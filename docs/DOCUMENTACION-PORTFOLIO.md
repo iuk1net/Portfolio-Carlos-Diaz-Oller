@@ -1,4 +1,4 @@
-# Documentación — Portfolio Carlos Díaz Oller
+# Documentación — Portfolio Carlos Díaz Oller (v2.0)
 
 Este documento agrupa la documentación entregable del proyecto y enlaza a cada sección.
 
