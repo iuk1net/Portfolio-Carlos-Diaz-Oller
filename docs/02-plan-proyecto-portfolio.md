@@ -34,6 +34,33 @@ El desarrollo del proyecto se realizará en **1 mes**, organizado en tres fases 
 - Día 22: Integración del panel de administración, seguridad y funcionalidad de descarga del CV.
 - Día 30: Pruebas finales, corrección de errores, despliegue online y revisión de la documentación.
 
+## 4.1. Hito 2: Entrega del primer prototipo (MVP) de la aplicación
+En este segundo hito, se procederá a la presentación y entrega del **primer prototipo funcional** de la aplicación, concebido como **Producto Mínimo Viable (MVP)**.
+
+El objetivo principal de esta fase es ofrecer una versión inicial que integre las **funcionalidades esenciales**, permitiendo:
+- Validar la **viabilidad técnica**.
+- Recoger **retroalimentación temprana** de los interesados.
+
+### Alcance y objetivos de la entrega
+**Funcionalidades clave**
+- Incluir las características imprescindibles para demostrar el valor principal de la aplicación.
+- Verificar el correcto comportamiento y una usabilidad mínima aceptable.
+
+**Diseño preliminar**
+- Presentar un boceto de la interfaz de usuario y la estructura básica de navegación.
+- No se contempla el refinamiento estético completo, pero sí la coherencia y consistencia con los lineamientos de diseño.
+
+**Pruebas y validaciones iniciales**
+- Realizar pruebas funcionales básicas para detectar errores críticos.
+- Asegurar un nivel mínimo de estabilidad que permita avanzar a la siguiente etapa.
+
+### Resultados esperados
+- Mejor comprensión de los requerimientos reales del proyecto a partir de las reacciones e impresiones de usuarios y partes interesadas.
+- Un documento de retroalimentación que permita ajustar el alcance, priorizar mejoras y definir los siguientes pasos del desarrollo.
+- Incremento de la confianza en la dirección técnica y funcional del proyecto, validando supuestos iniciales y reduciendo riesgos a medio plazo.
+
+Con esta entrega, se sientan las bases para la siguiente fase de desarrollo, donde se afinarán los componentes clave del MVP y se incorporarán las modificaciones resultantes de la retroalimentación recibida.
+
 ## 5. Recursos del proyecto
 
 ### 5.1. Humanos
@@ -78,4 +105,3 @@ Presupuesto: Limitado a recursos gratuitos y herramientas disponibles en el ento
 - Disponibilidad de un entorno de pruebas local para verificar el funcionamiento de la aplicación.
 - Acceso a servicios en la nube gratuitos (Heroku, Vercel, etc.) para el despliegue del portfolio.
 - Correcta integración de Spring Boot con Thymeleaf y la base de datos para la visualización dinámica de los contenidos.
-
