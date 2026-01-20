@@ -1,94 +1,98 @@
 # Documento de Requisitos del Proyecto: Portfolio
-- El proyecto se desarrolla y mantiene de manera individual, por lo que todas las actualizaciones y mejoras serán gestionadas por el autor.
-- La aplicación funcionará correctamente en los navegadores y dispositivos compatibles definidos en los requisitos.
-- Los archivos del CV y los contenidos del portfolio estarán disponibles y actualizados por el administrador.
-- Los visitantes tendrán acceso a una conexión a Internet estable para visualizar correctamente el portfolio.
-## 7. Suposiciones iniciales
 
-- Debe cumplir los requisitos mínimos obligatorios: **MVC**, **Spring Boot**, seguridad y persistencia en base de datos.
-- Se usarán únicamente herramientas gratuitas o disponibles en el entorno académico.
-- El proyecto se realiza de manera individual, gestionando frontend, backend, base de datos y documentación.
-- El desarrollo se realizará en un plazo aproximado de 1 mes.
-- La aplicación debe ser responsiva y funcionar correctamente en móviles, tablets y ordenadores.
-## 6. Restricciones
+## 1. Título del proyecto
+**Plataforma Social de Portfolios — Carlos Díaz Oller (v2.0)**
 
-- Uso de estándares **A11y** para accesibilidad: estructura semántica de HTML, contraste de colores, soporte para lectores de pantalla.
-- Diseño responsivo y navegación intuitiva.
-### 5.4. Usabilidad
+## 2. Introducción
+El proyecto **“Portfolio Carlos Díaz Oller”** evoluciona a una **plataforma social de portfolios**, orientada a que **múltiples usuarios** puedan registrarse, crear y gestionar su propio portfolio, publicar proyectos y participar en un sistema de votación que genera un **ranking público** de proyectos.
 
-- Compatible con navegadores modernos (Chrome, Firefox, Edge, Safari).
-- Aplicación web accesible desde dispositivos móviles, tablets y ordenadores.
-### 5.3. Compatibilidad
-
-- Recuperación y carga eficiente de proyectos y archivos CV.
-- Respuesta de la aplicación en menos de 2 segundos en condiciones normales.
-### 5.2. Rendimiento
-
-- Uso de HTTP y cifrado básico de contraseñas.
-- Protección de rutas sensibles y validación de datos introducidos por el administrador.
-- Autenticación y autorización para acceso al panel de administración.
-### 5.1. Seguridad
-
-## 5. Requisitos no funcionales
-
-- Gestión del envío o almacenamiento de los mensajes recibidos mediante el backend.
-- Validación de los datos introducidos antes de su envío.
-- Formulario de contacto accesible desde la parte pública del portfolio.
-### 4.5. Formulario de contacto
-
-- Mantenimiento de la integridad de los datos en operaciones de creación, modificación o eliminación.
-- Recuperación dinámica de datos para su correcta visualización en la parte pública del portfolio.
-- Almacenamiento de la información del portfolio y de los archivos del CV en la base de datos o en un sistema de almacenamiento vinculado al backend.
-### 4.4. Persistencia y gestión de datos
-
-- Protección de rutas internas mediante roles y control de acceso basado en **Spring Security**.
-- Acceso restringido a las funcionalidades de administración únicamente para usuarios autorizados.
-- Inicio de sesión para el administrador mediante usuario y contraseña.
-### 4.3. Autenticación y autorización
-
-- Gestión de otros contenidos del portfolio, incluyendo archivos del CV disponibles para descarga.
-- Eliminación de proyectos.
-- Edición y actualización de proyectos existentes.
-- Creación de nuevos proyectos desde el panel de administración.
-- Panel de administración protegido mediante autenticación y autorización.
-### 4.2. Gestión de proyectos y contenido
-
-- Opción para descargar el **CV** en distintos formatos (PDF, DOCX, TXT), accesible públicamente.
-- Secciones adicionales de habilidades técnicas y experiencia formativa.
-- Sección de proyectos desarrollados con título, descripción, tecnologías utilizadas y enlaces asociados.
-- Página principal con información general del perfil profesional (foto, datos personales y resumen).
-### 4.1. Visualización del portfolio
-
-## 4. Requisitos funcionales
-
-- Desplegar la aplicación en un entorno online accesible públicamente, permitiendo su correcta visualización y uso desde Internet.
-- Implementar al menos dos requisitos transversales optativos, como el cumplimiento de requisitos legales básicos de una web y la atención a criterios de accesibilidad.
-- Garantizar un nivel adecuado de **seguridad** en la aplicación, validando los datos introducidos y protegiendo los accesos restringidos.
-- Utilizar herramientas de planificación y organización del proyecto, como **Trello**, para la gestión de tareas y seguimiento del desarrollo.
-- Aplicar buenas prácticas de desarrollo y control de versiones mediante el uso de **GitHub** y un repositorio remoto compartido.
-- Incorporar un sistema de **persistencia** mediante base de datos relacional para la gestión dinámica de proyectos, tecnologías y contenidos del portfolio.
-- Implementar un sistema de **autenticación y autorización** de usuarios que proteja el acceso a las funcionalidades de administración del portfolio.
-- Desarrollar el backend de la aplicación utilizando **Spring Boot**, aplicando una arquitectura clara y mantenible.
-- Diseñar e implementar una aplicación web siguiendo el patrón de diseño **MVC**, separando correctamente la lógica de negocio, la capa de presentación y el acceso a datos.
-### 3.2. Objetivos específicos
-
-El proyecto tiene como finalidad demostrar la capacidad para **diseñar, desarrollar y desplegar** una aplicación web completa, cumpliendo requisitos de **seguridad**, organización del código y buenas prácticas propias de un entorno profesional.
-
-Desarrollar un **portfolio web personal** basado en una arquitectura backend con **Spring Boot** y persistencia en **base de datos**, siguiendo el patrón de diseño **MVC**, que permita presentar de forma profesional mi perfil como desarrollador de aplicaciones.
-### 3.1. Objetivo general
+La finalidad académica del proyecto es aplicar, en un contexto más cercano a un sistema real, buenas prácticas de análisis, diseño, desarrollo y documentación de software. Se desarrolla una aplicación web completa con backend y persistencia en base de datos, con requisitos de seguridad, organización del código y mantenimiento.
 
 ## 3. Objetivos del proyecto
 
-Además de servir como carta de presentación profesional, este proyecto tiene como finalidad aplicar **buenas prácticas** de análisis, diseño, desarrollo y documentación de software, simulando un entorno de trabajo real. De este modo, no solo se muestra el resultado visual final, sino también la correcta estructuración, mantenimiento y gestión de una aplicación web completa.
+### 3.1. Objetivo general
+Desarrollar una **plataforma social de portfolios** basada en una arquitectura backend con **Spring Boot**, persistencia en **base de datos relacional** y patrón **MVC**, que permita a los usuarios registrarse, publicar proyectos, votar proyectos de otros usuarios y consultar un ranking global, cumpliendo requisitos de seguridad y buenas prácticas propias de un entorno profesional.
 
-El uso de un backend y una base de datos permite gestionar de forma **dinámica** la información del portfolio, como los proyectos, las tecnologías o los contenidos mostrados.
+### 3.2. Objetivos específicos
+- Diseñar e implementar la aplicación siguiendo el patrón **MVC**, separando correctamente lógica de negocio, presentación y acceso a datos.
+- Desarrollar el backend con **Spring Boot**, con una arquitectura clara y mantenible.
+- Implementar un sistema de **autenticación y autorización** para usuarios y administración, con control de acceso por roles.
+- Incorporar persistencia en base de datos relacional para gestionar usuarios, portfolios, proyectos y votos.
+- Implementar un sistema de **votación** (likes) sobre proyectos y un **ranking** público en función de las votaciones.
+- Aplicar buenas prácticas de control de versiones con **Git/GitHub** y planificación con **Trello**.
+- Garantizar un nivel adecuado de seguridad: cifrado de contraseñas, validación de datos y protección de accesos.
+- Implementar requisitos transversales optativos: accesibilidad y requisitos legales básicos de una web.
+- Desplegar la aplicación en un entorno online accesible públicamente.
 
-A través de esta aplicación se muestran los conocimientos adquiridos durante la formación en **Desarrollo de Aplicaciones Multiplataforma (DAM)**, junto con los proyectos realizados, las tecnologías utilizadas y la experiencia práctica obtenida. La aplicación está pensada como una herramienta de presentación dirigida a **empresas y reclutadores del sector tecnológico**, permitiendo evaluar tanto mis competencias técnicas como mi capacidad para diseñar y desarrollar aplicaciones completas.
+## 4. Requisitos funcionales
 
-El proyecto **“Portfolio Carlos Díaz Oller”** consiste en el desarrollo de un **portfolio web personal** con **backend** y **base de datos**, cuyo objetivo es presentar de forma clara y profesional mi perfil como **desarrollador de aplicaciones**.
-## 2. Introducción
+### 4.1. Visualización de portfolios y proyectos
+- Listado público de proyectos publicados en la plataforma.
+- Acceso al portfolio completo del autor desde un proyecto.
+- Visualización de información del usuario propietario del portfolio.
+- Listado de proyectos ordenado por número de votos (ranking global).
 
-**Portfolio Carlos Díaz Oller**
-## 1. Título del proyecto
+### 4.2. Gestión de usuarios y perfil
+- Registro de nuevos usuarios.
+- Inicio de sesión y cierre de sesión.
+- Gestión del perfil del usuario (datos de contacto y enlaces a redes sociales).
+- Estados de usuario: activo, deshabilitado y bloqueado.
 
+### 4.3. Gestión de proyectos (por usuario)
+- Creación, edición y eliminación de proyectos propios.
+- Inclusión de enlace web del proyecto.
+- Gestión de galería de imágenes asociadas a proyectos.
 
+### 4.4. Sistema de votación y ranking
+- Los usuarios pueden votar/dar like a proyectos.
+- Restricción: un usuario solo puede votar una vez por proyecto.
+- Posibilidad de quitar el voto.
+- Cálculo y visualización del total de votos por proyecto.
+
+### 4.5. Gestión de CV
+- Subida de archivos de CV al servidor.
+- Descarga del CV.
+- Soporte para múltiples formatos: PDF, DOCX y TXT.
+
+### 4.6. Mensajes de contacto
+- Formulario de contacto en cada portfolio.
+- Envío de mensajes al propietario del portfolio.
+- Bandeja/listado de mensajes recibidos para el usuario destinatario.
+
+### 4.7. Panel de administración (rol Admin)
+- CRUD completo de usuarios.
+- Habilitar/deshabilitar/bloquear usuarios.
+- Moderación de proyectos.
+- Consulta de estadísticas globales básicas de la plataforma.
+
+## 5. Requisitos no funcionales
+
+### 5.1. Seguridad
+- Autenticación y autorización con control de permisos por roles (Admin / Usuario).
+- Cifrado de contraseñas con algoritmo seguro (p. ej. BCrypt).
+- Protección de rutas sensibles.
+- Validación de datos de entrada.
+
+### 5.2. Rendimiento
+- Respuesta de la aplicación en menos de 2 segundos en condiciones normales.
+- Carga del ranking en menos de 1 segundo en escenarios de uso habitual.
+
+### 5.3. Compatibilidad
+- Aplicación web accesible desde móviles, tablets y ordenadores.
+- Compatible con navegadores modernos (Chrome, Firefox, Edge, Safari).
+
+### 5.4. Usabilidad
+- Diseño responsivo y navegación intuitiva.
+- Uso de estándares A11y: estructura semántica de HTML, contraste de colores y soporte para lectores de pantalla.
+
+## 6. Restricciones
+- La aplicación debe ser responsiva y funcionar correctamente en móviles, tablets y ordenadores.
+- El proyecto se realiza de manera individual.
+- Se usarán únicamente herramientas gratuitas o disponibles en el entorno académico.
+- Debe cumplir requisitos mínimos obligatorios: **MVC**, **Spring Boot**, seguridad y persistencia en base de datos.
+
+## 7. Suposiciones iniciales
+- Los usuarios tendrán acceso a conexión a Internet estable.
+- Los usuarios publicarán y mantendrán actualizados sus portfolios y proyectos.
+- El sistema de votación se basará en la regla de **un voto por usuario y proyecto**.
+- La aplicación funcionará en los navegadores y dispositivos compatibles definidos en los requisitos.

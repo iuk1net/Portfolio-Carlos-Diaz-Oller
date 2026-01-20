@@ -1,15 +1,17 @@
 # Manual de Desarrollo: Portfolio
 
 ## 1. Objetivo del manual de desarrollo
-Proporcionar guías y procedimientos claros para el desarrollo del portfolio, asegurando la calidad del código, la correcta organización de los archivos, la integridad de los datos y un despliegue eficiente de la aplicación.
+Proporcionar guías y procedimientos claros para el desarrollo de la **plataforma social de portfolios (v2.0)**, asegurando la calidad del código, la correcta organización de los archivos, la integridad de los datos y un despliegue eficiente de la aplicación.
 
 ## 2. Procedimientos
 
 ### 2.1. Creación de ramas
 - Naming convention: las ramas deben seguir la estructura `tipo/descripcion`.
   - Ejemplos:
-    - `feature/añadir-proyecto`
-    - `bugfix/corregir-error-descarga-cv`
+    - `feature/registro-usuarios`
+    - `feature/sistema-votos`
+    - `feature/ranking-global`
+    - `bugfix/regla-un-voto-por-proyecto`
     - `hotfix/ajuste-seguridad`
 - Flujo de trabajo:
   1. Crear una nueva rama a partir de `main` para trabajar en cada funcionalidad.
@@ -24,9 +26,9 @@ Proporcionar guías y procedimientos claros para el desarrollo del portfolio, as
 ## 3. Estándares de codificación
 
 ### 3.1. Convenciones de nombres
-- Clases: nombres en **PascalCase** (ej.: `ProyectoController`, `CVService`).
-- Métodos y variables: **camelCase** (ej.: `obtenerProyectos`, `rutaArchivoCV`).
-- Constantes: todo en mayúsculas con guiones bajos (ej.: `TIEMPO_MAXIMO_DESCARGA`).
+- Clases: nombres en **PascalCase** (ej.: `UsuarioController`, `ProyectoController`, `VotoService`).
+- Métodos y variables: **camelCase** (ej.: `registrarUsuario`, `listarRanking`, `darVoto`).
+- Constantes: todo en mayúsculas con guiones bajos (ej.: `MAX_TAMANO_ARCHIVO`, `ROL_ADMIN`).
 
 ### 3.2. Estilo de código
 - Formato:
@@ -44,15 +46,15 @@ Proporcionar guías y procedimientos claros para el desarrollo del portfolio, as
 
 ### 4.1. Flujo de trabajo GitHub
 - Rama principal (`main`): contiene siempre el código estable y probado.
-- Ramas de características (`feature`): se crean para desarrollar nuevas funcionalidades o cambios específicos (ej.: `feature/añadir-proyecto`).
+- Ramas de características (`feature`): se crean para desarrollar nuevas funcionalidades o cambios específicos.
 - Fusión de ramas: una vez que la funcionalidad está lista y probada, se fusiona a `main`.
 
 ### 4.2. Buenas prácticas en Git
 - Realizar commits frecuentes con mensajes claros y descriptivos.
 - Formato sugerido: `[tipo]: descripción breve`.
-  - Ej.: `feat: añadir sección de descarga de CV`.
+  - Ej.: `feat: añadir ranking global por votos`.
 - Mantener el repositorio actualizado sincronizando `main` con las ramas de desarrollo antes de fusionar cambios.
-- Usar tags para marcar versiones importantes del proyecto (ej.: `v1.0`, `v1.1`).
+- Usar tags para marcar versiones importantes del proyecto (ej.: `v2.0.0`, `v2.1.0`).
 
 ## 5. Resolución de conflictos
 
@@ -68,15 +70,14 @@ Proporcionar guías y procedimientos claros para el desarrollo del portfolio, as
 ## 6. Gestor de versiones y CI/CD
 
 ### 6.1. Control de versiones
-- Utilizar etiquetas (tags) para identificar versiones significativas del proyecto (e.g., `v1.0.0`, `v1.1.0`).
+- Utilizar etiquetas (tags) para identificar versiones significativas del proyecto (e.g., `v2.0.0`, `v2.0.1`).
 
 ### 6.2. Integración y despliegue continuo
 - Configurar pipelines automáticos para pruebas y despliegue con GitHub Actions.
 - Realizar despliegues en entornos de pruebas antes de pasar a producción.
 
 ## 7. Indicadores de calidad
-- Cobertura de pruebas: mantener pruebas unitarias y de integración con una cobertura mínima del 80% en las funcionalidades críticas (backend y lógica de descarga del CV).
+- Cobertura de pruebas: mantener pruebas unitarias y de integración con una cobertura mínima del 80% en funcionalidades críticas (registro/login, votación y ranking).
 - Conflictos de fusión: minimizar los conflictos al trabajar con ramas de funcionalidades, idealmente menos del 5%.
-- Revisiones de código: aunque es un proyecto individual, asegurarse de que el código revisado cumpla con los estándares de codificación y no presente errores importantes antes de fusionar a `main`.
-- Estabilidad de la aplicación: todas las funcionalidades visibles en el portfolio (proyectos, descarga de CV, panel de administración) deben funcionar correctamente en al menos 95% de los casos de uso.
-
+- Revisiones de código: asegurar que el código revisado cumpla con los estándares y no presente errores importantes antes de fusionar a `main`.
+- Estabilidad de la aplicación: las funcionalidades principales (registro/login, gestión de proyectos, votación y ranking) deben funcionar correctamente en al menos el 95% de los casos de uso.

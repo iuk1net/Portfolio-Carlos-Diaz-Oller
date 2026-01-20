@@ -1,105 +1,100 @@
 # Especificaciones Técnicas del Proyecto: Portfolio
 
-> Nota: El texto original incluía el encabezado “Red Social de Mascotas” en esta sección. En este documento se mantiene el contenido técnico, aplicado al proyecto **Portfolio Carlos Díaz Oller**.
-
 ## 1. Arquitectura
-El portfolio estará basado en una arquitectura **cliente-servidor**, adaptada a un proyecto individual:
+La aplicación estará basada en una arquitectura **cliente-servidor** para una **plataforma social de portfolios**, con backend centralizado y persistencia en base de datos.
 
 ### Cliente
 - Interfaz web responsiva accesible desde navegadores de escritorio, tablets y móviles.
-- Desarrollo de las vistas usando **Thymeleaf**, integrado con Spring Boot para mostrar contenido dinámico.
-- Interacción con el backend mediante peticiones HTTP gestionadas internamente por **Spring MVC**.
+- Vistas renderizadas en servidor con **Thymeleaf**, integradas con Spring Boot para mostrar contenido dinámico.
+- Interactividad mediante **JavaScript** para acciones como votación, filtrado y navegación sin recarga completa cuando sea aplicable.
 
 ### Servidor
-- Backend desarrollado en Java con **Spring Boot**, siguiendo el patrón MVC.
-- Gestión de la lógica de negocio, seguridad y acceso a la base de datos.
-- Implementación de un panel de administración para gestionar proyectos y archivos del CV.
-- Integración con una base de datos relacional (MySQL o PostgreSQL) para almacenar los proyectos, información del portfolio y archivos del CV.
-- Implementación de autenticación y control de acceso para proteger el panel de administración.
+- Backend desarrollado en **Java** con **Spring Boot**, siguiendo el patrón **MVC**.
+- Gestión de la lógica de negocio: registro/login, perfiles, publicación de proyectos, votos y ranking.
+- Implementación de autenticación y control de acceso por roles (Admin / Usuario).
+- Integración con una base de datos relacional **PostgreSQL** para almacenar usuarios, proyectos, votos y contenidos asociados.
+- Gestión de archivos en servidor para CV e imágenes (subida/descarga) con validación de tipos.
 
 ## 2. Tecnologías seleccionadas
 
 ### Frontend
 - Lenguajes: **HTML5**, **CSS3**, **JavaScript (ES6)**.
 - Framework/Biblioteca: **Thymeleaf** para generar vistas dinámicas integradas con Spring Boot.
-- Herramientas adicionales: posible uso de **Bootstrap** para diseño responsivo y compatibilidad con dispositivos móviles.
+- Estilos: uso de **Bootstrap** para diseño responsivo y compatibilidad con dispositivos.
 
 ### Backend
 - Lenguaje: **Java 11 o superior**.
-- Framework principal: **Spring Boot** (incluyendo Spring MVC y Spring Data JPA).
-- Seguridad: **Spring Security** para la autenticación y autorización en el panel de administración.
+- Framework principal: **Spring Boot** (Spring MVC y Spring Data JPA).
+- Seguridad: **Spring Security** para autenticación y autorización.
 
 ### Base de datos
 - Motor: **PostgreSQL**.
-- ORM: **Hibernate** para la persistencia de datos y mapeo objeto-relacional.
+- ORM: **Hibernate**.
 
 ### Infraestructura
-- Servidor: despliegue en servicios gratuitos o educativos en la nube (Heroku, Vercel, etc.).
-- Contenedores: opcionalmente **Docker** para empaquetar la aplicación.
 - Control de versiones: **Git** con repositorio en **GitHub**.
+- Despliegue: servicios gratuitos o educativos en la nube.
+- Contenedores: **Docker** (opcional).
 
 ## 3. Estándares
 
 ### Arquitectura MVC y rutas
-Para este proyecto, la comunicación entre frontend (Thymeleaf) y backend se realiza mediante **controladores Spring MVC**, siguiendo buenas prácticas de nombres de métodos y rutas claras.
+- La comunicación entre frontend (Thymeleaf) y backend se realiza mediante **controladores Spring MVC**.
+- Las rutas se diseñarán de forma consistente para cubrir: autenticación, perfil, gestión de proyectos, votación y ranking.
 
 ### Seguridad
-- Autenticación y control de acceso: proteger el panel de administración mediante **Spring Security**.
-- Protección de datos: uso de **HTTP** para las comunicaciones y manejo seguro de la información del portfolio y archivos del CV.
-- Buenas prácticas: evitar inyecciones SQL y validar correctamente los datos ingresados por el usuario en el panel de administración.
+- Autenticación y control de acceso mediante **Spring Security**.
+- Cifrado de contraseñas con un algoritmo seguro (p. ej. **BCrypt**).
+- Validación de datos de entrada para formularios y endpoints.
+- Prevención de vulnerabilidades comunes: inyección SQL (mediante JPA/consultas parametrizadas) y XSS (escape de salida y validación).
 
 ### Desarrollo
-- Convenciones de codificación: seguir las **Java Code Conventions** para mantener claridad y consistencia en clases, métodos y variables.
-- Pruebas: implementar pruebas unitarias y básicas de integración con **JUnit** para verificar que la lógica del backend funciona correctamente.
-- Control de versiones y CI/CD: usar Git/GitHub para control de versiones. Integración continua opcional mediante GitHub Actions para automatizar pruebas y despliegue.
+- Convenciones de codificación: aplicar **Java Code Conventions**.
+- Pruebas: pruebas unitarias e integración con **JUnit**.
+- Control de versiones: commits frecuentes y descriptivos.
 
 ## 4. Interfaz de usuario
 
 ### Diseño web responsivo
-- La web se adaptará a diferentes resoluciones y dispositivos (móviles, tablets y ordenadores).
-- Se aplicarán principios básicos de UX/UI para garantizar una navegación intuitiva y clara.
-- Uso de Thymeleaf para renderizado dinámico y Bootstrap para facilitar el diseño responsivo.
+- Adaptación a diferentes resoluciones y dispositivos.
+- Navegación clara entre: ranking, proyectos, perfiles y administración.
 
 ### Componentes clave
-- Página de inicio: presentación del autor, breve descripción y enlaces a proyectos destacados.
-- Sección de proyectos: visualización de los proyectos realizados, con descripciones, tecnologías usadas y capturas.
-- Descarga del CV: botones para descargar el CV en distintos formatos (PDF, DOCX, etc.).
-- Panel de administración: acceso protegido para gestionar los proyectos, actualizar contenidos y archivos del CV.
+- Listado público de proyectos y acceso al detalle.
+- Ranking global de proyectos ordenado por votos.
+- Perfil de usuario con enlaces de contacto y redes sociales.
+- Formularios de registro/inicio de sesión.
+- Panel de administración (rol Admin) para gestión de usuarios y moderación.
 
 ## 5. Seguridad
 
 ### Autenticación
-- El panel de administración estará protegido mediante inicio de sesión con usuario y contraseña cifrada usando **BCrypt**.
-- Solo el autor tendrá acceso al panel para gestionar proyectos y archivos del CV.
+- Inicio de sesión y control de sesión mediante Spring Security.
+- Credenciales almacenadas con hash seguro.
 
 ### Autorización
-- Control de acceso limitado al rol de administrador (el propio autor).
-- Restricción de acciones sensibles, como modificar o eliminar proyectos y archivos del CV, exclusivamente al administrador.
+- Acceso diferenciado por roles:
+  - Usuario: gestión de su perfil y proyectos; votación; consulta del ranking.
+  - Admin: gestión completa de usuarios y moderación de proyectos.
 
 ### Protección de datos
-- Manejo seguro de los datos del portfolio y archivos del CV.
 - Políticas básicas de privacidad sobre la información visible públicamente.
-- Copias de seguridad periódicas de la base de datos.
-
-### Seguridad de la aplicación
-- Prevención de ataques comunes como inyección SQL y Cross-Site Scripting (XSS).
-- Validación de los datos ingresados en el panel de administración.
+- Evitar exposición de datos sensibles de usuarios.
 
 ## 6. Escalabilidad y rendimiento
 
-### Escalabilidad horizontal
-- La aplicación está diseñada para soportar crecimiento moderado, aunque el tráfico esperado será bajo.
-- La estructura del backend y la base de datos permite añadir nuevos proyectos o secciones sin modificar la arquitectura básica.
+### Escalabilidad
+- Diseño orientado a crecimiento moderado de usuarios y proyectos.
+- Estructura de base de datos preparada para consultas de ranking.
 
 ### Optimización del rendimiento
-- Consultas a la base de datos optimizadas para carga rápida de los proyectos y archivos del CV.
-- Uso de caching básico en memoria para mejorar la respuesta de páginas consultadas frecuentemente.
-- La interfaz web está optimizada para cargar rápido, incluso en dispositivos móviles.
+- Consultas optimizadas para el ranking (ordenación por votos).
+- Uso de paginación en listados.
+- Optimización básica de recursos estáticos (CSS/JS) y control de peso de imágenes.
 
 ## 7. Indicadores de rendimiento (KPIs)
-- Tiempo de carga de páginas: menor a 2 segundos en condiciones normales de uso.
-- Tiempo de respuesta del backend: menor a 500 ms para consultas básicas y carga de proyectos.
-- Disponibilidad de la web: accesible > 95% del tiempo, considerando despliegue en servicios gratuitos en la nube.
-- Velocidad de descarga del CV: archivos descargables en menos de 3 segundos.
-- Compatibilidad y responsividad: la web debe mostrarse correctamente en ordenadores, tablets y móviles.
-
+- Tiempo de carga de páginas: < 2 segundos en condiciones normales.
+- Tiempo de respuesta en ranking/listados: < 1 segundo en escenarios habituales.
+- Disponibilidad: > 95% (según limitaciones del despliegue).
+- Consistencia de votos: sin duplicidad (un voto por usuario y proyecto).
+- Compatibilidad y responsividad: correcto funcionamiento en ordenadores, tablets y móviles.

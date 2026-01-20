@@ -1,9 +1,9 @@
 # CHANGELOG
 
-Este archivo documenta de manera clara y ordenada las modificaciones y mejoras realizadas en el portfolio, facilitando el seguimiento del desarrollo, la identificación de errores y el historial de versiones del proyecto.
+Este archivo documenta de manera clara y ordenada las modificaciones y mejoras realizadas en el proyecto, facilitando el seguimiento del desarrollo, la identificación de errores y el historial de versiones.
 
 ## Propósito del registro de cambios
-Documentar de manera clara y ordenada las modificaciones y mejoras realizadas en el portfolio.
+Documentar de manera clara y ordenada las modificaciones y mejoras realizadas en el proyecto.
 
 ## Formato del registro
 Cada entrada del registro contiene:
@@ -29,6 +29,15 @@ Cada entrada del registro contiene:
 
 ---
 
+## [2.0.0] - 2026-01-20
+**Cambios realizados:**
+- Cambio de alcance del proyecto: de portfolio personal a **plataforma social de portfolios** (v2.0).
+- Introducción de modelo **multiusuario** con roles (Admin/Usuario).
+- Definición del sistema de **votación** (un voto por usuario y proyecto) y **ranking global**.
+- Actualización completa de la documentación (requisitos, plan, especificaciones técnicas, manual, Hito 2 y Hito 3).
+
+**Autor:** Carlos Díaz Oller
+
 ## [1.1.0] - 2026-01-20
 **Cambios realizados:**
 - Optimización del frontend con Thymeleaf para carga más rápida de contenidos.
@@ -51,4 +60,3 @@ Cada entrada del registro contiene:
 - Creación de la sección de proyectos con visualización básica.
 
 **Autor:** Carlos Díaz Oller
-
