@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lista de Productos</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.css}" />
+	<script th:src="@{/js/bootstrap/bootstrap.bundle.js}"></script>
+</head>
+<body>
+<div class="container">
+    <h1 class="my-4">Lista de Productos</h1>
+    <a th:href="@{/productos/nuevo}" class="btn btn-primary mb-3">Añadir Producto</a>
+    <a th:href="@{/productos/favoritos}" class="btn btn-primary mb-3">Productos Favoritos</a>
+    
+    
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Imagen</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="producto : ${productos}">
+            <td th:text="${producto.nombre}">Nombre</td>
+            <td th:text="${producto.descripcion}">Descripción</td>
+            <td th:text="${producto.precio}">0.00</td>
+            <td>
+                <img th:src="${producto.imagen}" alt="Imagen de Producto" style="max-width: 100px;">
+            </td>
+            <td>
+                <a th:href="@{/productos/{id}/editar(id=${producto.id})}" class="btn btn-warning btn-sm">Editar</a>
+               
+                <form th:action="@{/productos/{id}/favoritar(id=${producto.id})}" method="post">
+			        <button type="submit" sec:authorize="isAuthenticated()">Añadir a favoritos</button>
+			    </form>
+                
+                <form th:action="@{/productos/{id}/eliminar(id=${producto.id})}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    
+</div>
+</body>
+</html>
