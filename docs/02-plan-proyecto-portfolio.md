@@ -35,31 +35,37 @@ El desarrollo del proyecto se realizará en **1 mes**, organizado en tres fases 
 - Día 30: Pruebas finales, corrección de errores, despliegue online y revisión de la documentación.
 
 ## 4.1. Hito 2: Entrega del primer prototipo (MVP) de la aplicación
-En este segundo hito, se procederá a la presentación y entrega del **primer prototipo funcional** de la aplicación, concebido como **Producto Mínimo Viable (MVP)**.
 
-El objetivo principal de esta fase es ofrecer una versión inicial que integre las **funcionalidades esenciales**, permitiendo:
-- Validar la **viabilidad técnica**.
-- Recoger **retroalimentación temprana** de los interesados.
+### Introducción
+En este segundo hito se realizará la presentación y entrega del **primer prototipo funcional** del proyecto **“Portfolio Carlos Díaz Oller”**, concebido como **Producto Mínimo Viable (MVP)**. El objetivo principal de esta fase es disponer de una versión inicial operativa que permita **validar la viabilidad técnica** del portfolio web personal y recopilar **retroalimentación temprana** sobre su uso y comprensión.
 
 ### Alcance y objetivos de la entrega
-**Funcionalidades clave**
-- Incluir las características imprescindibles para demostrar el valor principal de la aplicación.
-- Verificar el correcto comportamiento y una usabilidad mínima aceptable.
 
-**Diseño preliminar**
-- Presentar un boceto de la interfaz de usuario y la estructura básica de navegación.
-- No se contempla el refinamiento estético completo, pero sí la coherencia y consistencia con los lineamientos de diseño.
+#### Funcionalidades clave
+El prototipo incluirá las funcionalidades imprescindibles definidas en los requisitos del proyecto para demostrar el valor principal del portfolio:
+- **Visualización pública** del portfolio: página principal con información general del perfil profesional y acceso a las secciones del sitio.
+- **Sección de proyectos** con visualización de título, descripción, tecnologías utilizadas y enlaces asociados.
+- **Secciones adicionales** de habilidades técnicas y experiencia formativa.
+- **Descarga pública del CV** en los formatos indicados (PDF, DOCX y TXT).
+- **Formulario de contacto** accesible desde la parte pública del portfolio, con validación previa de los datos.
+- **Acceso al panel de administración** protegido mediante autenticación y autorización.
+- **Gestión de proyectos y contenidos** desde el panel de administración: creación, edición/actualización y eliminación de proyectos, así como gestión de otros contenidos del portfolio, incluyendo los archivos del CV disponibles para descarga.
+- **Persistencia y recuperación dinámica de datos**, garantizando la integridad de la información en las operaciones de alta, modificación y eliminación.
 
-**Pruebas y validaciones iniciales**
-- Realizar pruebas funcionales básicas para detectar errores críticos.
-- Asegurar un nivel mínimo de estabilidad que permita avanzar a la siguiente etapa.
+#### Diseño preliminar
+Se entregará un diseño preliminar de la interfaz basado en una estructura web **responsiva**, priorizando la claridad de navegación y la coherencia entre secciones. El prototipo presentará una organización mínima de las vistas y rutas necesarias para la consulta pública del portfolio y el acceso restringido al panel de administración.
+
+#### Pruebas y validaciones iniciales
+Se realizarán pruebas funcionales básicas orientadas a detectar errores críticos y verificar:
+- La correcta visualización de las secciones públicas y la recuperación de la información.
+- El acceso restringido al panel de administración mediante autenticación y autorización.
+- La ejecución de operaciones de gestión de proyectos y contenidos, preservando la integridad de los datos.
+- La validación de datos en el formulario de contacto.
 
 ### Resultados esperados
-- Mejor comprensión de los requerimientos reales del proyecto a partir de las reacciones e impresiones de usuarios y partes interesadas.
-- Un documento de retroalimentación que permita ajustar el alcance, priorizar mejoras y definir los siguientes pasos del desarrollo.
-- Incremento de la confianza en la dirección técnica y funcional del proyecto, validando supuestos iniciales y reduciendo riesgos a medio plazo.
-
-Con esta entrega, se sientan las bases para la siguiente fase de desarrollo, donde se afinarán los componentes clave del MVP y se incorporarán las modificaciones resultantes de la retroalimentación recibida.
+- Una mejor comprensión de los requerimientos reales del proyecto a partir de las reacciones e impresiones de usuarios y partes interesadas.
+- Un documento de retroalimentación que permita ajustar el alcance y priorizar mejoras en fases posteriores.
+- La validación de supuestos iniciales sobre la dirección técnica y funcional del proyecto, reduciendo riesgos a medio plazo.
 
 ## 5. Recursos del proyecto
 
