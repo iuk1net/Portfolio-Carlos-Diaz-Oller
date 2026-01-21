@@ -55,8 +55,15 @@ Desarrollar una **plataforma social de portfolios** basada en una arquitectura b
 - Soporte para múltiples formatos: PDF, DOCX y TXT.
 
 ### 4.6. Publicación en redes sociales
-- Posibilidad de publicar (compartir) proyectos en redes sociales desde la plataforma.
-- Seguimiento del estado de publicación (pendiente/publicado/error) mediante un registro asociado al proyecto.
+- **Compartir proyectos**: publicación automatizada en LinkedIn, Twitter, Facebook u otras redes sociales.
+- **Estados de publicación**:
+  - **Pendiente**: la publicación está en cola de procesamiento
+  - **Publicado**: se compartió exitosamente en la red social
+  - **Error**: falló la publicación (problema de conectividad, tokens expirados, etc.)
+- **Registro de publicaciones**: se guarda el historial con:
+  - Red social utilizada (`redSocial`)
+  - Fecha y hora de publicación (`fechaPublicacion`)
+  - Estado actual de la publicación (`estado`)
 
 ### 4.7. Panel de administración (rol Admin)
 - CRUD completo de usuarios.
