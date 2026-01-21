@@ -13,8 +13,9 @@ Este documento agrupa la documentación entregable del proyecto y enlaza a cada 
 3. [Especificaciones Técnicas](./03-especificaciones-tecnicas-portfolio.md)
 4. [Manual de Desarrollo](./04-manual-desarrollo-portfolio.md)
 5. [Hito 3 — Entrega Esquemática](./05-hito-3-entrega-esquematica.md)
-6. [Modelo de Datos Completo](./06-modelo-datos-completo.md) ⭐ **Nuevo**
-7. [Registro de Cambios (Changelog)](./CHANGELOG.md)
+6. [Modelo de Datos Completo](./06-modelo-datos-completo.md)
+7. [Diagramas ER y UML (Mermaid)](./diagramas-mermaid.md)
+8. [Registro de Cambios (Changelog)](./CHANGELOG.md)
 
 ## Diagramas
 - [Modelo Entidad-Relación (ER) y Diagrama de Clases UML](./Modelo%20entidad%20relacion%20y%20UML.png)
@@ -27,6 +28,9 @@ Este documento agrupa la documentación entregable del proyecto y enlaza a cada 
 - **CV**: almacenamiento de currículums en servidor
 - **Voto**: sistema de likes con restricción única (un voto por usuario/proyecto)
 - **PublicacionRRSS**: historial de publicaciones en redes sociales
+
+### Entidades Complementarias
+- **Favorito**: sistema de marcado de proyectos favoritos
 
 ### Tecnologías
 - **Backend**: Java 17+ con Spring Boot 3.x

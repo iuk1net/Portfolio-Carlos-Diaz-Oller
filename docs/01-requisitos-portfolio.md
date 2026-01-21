@@ -49,12 +49,18 @@ Desarrollar una **plataforma social de portfolios** basada en una arquitectura b
 - Posibilidad de quitar el voto.
 - Cálculo y visualización del total de votos por proyecto.
 
-### 4.5. Gestión de CV
+### 4.5. Sistema de favoritos
+- Los usuarios pueden marcar proyectos como favoritos para acceso rápido.
+- Listado personal de proyectos favoritos.
+- Gestión de favoritos (añadir/eliminar) desde el perfil del usuario.
+- Los favoritos son independientes del sistema de votación.
+
+### 4.6. Gestión de CV
 - Subida de archivos de CV al servidor.
 - Descarga del CV.
 - Soporte para múltiples formatos: PDF, DOCX y TXT.
 
-### 4.6. Publicación en redes sociales
+### 4.7. Publicación en redes sociales
 - **Compartir proyectos**: publicación automatizada en LinkedIn, Twitter, Facebook u otras redes sociales.
 - **Estados de publicación**:
   - **Pendiente**: la publicación está en cola de procesamiento
@@ -65,7 +71,7 @@ Desarrollar una **plataforma social de portfolios** basada en una arquitectura b
   - Fecha y hora de publicación (`fechaPublicacion`)
   - Estado actual de la publicación (`estado`)
 
-### 4.7. Panel de administración (rol Admin)
+### 4.8. Panel de administración (rol Admin)
 - CRUD completo de usuarios.
 - Habilitar/deshabilitar/bloquear usuarios.
 - Moderación de proyectos.

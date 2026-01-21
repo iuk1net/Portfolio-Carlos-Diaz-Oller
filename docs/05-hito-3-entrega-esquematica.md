@@ -7,6 +7,58 @@
 
 **Objetivo:** Representar entidades y relaciones de la base de datos de la plataforma.
 
+### Diagrama ER (Mermaid)
+
+```mermaid
+erDiagram
+    USUARIO ||--o{ PROYECTO : "crea"
+    USUARIO ||--o{ CV : "sube"
+    USUARIO ||--o{ VOTO : "emite"
+    USUARIO ||--o{ FAVORITO : "marca"
+    PROYECTO ||--o{ VOTO : "recibe"
+    PROYECTO ||--o{ PUBLICACION_RRSS : "se publica en"
+    PROYECTO ||--o{ FAVORITO : "es favorito de"
+
+    USUARIO {
+        int id_usuario PK
+        string nombre
+        string email UK
+        string rol
+        string estado
+    }
+
+    PROYECTO {
+        int id_proyecto PK
+        string titulo
+        int totalLikes
+        int id_usuario FK
+    }
+
+    CV {
+        int id_cv PK
+        string tipoArchivo
+        int id_usuario FK
+    }
+
+    VOTO {
+        int id_voto PK
+        int id_usuario FK
+        int id_proyecto FK
+    }
+
+    PUBLICACION_RRSS {
+        int id_publicacion PK
+        int id_proyecto FK
+        string redSocial
+    }
+
+    FAVORITO {
+        int id_favorito PK
+        int id_usuario FK
+        int id_proyecto FK
+    }
+```
+
 ### Entidades principales
 
 **Usuario**
@@ -39,9 +91,19 @@
 - **Restricción:** un usuario solo puede votar una vez por proyecto (unicidad id_usuario + id_proyecto).
 
 **PublicacionRRSS**
-- **Atributos:** id_publicacion, id_proyecto (FK), redSocial, fechaPublicacion, estado, urlPublicacion, mensajeError
+- **Atributos:** id_publicacion, id_proyecto (FK), redSocial, fechaPublicacion, estado
 - **Relaciones:** Asociación con Proyecto
 - **Cardinalidad:** N:1
+
+### Entidades adicionales
+
+**Favorito**
+- **Atributos:** id_favorito, id_usuario (FK), id_proyecto (FK)
+- **Relaciones:** Asociación con Usuario y Proyecto
+- **Cardinalidad:**
+  - Favorito → Usuario: N:1
+  - Favorito → Proyecto: N:1
+- **Descripción:** Permite a los usuarios marcar proyectos como favoritos para acceso rápido.
 
 ### Notas
 - Cada entidad tiene su **clave primaria**; las relaciones se implementan mediante **claves foráneas**.
@@ -51,6 +113,71 @@
 ## 2. Diagrama de Clases UML
 
 **Objetivo:** Mostrar la estructura de clases y la lógica de negocio del sistema.
+
+### Diagrama UML (Mermaid)
+
+```mermaid
+classDiagram
+    class Usuario {
+        -Long id
+        -String nombre
+        -String email
+        -String contraseña
+        -Rol rol
+        -Estado estado
+        +crearUsuario()
+        +actualizarUsuario()
+        +bloquearUsuario()
+        +eliminarUsuario()
+    }
+
+    class Proyecto {
+        -Long id
+        -String titulo
+        -String descripcion
+        -Integer totalLikes
+        +crearProyecto()
+        +actualizarProyecto()
+        +eliminarProyecto()
+        +incrementarLikes()
+        +decrementarLikes()
+    }
+
+    class CV {
+        -Long id
+        -String tipoArchivo
+        -String rutaServidor
+        +subirCV()
+        +descargarCV()
+        +eliminarCV()
+    }
+
+    class Voto {
+        -Long id
+        -LocalDateTime fechaVoto
+        +votar()
+    }
+
+    class PublicacionRRSS {
+        -Long id
+        -String redSocial
+        -EstadoPublicacion estado
+    }
+
+    class Favorito {
+        -Long id
+        +agregarFavorito()
+        +eliminarFavorito()
+    }
+
+    Usuario "1" --> "*" Proyecto : crea
+    Usuario "1" --> "*" CV : sube
+    Usuario "1" --> "*" Voto : emite
+    Usuario "1" --> "*" Favorito : marca
+    Proyecto "1" --> "*" Voto : recibe
+    Proyecto "1" --> "*" PublicacionRRSS : "se publica"
+    Proyecto "1" --> "*" Favorito : "es favorito"
+```
 
 ### Clases principales
 
@@ -93,6 +220,16 @@
 - **Relaciones:** PublicacionRRSS → Proyecto (N:1)
 - **Métodos:**
   - (métodos de gestión automática desde Proyecto)
+
+### Clases adicionales
+
+**Favorito**
+- **Atributos:** id: int, idUsuario: int, idProyecto: int
+- **Relaciones:** Favorito → Usuario (N:1), Favorito → Proyecto (N:1)
+- **Métodos:**
+  - `agregarFavorito()`: marca un proyecto como favorito del usuario
+  - `eliminarFavorito()`: elimina un proyecto de los favoritos
+  - `listarFavoritosPorUsuario()`: obtiene todos los favoritos de un usuario
 
 ### Notas
 - Se mantiene el patrón **MVC**.
