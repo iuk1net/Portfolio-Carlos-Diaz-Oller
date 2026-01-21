@@ -168,9 +168,45 @@ Registra las publicaciones de proyectos en redes sociales.
 Usuario (1) ──crea──> (N) Proyecto
 Usuario (1) ──sube──> (N) CV
 Usuario (1) ──emite──> (N) Voto
+Usuario (1) ──marca favorito──> (N) Favorito
 Proyecto (1) ──recibe──> (N) Voto
 Proyecto (1) ──se publica en──> (N) PublicacionRRSS
+Proyecto (1) ──marcado como favorito por──> (N) Favorito
 ```
+
+---
+
+## 6.1. Entidad: Favorito
+
+### Descripción
+Representa los proyectos marcados como favoritos por los usuarios para su acceso rápido y organización personal.
+
+### Tabla en BD: `favoritos`
+
+| Campo | Tipo | Constraints | Descripción |
+|-------|------|-------------|-------------|
+| `id_favorito` | INT | PRIMARY KEY, AUTO_INCREMENT | Identificador único |
+| `id_usuario` | INT | NOT NULL, FOREIGN KEY | Usuario que marca el favorito |
+| `id_proyecto` | INT | NOT NULL, FOREIGN KEY | Proyecto marcado como favorito |
+
+**Constraint adicional:**
+```sql
+UNIQUE (id_usuario, id_proyecto)
+```
+
+### Relaciones
+- **Favorito → Usuario** (N:1): Cada favorito pertenece a un usuario
+- **Favorito → Proyecto** (N:1): Cada favorito está asociado a un proyecto
+
+### Reglas de Negocio
+- Un usuario puede marcar el mismo proyecto como favorito solo una vez (constraint UNIQUE)
+- Los favoritos son independientes del sistema de votación
+- Al eliminar un proyecto, se eliminan en cascada sus favoritos
+- Al eliminar un usuario, se eliminan en cascada sus favoritos
+
+### Diferencia con Voto
+- **Voto**: Sistema público que afecta el ranking global
+- **Favorito**: Colección personal del usuario
 
 ---
 
@@ -193,6 +229,12 @@ CREATE INDEX idx_votos_usuario ON votos(id_usuario);
 
 -- Votos a un proyecto
 CREATE INDEX idx_votos_proyecto ON votos(id_proyecto);
+
+-- Favoritos de un usuario
+CREATE INDEX idx_favoritos_usuario ON favoritos(id_usuario);
+
+-- Favoritos de un proyecto
+CREATE INDEX idx_favoritos_proyecto ON favoritos(id_proyecto);
 ```
 
 ---
