@@ -13,4 +13,27 @@ Este documento agrupa la documentación entregable del proyecto y enlaza a cada 
 3. [Especificaciones Técnicas](./03-especificaciones-tecnicas-portfolio.md)
 4. [Manual de Desarrollo](./04-manual-desarrollo-portfolio.md)
 5. [Hito 3 — Entrega Esquemática](./05-hito-3-entrega-esquematica.md)
-6. [Registro de Cambios (Changelog)](./CHANGELOG.md)
+6. [Modelo de Datos Completo](./06-modelo-datos-completo.md) ⭐ **Nuevo**
+7. [Registro de Cambios (Changelog)](./CHANGELOG.md)
+
+## Diagramas
+- [Modelo Entidad-Relación (ER) y Diagrama de Clases UML](./Modelo%20entidad%20relacion%20y%20UML.png)
+
+## Estructura del Proyecto
+
+### Entidades Principales
+- **Usuario**: gestión de perfiles con datos de contacto y enlaces RRSS
+- **Proyecto**: portfolios con galerías de imágenes y sistema de votación
+- **CV**: almacenamiento de currículums en servidor
+- **Voto**: sistema de likes con restricción única (un voto por usuario/proyecto)
+- **PublicacionRRSS**: historial de publicaciones en redes sociales
+
+### Tecnologías
+- **Backend**: Java 17+ con Spring Boot 3.x
+- **Frontend**: Thymeleaf + Bootstrap 5 + JavaScript
+- **Base de Datos**: PostgreSQL 15+
+- **Seguridad**: Spring Security con BCrypt
+
+## Enlaces Útiles
+- [Repositorio GitHub](https://github.com/iuk1net/Portfolio-Carlos-Diaz-Oller)
+- [Tablero Trello](https://trello.com/...) *(enlace pendiente)*

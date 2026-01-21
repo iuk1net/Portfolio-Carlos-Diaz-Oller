@@ -60,11 +60,12 @@ La aplicación estará basada en una arquitectura **cliente-servidor** para una 
 - Navegación clara entre: ranking, proyectos, perfiles y administración.
 
 ### Componentes clave
-- Listado público de proyectos y acceso al detalle.
-- Ranking global de proyectos ordenado por votos.
-- Perfil de usuario con **datos de contacto** (email profesional, WhatsApp, teléfono) y **enlaces a redes sociales**.
-- Formularios de registro/inicio de sesión.
-- Panel de administración (rol Admin) para gestión de usuarios y moderación.
+- **Listado público de proyectos**: con imagen destacada, título, tecnologías y totalLikes.
+- **Detalle de proyecto**: galería de imágenes, descripción completa, enlace web, y botón de votación.
+- **Ranking global**: proyectos ordenados por `totalLikes` (descendente) con paginación.
+- **Perfil de usuario público**: muestra nombre, email profesional, whatsapp, teléfono, enlaces a redes sociales (LinkedIn, GitHub, Twitter, etc.), y proyectos creados.
+- **Formularios de registro/inicio de sesión**: con validación frontend y backend.
+- **Panel de administración** (rol Admin): gestión de usuarios (bloquear, eliminar), moderación de proyectos, y estadísticas globales.
 
 ## 5. Seguridad
 
