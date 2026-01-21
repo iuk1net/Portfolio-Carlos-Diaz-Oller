@@ -36,4 +36,4 @@ Este documento agrupa la documentación entregable del proyecto y enlaza a cada 
 
 ## Enlaces Útiles
 - [Repositorio GitHub](https://github.com/iuk1net/Portfolio-Carlos-Diaz-Oller)
-- [Tablero Trello](https://trello.com/...) *(enlace pendiente)*
+- [Tablero Trello](https://trello.com/b/TjZDy1Jx/portfolio-carlos-diaz-oller)
