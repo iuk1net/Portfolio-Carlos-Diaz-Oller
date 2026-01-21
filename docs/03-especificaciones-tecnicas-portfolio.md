@@ -62,7 +62,7 @@ La aplicación estará basada en una arquitectura **cliente-servidor** para una 
 ### Componentes clave
 - Listado público de proyectos y acceso al detalle.
 - Ranking global de proyectos ordenado por votos.
-- Perfil de usuario con enlaces de contacto y redes sociales.
+- Perfil de usuario con **datos de contacto** (email profesional, WhatsApp, teléfono) y **enlaces a redes sociales**.
 - Formularios de registro/inicio de sesión.
 - Panel de administración (rol Admin) para gestión de usuarios y moderación.
 

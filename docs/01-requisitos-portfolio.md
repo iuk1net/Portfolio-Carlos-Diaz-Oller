@@ -54,10 +54,9 @@ Desarrollar una **plataforma social de portfolios** basada en una arquitectura b
 - Descarga del CV.
 - Soporte para múltiples formatos: PDF, DOCX y TXT.
 
-### 4.6. Mensajes de contacto
-- Formulario de contacto en cada portfolio.
-- Envío de mensajes al propietario del portfolio.
-- Bandeja/listado de mensajes recibidos para el usuario destinatario.
+### 4.6. Publicación en redes sociales
+- Posibilidad de publicar (compartir) proyectos en redes sociales desde la plataforma.
+- Seguimiento del estado de publicación (pendiente/publicado/error) mediante un registro asociado al proyecto.
 
 ### 4.7. Panel de administración (rol Admin)
 - CRUD completo de usuarios.
