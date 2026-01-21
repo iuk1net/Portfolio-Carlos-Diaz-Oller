@@ -2,30 +2,35 @@ package es.fempa.acd.demosecurityproductos.model;
 
 import jakarta.persistence.*;
 
+/**
+ * Entidad Favorito
+ * Representa los proyectos marcados como favoritos por los usuarios
+ */
 @Entity
+@Table(name = "favoritos")
 public class Favorito {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
-    @ManyToOne
-    @JoinColumn(name = "producto_id", nullable = false)
-    private Producto producto;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "proyecto_id", nullable = false)
+    private Proyecto proyecto;
 
-    
-	public Favorito() {
-	}
-    
-	public Favorito(Usuario usuario, Producto producto) {
-		this.usuario = usuario;
-        this.producto= producto;
-	}
-	
+    // Constructores
+    public Favorito() {
+    }
+
+    public Favorito(Usuario usuario, Proyecto proyecto) {
+        this.usuario = usuario;
+        this.proyecto = proyecto;
+    }
+
     // Getters y Setters
     public Long getId() {
         return id;
@@ -43,11 +48,11 @@ public class Favorito {
         this.usuario = usuario;
     }
 
-    public Producto getProducto() {
-        return producto;
+    public Proyecto getProyecto() {
+        return proyecto;
     }
 
-    public void setProducto(Producto producto) {
-        this.producto = producto;
+    public void setProyecto(Proyecto proyecto) {
+        this.proyecto = proyecto;
     }
 }
