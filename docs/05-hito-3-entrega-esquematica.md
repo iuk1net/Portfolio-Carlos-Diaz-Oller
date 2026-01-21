@@ -10,38 +10,38 @@
 ### Entidades principales
 
 **Usuario**
-- **Atributos:** id, nombre, contraseña, rol
-- **Relaciones:** Usuario → Proyecto, CV, Mensaje, Voto
+- **Atributos:** id_usuario, nombre, email, contraseña, rol, estado, emailProfesional, whatsapp, telefono, enlacesRRSS, fechaRegistro, fechaActualizacion
+- **Relaciones:** Usuario → Proyecto, CV, Voto
 - **Cardinalidad:**
   - Usuario → Proyecto: 1:N
   - Usuario → CV: 1:N
-  - Usuario → Mensaje: 1:N (como destinatario)
   - Usuario → Voto: 1:N
 
 **Proyecto**
-- **Atributos:** id, título, descripción, tecnologías
-- **Relaciones:** Asociación con Usuario; relación con Voto
+- **Atributos:** id_proyecto, titulo, descripcion, tecnologias, galeriaImagenes, enlaceWeb, totalLikes, fechaCreacion, fechaActualizacion
+- **Relaciones:** Asociación con Usuario; relación con Voto; relación con PublicacionRRSS
 - **Cardinalidad:**
   - Proyecto → Usuario: N:1
   - Proyecto → Voto: 1:N
+  - Proyecto → PublicacionRRSS: 1:N
 
 **CV (archivos)**
-- **Atributos:** id, tipoArchivo, rutaArchivo
+- **Atributos:** id_cv, tipoArchivo, rutaServidor, nombreOriginal, tamañoBytes, fechaSubida, activo
 - **Relaciones:** Asociación con Usuario
 - **Cardinalidad:** N:1
 
-**Mensaje de contacto**
-- **Atributos:** id, nombreRemitente, email, contenido
-- **Relaciones:** Asociación con Usuario (destinatario)
-- **Cardinalidad:** N:1
-
 **Voto**
-- **Atributos:** id, usuarioId (FK), proyectoId (FK), fechaVoto
+- **Atributos:** id_voto, id_usuario (FK), id_proyecto (FK), fechaVoto
 - **Relaciones:** Asociación con Usuario y Proyecto
 - **Cardinalidad:**
   - Voto → Usuario: N:1
   - Voto → Proyecto: N:1
-- **Restricción:** un usuario solo puede votar una vez por proyecto (unicidad usuarioId + proyectoId).
+- **Restricción:** un usuario solo puede votar una vez por proyecto (unicidad id_usuario + id_proyecto).
+
+**PublicacionRRSS**
+- **Atributos:** id_publicacion, id_proyecto (FK), redSocial, fechaPublicacion, estado, urlPublicacion, mensajeError
+- **Relaciones:** Asociación con Proyecto
+- **Cardinalidad:** N:1
 
 ### Notas
 - Cada entidad tiene su **clave primaria**; las relaciones se implementan mediante **claves foráneas**.
@@ -55,29 +55,29 @@
 ### Clases principales
 
 **Usuario**
-- **Atributos:** id, nombre, contraseña, rol
-- **Relaciones:** Usuario → Proyecto, CV, Mensaje, Voto
-- **Métodos:** getters, setters, funciones CRUD básicas
+- **Atributos:** id_usuario, nombre, email, contraseña, rol, estado, emailProfesional, whatsapp, telefono, enlacesRRSS, fechaRegistro, fechaActualizacion
+- **Relaciones:** Usuario → Proyecto, CV, Voto
+- **Métodos:** getters, setters, operaciones CRUD básicas
 
 **Proyecto**
-- **Atributos:** id, título, descripción, tecnologías
-- **Relaciones:** Asociación con Usuario; agregación de votos
-- **Métodos:** getters, setters, funciones CRUD básicas
+- **Atributos:** id_proyecto, titulo, descripcion, tecnologias, galeriaImagenes, enlaceWeb, totalLikes, fechaCreacion, fechaActualizacion
+- **Relaciones:** Asociación con Usuario; agregación de votos; asociación con PublicacionRRSS
+- **Métodos:** getters, setters, operaciones CRUD básicas
 
 **CV**
-- **Atributos:** id, tipoArchivo, rutaArchivo
+- **Atributos:** id_cv, tipoArchivo, rutaServidor, nombreOriginal, tamañoBytes, fechaSubida, activo
 - **Relaciones:** Asociación con Usuario
-- **Métodos:** getters, setters, funciones CRUD básicas
-
-**Mensaje**
-- **Atributos:** id, nombreRemitente, email, contenido
-- **Relaciones:** Asociación con Usuario (destinatario)
-- **Métodos:** getters, setters, funciones CRUD básicas
+- **Métodos:** getters, setters, operaciones CRUD básicas
 
 **Voto**
-- **Atributos:** id, usuarioId, proyectoId, fechaVoto
+- **Atributos:** id_voto, id_usuario, id_proyecto, fechaVoto
 - **Relaciones:** Asociación con Usuario y Proyecto
-- **Métodos:** getters, setters, funciones CRUD básicas
+- **Métodos:** getters, setters, operaciones CRUD básicas
+
+**PublicacionRRSS**
+- **Atributos:** id_publicacion, redSocial, fechaPublicacion, estado, urlPublicacion, mensajeError
+- **Relaciones:** Asociación con Proyecto
+- **Métodos:** getters, setters, operaciones CRUD básicas
 
 ### Notas
 - Se mantiene el patrón **MVC**.
@@ -90,16 +90,16 @@
 
 ### Clases y componentes documentados
 
-**Usuario / Proyecto / CV / Mensaje / Voto**
-- Función de la clase
-- Descripción de atributos
-- Propósito de métodos
-- Ejemplo de uso (cuando aplique)
+**Usuario / Proyecto / CV / Voto / PublicacionRRSS**
+- Función de la clase.
+- Descripción de atributos.
+- Propósito de métodos.
+- Ejemplo de uso (cuando aplique).
 
 **Controladores / Servicios / Repositorios**
-- Función de la clase
-- Descripción de métodos
-- Interacciones
+- Función de la clase.
+- Descripción de métodos.
+- Interacciones.
 
 ### Resultado
 Permite a futuros desarrolladores comprender la lógica y mantener la aplicación sin inconsistencias.
@@ -110,41 +110,46 @@ Permite a futuros desarrolladores comprender la lógica y mantener la aplicació
 
 ### Endpoints principales
 
-**`/api/proyectos`**
-- **Operaciones:** listar, crear, actualizar, eliminar
+**`/api/auth`**
+- **Operaciones:** register, login, logout, refresh-token
 - **Entrada/Salida:** JSON
-- **Códigos de estado:** 200 OK, 201 Created, 400 Bad Request, 401 Unauthorized, 404 Not Found
+- **Códigos de estado:** 200 OK, 201 Created, 400 Bad Request, 401 Unauthorized
 
-**`/api/votos`**
-- **Operaciones:** votar (crear), retirar voto (eliminar), consultar votos
+**`/api/usuarios`**
+- **Operaciones:** ver perfil público, editar perfil propio, gestionar enlaces RRSS
+- **Entrada/Salida:** JSON
+- **Códigos de estado:** 200 OK, 400 Bad Request, 401 Unauthorized, 404 Not Found
+
+**`/api/proyectos`**
+- **Operaciones:** listar, crear, actualizar, eliminar; gestión de imágenes
 - **Entrada/Salida:** JSON
 - **Códigos de estado:** 200 OK, 201 Created, 400 Bad Request, 401 Unauthorized, 404 Not Found
 
 **`/api/ranking`**
-- **Operaciones:** listar ranking global de proyectos
+- **Operaciones:** listar ranking global de proyectos (público), filtros/ordenación
 - **Entrada/Salida:** JSON
 - **Códigos de estado:** 200 OK, 400 Bad Request
 
 **`/api/cv`**
-- **Operaciones:** subir y descargar archivos del CV
+- **Operaciones:** subir, descargar, listar versiones, activar, eliminar
 - **Entrada/Salida:** JSON
 - **Códigos de estado:** 200 OK, 201 Created, 400 Bad Request, 401 Unauthorized, 404 Not Found
 
-**`/api/mensajes`**
-- **Operaciones:** recibir y listar mensajes
+**`/api/publicaciones`**
+- **Operaciones:** historial de publicaciones y reintentos
 - **Entrada/Salida:** JSON
 - **Códigos de estado:** 200 OK, 201 Created, 400 Bad Request, 401 Unauthorized, 404 Not Found
 
-**`/api/usuarios`**
-- **Operaciones:** registro, login y gestión básica de usuarios
+**`/api/admin`**
+- **Operaciones:** gestión de usuarios, moderación de proyectos, estadísticas globales
 - **Entrada/Salida:** JSON
-- **Códigos de estado:** 200 OK, 201 Created, 400 Bad Request, 401 Unauthorized, 404 Not Found
+- **Códigos de estado:** 200 OK, 400 Bad Request, 401 Unauthorized, 404 Not Found
 
 ### Notas
 - Documentación clara para integración y pruebas.
 - Los endpoints siguen buenas prácticas REST y control de seguridad.
 
-## 5. Resultados Esperados
+## 5. Resultados esperados
 - Visión integral de la arquitectura y base de datos de la plataforma social.
 - Referencia clara para desarrollo, mantenimiento y ampliaciones.
 - Reducción de ambigüedades durante la implementación.

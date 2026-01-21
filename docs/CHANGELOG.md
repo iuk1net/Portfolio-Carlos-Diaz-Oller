@@ -34,6 +34,8 @@ Cada entrada del registro contiene:
 - Cambio de alcance del proyecto: de portfolio personal a **plataforma social de portfolios** (v2.0).
 - Introducción de modelo **multiusuario** con roles (Admin/Usuario).
 - Definición del sistema de **votación** (un voto por usuario y proyecto) y **ranking global**.
+- Definición de la entidad **PublicacionRRSS** para el seguimiento de publicaciones en redes sociales.
+- **Eliminación del sistema de mensajería / mensajes de contacto** de la arquitectura y de la documentación.
 - Actualización completa de la documentación (requisitos, plan, especificaciones técnicas, manual, Hito 2 y Hito 3).
 
 **Autor:** Carlos Díaz Oller
@@ -41,7 +43,6 @@ Cada entrada del registro contiene:
 ## [1.1.0] - 2026-01-20
 **Cambios realizados:**
 - Optimización del frontend con Thymeleaf para carga más rápida de contenidos.
-- Implementación de formulario de contacto funcional.
 - Corrección de errores menores de navegación y estilo.
 
 **Autor:** Carlos Díaz Oller

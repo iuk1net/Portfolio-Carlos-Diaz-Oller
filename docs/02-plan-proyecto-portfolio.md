@@ -18,7 +18,7 @@ El desarrollo del proyecto se realizará en **1 mes**, organizado en tres fases 
 - Implementar la gestión de perfil (datos de contacto y enlaces a redes sociales).
 - Implementar la gestión de proyectos por usuario (crear/editar/eliminar) y la gestión de imágenes/enlaces.
 - Implementar la subida y descarga de CV.
-- Implementar el formulario de contacto y la relación del mensaje con el usuario destinatario.
+- Implementar la publicación de proyectos en redes sociales (seguimiento del estado de publicación).
 
 ### Fase 2: Pruebas (15 días)
 - Realizar pruebas funcionales de registro/login y flujos principales del usuario.
@@ -51,7 +51,6 @@ El prototipo incluirá las funcionalidades imprescindibles definidas en los requ
 - **Publicación y gestión de proyectos** por parte de cada usuario (crear, editar, eliminar), incluyendo tecnologías y enlace web.
 - **Listado público de proyectos** y **ranking global** ordenado por número de votos.
 - **Sistema de votación** (likes) con la regla de **un voto por usuario y proyecto**, con posibilidad de retirar el voto.
-- **Mensajes de contacto** dirigidos al usuario propietario del portfolio.
 - **Gestión de CV**: subida y descarga en formatos PDF, DOCX y TXT.
 - **Acceso de administración** (rol Admin) para gestión de usuarios y moderación básica de proyectos.
 
@@ -67,7 +66,6 @@ Se realizarán pruebas funcionales básicas orientadas a detectar errores críti
 - Registro/login y control de acceso por rol.
 - Gestión de proyectos propios por usuario.
 - Regla de votación (sin duplicidad) y actualización del ranking.
-- Envío y recepción de mensajes de contacto por usuario destinatario.
 - Subida/descarga de CV.
 
 ### Resultados esperados
