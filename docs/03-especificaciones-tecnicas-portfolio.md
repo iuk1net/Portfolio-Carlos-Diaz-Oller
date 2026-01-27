@@ -93,7 +93,78 @@ La aplicación estará basada en una arquitectura **cliente-servidor** para una 
 - Uso de paginación en listados.
 - Optimización básica de recursos estáticos (CSS/JS) y control de peso de imágenes.
 
-## 7. Indicadores de rendimiento (KPIs)
+## 7. API y Endpoints Implementados
+
+### Endpoints de Proyectos (ProyectoController - `/proyectos`)
+
+| Método | Endpoint | Descripción | Permisos |
+|--------|----------|-------------|----------|
+| GET | `/proyectos/lista` | Lista todos los proyectos | Público |
+| GET | `/proyectos/nuevo` | Formulario nuevo proyecto | Admin |
+| POST | `/proyectos` | Crear proyecto | Admin |
+| GET | `/proyectos/{id}/editar` | Formulario editar | Admin |
+| POST | `/proyectos/{id}/editar` | Actualizar proyecto | Admin |
+| POST | `/proyectos/{id}/favoritar` | Marcar como favorito | Usuario |
+| GET | `/proyectos/favoritos` | Listar favoritos del usuario | Usuario |
+| POST | `/proyectos/{id}/eliminar` | Eliminar proyecto | Admin |
+
+### Endpoints de Favoritos (FavoritoController - `/favoritos`)
+
+| Método | Endpoint | Descripción | Permisos |
+|--------|----------|-------------|----------|
+| POST | `/favoritos/{id}/eliminar` | Eliminar favorito | Usuario |
+
+### Servicios Implementados
+
+**ProyectoService:**
+- `crearProyecto()` - Crear nuevo proyecto
+- `actualizarProyecto()` - Actualizar proyecto con control de acceso
+- `eliminarProyecto()` - Eliminar (propietario/admin)
+- `publicarEnRRSS()` - Publicar en redes sociales
+- `obtenerRanking()` - Ranking ordenado por likes
+- `agregarImagen()` - Añadir imagen a galería
+- `eliminarImagen()` - Eliminar imagen de galería
+- `incrementarLikes()` - Incrementar contador (automático)
+- `decrementarLikes()` - Decrementar contador (automático)
+- `listarProyectos()` - Listar todos
+- `buscarPorId()` - Buscar proyecto
+
+**VotoService:**
+- `votar()` - Registrar voto (validación única)
+- `quitarVoto()` - Eliminar voto
+- `toggleVoto()` - Alternar estado voto
+- `verificarVoto()` - Verificar si ya votó
+- `obtenerVotosPorProyecto()` - Listar votos
+- `contarVotos()` - Contar votos
+
+**CVService:**
+- `subirCV()` - Subir CV (PDF/DOCX/TXT, max 10MB)
+- `descargarCV()` - Descargar CV
+- `eliminarCV()` - Eliminar CV
+- `listarCVsPorUsuario()` - Listar CVs
+- `obtenerCVMasReciente()` - Obtener último CV
+
+**UsuarioService:**
+- `crearUsuario()` - Crear usuario (admin)
+- `actualizarUsuario()` - Actualizar perfil
+- `bloquearUsuario()` - Bloquear usuario (admin)
+- `desbloquearUsuario()` - Desbloquear usuario (admin)
+- `eliminarUsuario()` - Eliminar usuario
+- `listarUsuarios()` - Listar todos
+
+**FavoritoService:**
+- `agregarFavorito()` - Marcar favorito
+- `eliminarFavorito()` - Eliminar favorito
+- `listarFavoritosPorUsuario()` - Listar favoritos
+
+**PublicacionRRSSService:**
+- `publicarEnRedSocial()` - Publicar en RRSS
+- `obtenerPublicacionesPorProyecto()` - Listar publicaciones
+- `actualizarEstadoPublicacion()` - Cambiar estado
+- `reintentarPublicacion()` - Reintentar fallida
+- Redes soportadas: LinkedIn, Twitter, Facebook, Instagram, GitHub
+
+## 8. Indicadores de rendimiento (KPIs)
 - Tiempo de carga de páginas: < 2 segundos en condiciones normales.
 - Tiempo de respuesta en ranking/listados: < 1 segundo en escenarios habituales.
 - Disponibilidad: > 95% (según limitaciones del despliegue).

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Nuevo Proyecto</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.css}" />
+	<script th:src="@{/js/bootstrap/bootstrap.bundle.js}"></script>
+</head>
+<body>
+<div class="container">
+    <h1 class="my-4">Añadir Nuevo Proyecto</h1>
+    <form th:action="@{/proyectos}" method="post">
+        <div class="mb-3">
+            <label for="titulo" class="form-label">Título</label>
+            <input type="text" id="titulo" name="titulo" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="descripcion" class="form-label">Descripción</label>
+            <textarea id="descripcion" name="descripcion" class="form-control" rows="3" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="tecnologias" class="form-label">Tecnologías</label>
+            <input type="text" id="tecnologias" name="tecnologias" class="form-control" placeholder="Ej: Java, Spring Boot, PostgreSQL">
+        </div>
+        <div class="mb-3">
+            <label for="enlaceWeb" class="form-label">Enlace Web</label>
+            <input type="url" id="enlaceWeb" name="enlaceWeb" class="form-control" placeholder="https://ejemplo.com">
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a th:href="@{/proyectos/lista}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+</body>
+</html>

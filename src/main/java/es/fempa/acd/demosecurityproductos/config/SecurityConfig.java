@@ -1,6 +1,6 @@
 package es.fempa.acd.demosecurityproductos.config;
 
-import es.fempa.acd.demosecurityproductos.model.Rol;
+import es.fempa.acd.demosecurityproductos.model.enums.Rol;
 import es.fempa.acd.demosecurityproductos.service.CustomUserDetailsService;
 
 import org.springframework.context.annotation.Bean;

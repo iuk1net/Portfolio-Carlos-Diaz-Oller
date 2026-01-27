@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ProductoRepository extends JpaRepository<Proyecto, Long> {
+public interface ProyectoRepository extends JpaRepository<Proyecto, Long> {
 
     // Ejemplo: Buscar productos por nombre (opcional)
     // List<Producto> findByNombreContainingIgnoreCase(String nombre);

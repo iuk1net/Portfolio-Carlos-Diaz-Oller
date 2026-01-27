@@ -1,5 +1,7 @@
 package es.fempa.acd.demosecurityproductos.model;
 
+import es.fempa.acd.demosecurityproductos.model.enums.Estado;
+import es.fempa.acd.demosecurityproductos.model.enums.Rol;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.HashSet;

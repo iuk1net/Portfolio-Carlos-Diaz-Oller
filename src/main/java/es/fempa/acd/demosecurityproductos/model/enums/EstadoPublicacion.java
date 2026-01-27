@@ -1,4 +1,4 @@
-package es.fempa.acd.demosecurityproductos.model;
+package es.fempa.acd.demosecurityproductos.model.enums;
 
 /**
  * Enum EstadoPublicacion según modelo ER v2.0

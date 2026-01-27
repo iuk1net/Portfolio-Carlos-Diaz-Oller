@@ -1,5 +1,6 @@
 package es.fempa.acd.demosecurityproductos.model;
 
+import es.fempa.acd.demosecurityproductos.model.enums.EstadoPublicacion;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 

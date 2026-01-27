@@ -1,18 +1,20 @@
 package es.fempa.acd.demosecurityproductos.service;
 
 import es.fempa.acd.demosecurityproductos.model.Favorito;
-import es.fempa.acd.demosecurityproductos.model.Producto;
+import es.fempa.acd.demosecurityproductos.model.Proyecto;
 import es.fempa.acd.demosecurityproductos.model.Usuario;
 import es.fempa.acd.demosecurityproductos.repository.FavoritoRepository;
-import es.fempa.acd.demosecurityproductos.repository.UsuarioRepository;
 
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Servicio para gestión de favoritos
+ * Implementa las operaciones definidas en el UML
+ */
 @Service
 public class FavoritoService {
 
@@ -22,32 +24,57 @@ public class FavoritoService {
         this.favoritoRepository = favoritoRepository;
     }
 
-    // Agregar un producto a los favoritos de un usuario
+    /**
+     * Agrega un proyecto a los favoritos de un usuario
+     * Método del UML: agregarFavorito()
+     *
+     * @param usuario el usuario
+     * @param proyecto el proyecto a marcar como favorito
+     * @return el favorito creado
+     * @throws IllegalArgumentException si el proyecto ya está en favoritos
+     */
     @Transactional
-    public Favorito agregarFavorito(Usuario usuario, Producto producto) {
-        if (favoritoRepository.findByUsuarioAndProducto(usuario, producto).isPresent()) {
-            throw new IllegalArgumentException("El producto ya está en favoritos");
+    public Favorito agregarFavorito(Usuario usuario, Proyecto proyecto) {
+        if (favoritoRepository.findByUsuarioAndProyecto(usuario, proyecto).isPresent()) {
+            throw new IllegalArgumentException("El proyecto ya está en favoritos");
         }
 
         Favorito favorito = new Favorito();
         favorito.setUsuario(usuario);
-        favorito.setProducto(producto);
+        favorito.setProyecto(proyecto);
 
         return favoritoRepository.save(favorito);
     }
 
-    // Listar los favoritos de un usuario
+    /**
+     * Lista los favoritos de un usuario
+     * Método del UML: listarFavoritosPorUsuario()
+     *
+     * @param usuario el usuario
+     * @return lista de favoritos del usuario
+     */
     public List<Favorito> listarFavoritosPorUsuario(Usuario usuario) {
         return favoritoRepository.findByUsuario(usuario);
     }
 
-    // Eliminar un favorito
+    /**
+     * Elimina un favorito por ID
+     *
+     * @param favoritoId ID del favorito
+     */
+    @Transactional
     public void eliminarFavorito(Long favoritoId) {
         favoritoRepository.deleteById(favoritoId);
     }
 
-    
-    
+    /**
+     * Elimina un favorito verificando permisos del usuario
+     * Método del UML: eliminarFavorito()
+     *
+     * @param favoritoId ID del favorito
+     * @param username nombre del usuario autenticado
+     * @throws AccessDeniedException si no tiene permisos
+     */
     @Transactional
     public void eliminarFavorito(Long favoritoId, String username) {
         // Buscar el favorito por ID
@@ -63,6 +90,5 @@ public class FavoritoService {
         favoritoRepository.delete(favorito);
     }
 
-
-    
 }
+

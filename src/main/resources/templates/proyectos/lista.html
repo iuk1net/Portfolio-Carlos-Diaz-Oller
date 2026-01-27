@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lista de Proyectos</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.css}" />
+	<script th:src="@{/js/bootstrap/bootstrap.bundle.js}"></script>
+</head>
+<body>
+<div class="container">
+    <h1 class="my-4">Lista de Proyectos</h1>
+    <a th:href="@{/proyectos/nuevo}" class="btn btn-primary mb-3">Añadir Proyecto</a>
+    <a th:href="@{/proyectos/favoritos}" class="btn btn-primary mb-3">Proyectos Favoritos</a>
+
+    
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Título</th>
+            <th>Descripción</th>
+            <th>Tecnologías</th>
+            <th>Likes</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="proyecto : ${proyectos}">
+            <td th:text="${proyecto.titulo}">Título</td>
+            <td th:text="${proyecto.descripcion}">Descripción</td>
+            <td th:text="${proyecto.tecnologias}">Tecnologías</td>
+            <td th:text="${proyecto.totalLikes}">0</td>
+            <td>
+                <a th:href="@{/proyectos/{id}/editar(id=${proyecto.id})}" class="btn btn-warning btn-sm">Editar</a>
+               
+                <form th:action="@{/proyectos/{id}/favoritar(id=${proyecto.id})}" method="post" class="d-inline">
+			        <button type="submit" class="btn btn-success btn-sm" sec:authorize="isAuthenticated()">★ Favorito</button>
+			    </form>
+                
+                <form th:action="@{/proyectos/{id}/eliminar(id=${proyecto.id})}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    
+</div>
+</body>
+</html>

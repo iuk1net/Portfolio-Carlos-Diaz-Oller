@@ -1,7 +1,7 @@
 package es.fempa.acd.demosecurityproductos.service;
 
 import es.fempa.acd.demosecurityproductos.model.Usuario;
-import es.fempa.acd.demosecurityproductos.model.Rol;
+import es.fempa.acd.demosecurityproductos.model.enums.Rol;
 import es.fempa.acd.demosecurityproductos.repository.UsuarioRepository;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,18 +25,15 @@ public class UsuarioService {
 
     // Crear un nuevo usuario
     @PreAuthorize("hasRole('ADMIN')") // Solo los administradores pueden crear usuarios
-    public Usuario crearUsuario(String username, String password, String email, Rol rol) {
-        if (usuarioRepository.existsByUsername(username)) {
-            throw new IllegalArgumentException("El nombre de usuario ya está en uso");
-        }
+    public Usuario crearUsuario(String nombre, String email, String password, Rol rol) {
         if (usuarioRepository.existsByEmail(email)) {
             throw new IllegalArgumentException("El email ya está en uso");
         }
 
         Usuario usuario = new Usuario();
-        usuario.setUsername(username);
-        usuario.setPassword(passwordEncoder.encode(password)); // Encriptar contraseña
+        usuario.setNombre(nombre);
         usuario.setEmail(email);
+        usuario.setPassword(passwordEncoder.encode(password)); // Encriptar contraseña
         usuario.setRol(rol);
 
         return usuarioRepository.save(usuario);
@@ -70,11 +67,46 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
 
-        usuario.setUsername(usuarioActualizado.getUsername());
+        usuario.setNombre(usuarioActualizado.getNombre());
         usuario.setEmail(usuarioActualizado.getEmail());
         usuario.setRol(usuarioActualizado.getRol());
 
         usuarioRepository.save(usuario);
     }
-    
+
+    /**
+     * Bloquea un usuario
+     * Método del UML: bloquearUsuario()
+     * Solo los administradores pueden bloquear usuarios
+     *
+     * @param id ID del usuario a bloquear
+     * @throws IllegalArgumentException si el usuario no existe
+     */
+    @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
+    public void bloquearUsuario(Long id) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+
+        usuario.setEstado(es.fempa.acd.demosecurityproductos.model.enums.Estado.BLOQUEADO);
+        usuarioRepository.save(usuario);
+    }
+
+    /**
+     * Desbloquea un usuario (cambiar estado a ACTIVO)
+     * Solo los administradores pueden desbloquear usuarios
+     *
+     * @param id ID del usuario a desbloquear
+     * @throws IllegalArgumentException si el usuario no existe
+     */
+    @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
+    public void desbloquearUsuario(Long id) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+
+        usuario.setEstado(es.fempa.acd.demosecurityproductos.model.enums.Estado.ACTIVO);
+        usuarioRepository.save(usuario);
+    }
+
 }

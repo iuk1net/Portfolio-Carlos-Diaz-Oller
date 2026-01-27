@@ -1,6 +1,6 @@
 package es.fempa.acd.demosecurityproductos.controller;
 
-import es.fempa.acd.demosecurityproductos.model.Rol;
+import es.fempa.acd.demosecurityproductos.model.enums.Rol;
 import es.fempa.acd.demosecurityproductos.model.Usuario;
 import es.fempa.acd.demosecurityproductos.service.UsuarioService;
 import org.springframework.security.access.prepost.PreAuthorize;

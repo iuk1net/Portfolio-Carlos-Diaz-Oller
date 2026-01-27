@@ -1,7 +1,7 @@
 package es.fempa.acd.demosecurityproductos.repository;
 
 import es.fempa.acd.demosecurityproductos.model.Favorito;
-import es.fempa.acd.demosecurityproductos.model.Producto;
+import es.fempa.acd.demosecurityproductos.model.Proyecto;
 import es.fempa.acd.demosecurityproductos.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
@@ -12,12 +12,13 @@ public interface FavoritoRepository extends JpaRepository<Favorito, Long> {
     // Obtener los favoritos de un usuario
     List<Favorito> findByUsuario(Usuario usuario);
 
-    // Verificar si un producto ya está en los favoritos de un usuario
-    Optional<Favorito> findByUsuarioAndProducto(Usuario usuario, Producto producto);
+    // Verificar si un proyecto ya está en los favoritos de un usuario
+    Optional<Favorito> findByUsuarioAndProyecto(Usuario usuario, Proyecto proyecto);
     
-    
-    void deleteByProductoAndUsuario(Producto producto, Usuario usuario);
+    // Eliminar un favorito por proyecto y usuario
+    void deleteByProyectoAndUsuario(Proyecto proyecto, Usuario usuario);
 
-	boolean existsByProductoId(Long id);
-    
+    // Verificar si existe un favorito para un proyecto específico
+    boolean existsByProyectoId(Long id);
+
 }

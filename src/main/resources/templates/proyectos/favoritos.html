@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Mis Proyectos Favoritos</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.css}" />
+    <script th:src="@{/js/bootstrap/bootstrap.bundle.js}"></script>
+</head>
+<body>
+<div class="container">
+    <h1 class="my-4">Mis Proyectos Favoritos</h1>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Título</th>
+            <th>Descripción</th>
+            <th>Tecnologías</th>
+            <th>Likes</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="favorito : ${favoritos}">
+            <td th:text="${favorito.proyecto.titulo}">Título</td>
+            <td th:text="${favorito.proyecto.descripcion}">Descripción</td>
+            <td th:text="${favorito.proyecto.tecnologias}">Tecnologías</td>
+            <td th:text="${favorito.proyecto.totalLikes}">0</td>
+            <td>
+                <form th:action="@{/favoritos/{id}/eliminar(id=${favorito.id})}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-danger btn-sm">★ Eliminar de favoritos</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a th:href="@{/proyectos/lista}" class="btn btn-secondary">Volver a la lista de proyectos</a>
+</div>
+</body>
+</html>

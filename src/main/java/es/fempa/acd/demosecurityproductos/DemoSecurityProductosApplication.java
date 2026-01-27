@@ -1,5 +1,6 @@
 package es.fempa.acd.demosecurityproductos;
 
+import es.fempa.acd.demosecurityproductos.model.Proyecto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -9,11 +10,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import es.fempa.acd.demosecurityproductos.model.Favorito;
-import es.fempa.acd.demosecurityproductos.model.Producto;
-import es.fempa.acd.demosecurityproductos.model.Rol;
+import es.fempa.acd.demosecurityproductos.model.enums.Rol;
 import es.fempa.acd.demosecurityproductos.model.Usuario;
 import es.fempa.acd.demosecurityproductos.repository.FavoritoRepository;
-import es.fempa.acd.demosecurityproductos.repository.ProductoRepository;
+import es.fempa.acd.demosecurityproductos.repository.ProyectoRepository;
 import es.fempa.acd.demosecurityproductos.repository.UsuarioRepository;
 
 @SpringBootApplication
@@ -25,7 +25,7 @@ public class DemoSecurityProductosApplication {
 	@Autowired
 	private FavoritoRepository favoritoRepository;
 	@Autowired
-	private ProductoRepository productRepository;
+	private ProyectoRepository productRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(DemoSecurityProductosApplication.class, args);
@@ -33,10 +33,10 @@ public class DemoSecurityProductosApplication {
 
 	// insert a test Product in the database
 	@Bean
-	public CommandLineRunner insertProduct(ProductoRepository productRepository) {
+	public CommandLineRunner insertProduct(ProyectoRepository productRepository) {
 		return (args) -> {
-			Producto product = new Producto();
-			product.setNombre("Producto 1");
+			Proyecto product = new Proyecto();
+			product.setTitulo("Producto 1");
 			product.setDescripcion("Descripcion de producto 1");
 			product.setPrecio(130.0);
 			product.setImagen("http://miweb.com/img.jpg");
@@ -90,8 +90,8 @@ public class DemoSecurityProductosApplication {
 		user.setRol(Rol.ADMIN);
 		userRepository.save(user);
 		
-		Producto product = new Producto();
-		product.setNombre("Producto 2");
+		Proyecto product = new Proyecto();
+		product.setTitulo("Producto 2");
 		product.setDescripcion("Descripcion de producto 2");
 		product.setPrecio(10.0);
 		product.setImagen("http://miweb.com/img.jpg");
