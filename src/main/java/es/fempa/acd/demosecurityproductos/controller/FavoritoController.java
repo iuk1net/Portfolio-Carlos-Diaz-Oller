@@ -26,7 +26,7 @@ public class FavoritoController {
     @PostMapping("/{id}/eliminar")
     public String eliminarFavorito(@PathVariable Long id, Authentication authentication) {
         String userName = authentication.getName();
-        Usuario usuario = usuarioService.buscarPorUsername(userName).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+        Usuario usuario = usuarioService.buscarPorEmail(userName).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
         favoritoService.eliminarFavorito(id, usuario.getUsername());
         return "redirect:/proyectos/favoritos";
     }

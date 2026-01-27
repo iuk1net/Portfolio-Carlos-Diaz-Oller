@@ -45,10 +45,10 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
-    // Buscar un usuario por su nombre de usuario
+    // Buscar un usuario por su email
     @PreAuthorize("hasRole('ADMIN')") // Solo los administradores pueden buscar usuarios
-    public Optional<Usuario> buscarPorUsername(String username) {
-        return usuarioRepository.findByUsername(username);
+    public Optional<Usuario> buscarPorEmail(String email) {
+        return usuarioRepository.findByEmail(email);
     }
 
     @PreAuthorize("hasRole('ADMIN')") // Solo los administradores pueden eliminar usuarios

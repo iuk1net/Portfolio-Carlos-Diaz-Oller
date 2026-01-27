@@ -56,7 +56,7 @@ public class ProyectoController {
                                 Authentication authentication) {
         // Obtener usuario autenticado
         String userName = authentication.getName();
-        Usuario usuario = usuarioService.buscarPorUsername(userName)
+        Usuario usuario = usuarioService.buscarPorEmail(userName)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
         // Crear proyecto
@@ -99,7 +99,7 @@ public class ProyectoController {
         // Obtener el nombre del usuario autenticado
         String userName = authentication.getName();
         // Buscar el usuario en la base de datos
-        Usuario usuario = usuarioService.buscarPorUsername(userName).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+        Usuario usuario = usuarioService.buscarPorEmail(userName).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
 
         favoritoService.agregarFavorito(usuario, proyecto);
@@ -112,7 +112,7 @@ public class ProyectoController {
     	 // Obtener el nombre del usuario autenticado
         String userName = authentication.getName();
         // Buscar el usuario en la base de datos
-        Usuario usuario = usuarioService.buscarPorUsername(userName).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+        Usuario usuario = usuarioService.buscarPorEmail(userName).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
         List<Favorito> favoritos = favoritoService.listarFavoritosPorUsuario(usuario);
         model.addAttribute("favoritos", favoritos);

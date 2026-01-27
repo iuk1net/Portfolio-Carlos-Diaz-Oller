@@ -38,40 +38,48 @@ public class AuthController {
         return "admin/dashboard";
     }
     
-    @PreAuthorize("hasRole('CLIENTE')")
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/cliente/dashboard")
 	public String userDashboard() {
 		return "cliente/dashboard";
 	}
     
     
-    /**
-     * Redirige a la página de inicio según el rol del usuario
-     * @param authentication Datos de autenticación del usuario
-     * @return Redirección a la página de inicio correspond
-     */
+    // Ya no se usa este endpoint - ahora se usa CustomAuthenticationSuccessHandler
+    /*
     @RequestMapping("/default")
     public String defaultAfterLogin(Authentication authentication, Model model) {
         
-        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_CLIENTE"))) {
+        // Debug: Imprimir información de autenticación
+        System.out.println("========== DEBUG AUTHENTICATION ==========");
+        System.out.println("Usuario autenticado: " + authentication.getName());
+        System.out.println("Authorities: " + authentication.getAuthorities());
+        System.out.println("Is Authenticated: " + authentication.isAuthenticated());
+        System.out.println("==========================================");
+
+        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {
           	 // Obtener el nombre del usuario autenticado
             String userName = authentication.getName();
             // Buscar el usuario en la base de datos
-            Usuario usuario = usuarioService.buscarPorUsername(userName).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+            Usuario usuario = usuarioService.buscarPorEmail(userName).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
             model.addAttribute("usuario", usuario);
+            System.out.println("Redirigiendo a /cliente/dashboard");
         	return "redirect:/cliente/dashboard";
         }
         else if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
        	 // Obtener el nombre del usuario autenticado
             String userName = authentication.getName();
             // Buscar el usuario en la base de datos
-            Usuario usuario = usuarioService.buscarPorUsername(userName).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
-            
+            Usuario usuario = usuarioService.buscarPorEmail(userName).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+
             model.addAttribute("usuario", usuario);
+            System.out.println("Redirigiendo a /admin/dashboard");
             return "redirect:/admin/dashboard";
         }
+        System.out.println("No se encontró rol apropiado, redirigiendo a /login");
         return "redirect:/login";
     }
-    
+    */
+
     
 }

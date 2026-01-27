@@ -20,33 +20,44 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
+    private final CustomAuthenticationSuccessHandler successHandler;
 
-    public SecurityConfig(CustomUserDetailsService userDetailsService) {
+    public SecurityConfig(CustomUserDetailsService userDetailsService,
+                         CustomAuthenticationSuccessHandler successHandler) {
         this.userDetailsService = userDetailsService;
+        this.successHandler = successHandler;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http	
+        		.authenticationProvider(authenticationProvider())
         		.cors(Customizer.withDefaults())
         		.csrf(csrf -> csrf.disable()) // Deshabilitar CSRF (habilítalo según el caso)
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico", "/webjars/**").permitAll()
+                        .requestMatchers("/error", "/error/**").permitAll()
+                        .requestMatchers("/login", "/").permitAll()
                         .requestMatchers("/admin/**").hasRole(Rol.ADMIN.name())
-                        .requestMatchers("/cliente/**").hasRole(Rol.CLIENTE.name())
+                        .requestMatchers("/cliente/**").hasRole(Rol.USER.name())
+                        .requestMatchers("/proyectos/**", "/favoritos/**").hasAnyRole(Rol.ADMIN.name(), Rol.USER.name())
+                        .requestMatchers("/usuarios/**").hasRole(Rol.ADMIN.name())
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/default", true)
+                        .successHandler(successHandler)
                         .failureUrl("/login?error=true")
                         .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout=true")
                         .permitAll()
                 )
-                // Elimina la configuración de acceso denegado y deja que @ControllerAdvice maneje la excepción
-                .exceptionHandling(Customizer.withDefaults());
+                .exceptionHandling(ex -> ex
+                        .accessDeniedPage("/error/403")
+                );
 
         return http.build();
     }

@@ -19,13 +19,28 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Usuario usuario = usuarioRepository.findByUsername(username)
+        System.out.println("====== LOADING USER: " + username + " ======");
+
+        Usuario usuario = usuarioRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + username));
 
-        return User.builder()
+        System.out.println("Usuario encontrado: " + usuario.getEmail());
+        System.out.println("Rol del usuario: " + usuario.getRol());
+        System.out.println("Estado del usuario: " + usuario.getEstado());
+
+        UserDetails userDetails = User.builder()
                 .username(usuario.getUsername())
                 .password(usuario.getPassword()) // Contraseña encriptada
                 .roles(usuario.getRol().name()) // Rol asignado
+                .disabled(false)
+                .accountExpired(false)
+                .accountLocked(false)
+                .credentialsExpired(false)
                 .build();
+
+        System.out.println("UserDetails creado con authorities: " + userDetails.getAuthorities());
+        System.out.println("=========================================");
+
+        return userDetails;
     }
 }

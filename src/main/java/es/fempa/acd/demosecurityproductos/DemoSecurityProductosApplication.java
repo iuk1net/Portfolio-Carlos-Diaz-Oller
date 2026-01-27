@@ -35,12 +35,16 @@ public class DemoSecurityProductosApplication {
 	@Bean
 	public CommandLineRunner insertProduct(ProyectoRepository productRepository) {
 		return (args) -> {
-			Proyecto product = new Proyecto();
-			product.setTitulo("Producto 1");
-			product.setDescripcion("Descripcion de producto 1");
-			product.setPrecio(130.0);
-			product.setImagen("http://miweb.com/img.jpg");
-			productRepository.save(product);
+			Usuario admin = userRepository.findByEmail("admin@gmail.com").orElse(null);
+			if (admin != null) {
+				Proyecto product = new Proyecto();
+				product.setTitulo("Proyecto de Ejemplo 1");
+				product.setDescripcion("Descripción del proyecto de ejemplo 1");
+				product.setTecnologias("Java, Spring Boot, PostgreSQL");
+				product.setEnlaceWeb("https://github.com/ejemplo/proyecto1");
+				product.setUsuario(admin);
+				productRepository.save(product);
+			}
 		};
 	}
 
@@ -51,58 +55,71 @@ public class DemoSecurityProductosApplication {
 		String hashedPassword = encoder.encode("123");
 
 		return (args) -> {
-			Usuario user = new Usuario();
-			user.setUsername("admin");
-			user.setEmail("admin@gmail.com");
-			user.setPassword(hashedPassword);
-			user.setRol(Rol.ADMIN);
-			userRepository.save(user);
+			if (!userRepository.existsByEmail("admin@gmail.com")) {
+				Usuario user = new Usuario();
+				user.setNombre("Administrador");
+				user.setEmail("admin@gmail.com");
+				user.setContraseña(hashedPassword);
+				user.setRol(Rol.ADMIN);
+				userRepository.save(user);
+				System.out.println("✓ Usuario ADMIN creado: admin@gmail.com / 123");
+			}
 		};
 	}
 	
-	//insert a cliente  test User in the database
+	//insert a user test User in the database
 	@Bean
-	public CommandLineRunner inserClientetUser(UsuarioRepository userRepository) {
+	public CommandLineRunner inserUserTest(UsuarioRepository userRepository) {
 		PasswordEncoder encoder = new BCryptPasswordEncoder();
 		String hashedPassword = encoder.encode("123");
 
 		return (args) -> {
-			Usuario user = new Usuario();
-			user.setUsername("cliente");
-			user.setEmail("cliente@gmail.com");
-			user.setPassword(hashedPassword);
-			user.setRol(Rol.CLIENTE);
-			userRepository.save(user);
+			if (!userRepository.existsByEmail("user@gmail.com")) {
+				Usuario user = new Usuario();
+				user.setNombre("Usuario Cliente");
+				user.setEmail("user@gmail.com");
+				user.setContraseña(hashedPassword);
+				user.setRol(Rol.USER);
+				userRepository.save(user);
+				System.out.println("✓ Usuario USER creado: user@gmail.com / 123");
+			}
 		};
 	}
 	
 	
-	//insert a cliente  test User in the database
+	//insert a favorito test
 	@Bean
 	public CommandLineRunner insertaFavorito(FavoritoRepository favoritoRepository) {
 
 		PasswordEncoder encoder = new BCryptPasswordEncoder();
 		String hashedPassword = encoder.encode("123");
-		Usuario user = new Usuario();
-		user.setUsername("favorito");
-		user.setEmail("favorito@gmail.com");
-		user.setPassword(hashedPassword);
-		user.setRol(Rol.ADMIN);
-		userRepository.save(user);
-		
-		Proyecto product = new Proyecto();
-		product.setTitulo("Producto 2");
-		product.setDescripcion("Descripcion de producto 2");
-		product.setPrecio(10.0);
-		product.setImagen("http://miweb.com/img.jpg");
-		productRepository.save(product);
-		
+
 		return (args) -> {
-            //inserta producto 1 como favorito usuario 1
-			Favorito favorito = new Favorito(user, product);
-			favoritoRepository.save(favorito);
+			if (!userRepository.existsByEmail("favorito@gmail.com")) {
+				Usuario user = new Usuario();
+				user.setNombre("Usuario Favorito");
+				user.setEmail("favorito@gmail.com");
+				user.setContraseña(hashedPassword);
+				user.setRol(Rol.USER);
+				userRepository.save(user);
+
+				Proyecto product = new Proyecto();
+				product.setTitulo("Proyecto de Ejemplo 2");
+				product.setDescripcion("Descripción del proyecto de ejemplo 2");
+				product.setTecnologias("React, Node.js, MongoDB");
+				product.setEnlaceWeb("https://github.com/ejemplo/proyecto2");
+				product.setUsuario(user);
+				productRepository.save(product);
+
+				// Insertar favorito
+				Favorito favorito = new Favorito();
+				favorito.setUsuario(user);
+				favorito.setProyecto(product);
+				favoritoRepository.save(favorito);
+
+				System.out.println("✓ Usuario FAVORITO creado: favorito@gmail.com / 123");
+			}
 		};
 	}
-	
-	
+
 }
