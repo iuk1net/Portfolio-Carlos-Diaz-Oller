@@ -38,7 +38,7 @@ public class SecurityConfig {
                         // Recursos estáticos públicos
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico", "/webjars/**").permitAll()
                         .requestMatchers("/error", "/error/**").permitAll()
-                        .requestMatchers("/login", "/", "/logout").permitAll()
+                        .requestMatchers("/login", "/", "/logout", "/register").permitAll()
 
                         // Proyectos - lectura pública, escritura autenticada
                         .requestMatchers("/proyectos/lista", "/proyectos/ranking", "/proyectos/*/").permitAll()

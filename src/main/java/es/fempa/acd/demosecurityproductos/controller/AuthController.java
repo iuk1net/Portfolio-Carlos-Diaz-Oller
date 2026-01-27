@@ -5,14 +5,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import es.fempa.acd.demosecurityproductos.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import es.fempa.acd.demosecurityproductos.model.Favorito;
@@ -22,6 +25,7 @@ import es.fempa.acd.demosecurityproductos.service.FavoritoService;
 import es.fempa.acd.demosecurityproductos.service.ProyectoService;
 import es.fempa.acd.demosecurityproductos.service.UsuarioService;
 import es.fempa.acd.demosecurityproductos.service.VotoService;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class AuthController {
@@ -37,6 +41,12 @@ public class AuthController {
 
 	@Autowired
 	VotoService votoService;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping("/login")
     public String login() {
@@ -83,7 +93,31 @@ public class AuthController {
 
 		return "usuario/dashboard";
 	}
-    
+
+    @GetMapping("/register")
+    public String showRegisterForm() {
+        return "register";
+    }
+
+    @PostMapping("/register")
+    public String registerUser(@RequestParam String nombre, @RequestParam String email, @RequestParam String password, Model model) {
+        // Validar que el email no esté ya registrado
+        if (usuarioRepository.existsByEmail(email)) {
+            model.addAttribute("error", "El email ya está registrado");
+            return "register";
+        }
+
+        // Crear y guardar el nuevo usuario
+        Usuario usuario = new Usuario();
+        usuario.setNombre(nombre);
+        usuario.setEmail(email);
+        usuario.setPassword(passwordEncoder.encode(password));
+        usuarioRepository.save(usuario);
+
+        return "redirect:/login?registered=true";
+    }
+
+
     
     // Ya no se usa este endpoint - ahora se usa CustomAuthenticationSuccessHandler
     /*
