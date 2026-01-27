@@ -46,7 +46,7 @@ public class UsuarioService {
     }
 
     // Buscar un usuario por su email
-    @PreAuthorize("hasRole('ADMIN')") // Solo los administradores pueden buscar usuarios
+    // Este método NO tiene restricción porque se usa para buscar el propio perfil del usuario autenticado
     public Optional<Usuario> buscarPorEmail(String email) {
         return usuarioRepository.findByEmail(email);
     }

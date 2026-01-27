@@ -1,6 +1,5 @@
 package es.fempa.acd.demosecurityproductos.config;
 
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.ui.Model;
@@ -30,12 +29,16 @@ public class WebExceptionHandler {
         return "error/409"; // Redirige a error/409.html (Conflicto)
     }
 
+    // IMPORTANTE: No manejamos AccessDeniedException aquí porque Spring Security debe manejarlo
+    // El SecurityConfig ya tiene configurado .accessDeniedPage("/error/403")
+    /*
     @ExceptionHandler(AccessDeniedException.class)
     public String handleAccessDeniedException(AccessDeniedException ex, Model model) {
         model.addAttribute("error", "No tienes permisos para acceder a esta página.");
         return "error/403"; // Redirige a error/403.html
     }
-    
+    */
+
     @ExceptionHandler(NoResourceFoundException.class)
     public String handleResourceNotFound(NoResourceFoundException ex, Model model) {
         model.addAttribute("error", "Recurso no encontrado: " + ex.getMessage());

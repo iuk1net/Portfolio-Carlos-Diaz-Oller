@@ -163,5 +163,15 @@ public class VotoService {
             proyectoRepository.save(proyecto);
         }
     }
-}
 
+    /**
+     * Verifica si un usuario ya votó por un proyecto (alias de verificarVoto)
+     *
+     * @param usuario el usuario
+     * @param proyecto el proyecto
+     * @return true si ya votó
+     */
+    public boolean usuarioYaVoto(Usuario usuario, Proyecto proyecto) {
+        return votoRepository.existsByUsuarioAndProyecto(usuario, proyecto);
+    }
+}

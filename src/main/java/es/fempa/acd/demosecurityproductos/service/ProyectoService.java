@@ -256,5 +256,23 @@ public class ProyectoService {
         // Los favoritos se eliminarán automáticamente en cascada (orphanRemoval=true)
         proyectoRepository.deleteById(id);
     }
-}
 
+    /**
+     * Lista todos los proyectos ordenados por votos (ranking)
+     *
+     * @return lista de proyectos ordenados por totalLikes DESC
+     */
+    public List<Proyecto> listarProyectosOrdenadosPorVotos() {
+        return proyectoRepository.findAll(Sort.by(Sort.Direction.DESC, "totalLikes"));
+    }
+
+    /**
+     * Lista proyectos de un usuario específico
+     *
+     * @param usuario el usuario
+     * @return lista de proyectos del usuario
+     */
+    public List<Proyecto> listarProyectosPorUsuario(Usuario usuario) {
+        return proyectoRepository.findByUsuario(usuario);
+    }
+}

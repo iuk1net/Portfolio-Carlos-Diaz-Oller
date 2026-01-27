@@ -1,33 +1,186 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <title>Editar Proyecto</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.css}" />
-	<script th:src="@{/js/bootstrap/bootstrap.bundle.js}"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Proyecto - Portfolio Social</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #8b5cf6;
+            --dark-bg: #1a1a2e;
+            --card-bg: #16213e;
+            --text-light: #e0e0e0;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #0f0f1e 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(22, 33, 62, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .form-container {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 3rem;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .form-label {
+            color: var(--text-light);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            background: rgba(15, 15, 30, 0.5);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            color: var(--text-light);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+        }
+
+        .form-control:focus {
+            background: rgba(15, 15, 30, 0.7);
+            border-color: var(--primary-color);
+            color: var(--text-light);
+            box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25);
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            padding: 0.8rem 2rem;
+            font-weight: 600;
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-    <h1 class="my-4">Editar Proyecto</h1>
-    <form th:action="@{/proyectos/{id}/editar(id=${proyecto.id})}" method="post">
-        <div class="mb-3">
-            <label for="titulo" class="form-label">Título</label>
-            <input type="text" id="titulo" name="titulo" class="form-control" th:value="${proyecto.titulo}" required>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand fw-bold" th:href="@{/proyectos/lista}">
+                <span style="color: var(--primary-color);">Portfolio</span> Social
+            </a>
+            <div class="ms-auto">
+                <a th:href="@{/proyectos/{id}(id=${proyecto.id})}" class="btn btn-outline-secondary">
+                    ← Cancelar
+                </a>
+            </div>
         </div>
-        <div class="mb-3">
-            <label for="descripcion" class="form-label">Descripción</label>
-            <textarea id="descripcion" name="descripcion" class="form-control" rows="3" th:text="${proyecto.descripcion}" required></textarea>
+    </nav>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <h1 class="display-5 mb-2">✏️ Editar Proyecto</h1>
+                    <p class="lead mb-0">Actualiza la información de tu proyecto</p>
+                </div>
+
+                <!-- Alerts -->
+                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+                    <strong>✗</strong> <span th:text="${error}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+
+                <!-- Form -->
+                <div class="form-container">
+                    <form th:action="@{/proyectos/{id}/editar(id=${proyecto.id})}" method="post">
+                        <!-- Título -->
+                        <div class="mb-4">
+                            <label for="titulo" class="form-label">
+                                Título del Proyecto <span class="text-danger">*</span>
+                            </label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="titulo"
+                                   name="titulo"
+                                   th:value="${proyecto.titulo}"
+                                   maxlength="200"
+                                   required>
+                        </div>
+
+                        <!-- Descripción -->
+                        <div class="mb-4">
+                            <label for="descripcion" class="form-label">
+                                Descripción <span class="text-danger">*</span>
+                            </label>
+                            <textarea class="form-control"
+                                      id="descripcion"
+                                      name="descripcion"
+                                      rows="6"
+                                      required
+                                      th:text="${proyecto.descripcion}"></textarea>
+                        </div>
+
+                        <!-- Tecnologías -->
+                        <div class="mb-4">
+                            <label for="tecnologias" class="form-label">
+                                Tecnologías Utilizadas
+                            </label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="tecnologias"
+                                   name="tecnologias"
+                                   th:value="${proyecto.tecnologias}"
+                                   maxlength="500">
+                            <small class="text-muted mt-1 d-block">
+                                Separa las tecnologías con comas
+                            </small>
+                        </div>
+
+                        <!-- Enlace Web -->
+                        <div class="mb-4">
+                            <label for="enlaceWeb" class="form-label">
+                                Enlace al Proyecto
+                            </label>
+                            <input type="url"
+                                   class="form-control"
+                                   id="enlaceWeb"
+                                   name="enlaceWeb"
+                                   th:value="${proyecto.enlaceWeb}"
+                                   maxlength="500">
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex justify-content-between align-items-center mt-5">
+                            <a th:href="@{/proyectos/{id}(id=${proyecto.id})}"
+                               class="btn btn-outline-secondary btn-lg">
+                                Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                ✓ Guardar Cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="mb-3">
-            <label for="tecnologias" class="form-label">Tecnologías</label>
-            <input type="text" id="tecnologias" name="tecnologias" class="form-control" th:value="${proyecto.tecnologias}" placeholder="Ej: Java, Spring Boot, PostgreSQL">
-        </div>
-        <div class="mb-3">
-            <label for="enlaceWeb" class="form-label">Enlace Web</label>
-            <input type="url" id="enlaceWeb" name="enlaceWeb" class="form-control" th:value="${proyecto.enlaceWeb}" placeholder="https://ejemplo.com">
-        </div>
-        <button type="submit" class="btn btn-primary">Guardar</button>
-        <a th:href="@{/proyectos/lista}" class="btn btn-secondary">Cancelar</a>
-    </form>
-</div>
+    </div>
+
+    <script th:src="@{/js/bootstrap/bootstrap.bundle.min.js}"></script>
 </body>
 </html>
+

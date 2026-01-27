@@ -35,13 +35,26 @@ public class SecurityConfig {
         		.cors(Customizer.withDefaults())
         		.csrf(csrf -> csrf.disable()) // Deshabilitar CSRF (habilítalo según el caso)
                 .authorizeHttpRequests(auth -> auth
+                        // Recursos estáticos públicos
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico", "/webjars/**").permitAll()
                         .requestMatchers("/error", "/error/**").permitAll()
-                        .requestMatchers("/login", "/").permitAll()
+                        .requestMatchers("/login", "/", "/logout").permitAll()
+
+                        // Proyectos - lectura pública, escritura autenticada
+                        .requestMatchers("/proyectos/lista", "/proyectos/ranking", "/proyectos/*/").permitAll()
+                        .requestMatchers("/proyectos/**").authenticated()
+
+                        // Dashboards por rol
                         .requestMatchers("/admin/**").hasRole(Rol.ADMIN.name())
-                        .requestMatchers("/cliente/**").hasRole(Rol.USER.name())
-                        .requestMatchers("/proyectos/**", "/favoritos/**").hasAnyRole(Rol.ADMIN.name(), Rol.USER.name())
+                        .requestMatchers("/usuario/**").hasRole(Rol.USER.name())
+
+                        // Gestión de usuarios - solo admin
                         .requestMatchers("/usuarios/**").hasRole(Rol.ADMIN.name())
+
+                        // Favoritos - requiere autenticación
+                        .requestMatchers("/favoritos/**").authenticated()
+
+                        // Cualquier otra ruta requiere autenticación
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

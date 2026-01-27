@@ -90,5 +90,27 @@ public class FavoritoService {
         favoritoRepository.delete(favorito);
     }
 
-}
+    /**
+     * Verifica si un proyecto está en los favoritos de un usuario
+     *
+     * @param usuario el usuario
+     * @param proyecto el proyecto
+     * @return true si está en favoritos, false en caso contrario
+     */
+    public boolean esFavorito(Usuario usuario, Proyecto proyecto) {
+        return favoritoRepository.findByUsuarioAndProyecto(usuario, proyecto).isPresent();
+    }
 
+    /**
+     * Elimina un favorito dado un usuario y un proyecto
+     *
+     * @param usuario el usuario
+     * @param proyecto el proyecto
+     */
+    @Transactional
+    public void eliminarFavorito(Usuario usuario, Proyecto proyecto) {
+        Favorito favorito = favoritoRepository.findByUsuarioAndProyecto(usuario, proyecto)
+                .orElseThrow(() -> new IllegalArgumentException("El proyecto no está en favoritos"));
+        favoritoRepository.delete(favorito);
+    }
+}

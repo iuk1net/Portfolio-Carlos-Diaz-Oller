@@ -27,7 +27,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             redirectUrl = "/admin/dashboard";
             System.out.println("Redirigiendo a: " + redirectUrl);
         } else if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {
-            redirectUrl = "/cliente/dashboard";
+            redirectUrl = "/usuario/dashboard";
             System.out.println("Redirigiendo a: " + redirectUrl);
         }
 

@@ -1,48 +1,245 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <title>Lista de Proyectos</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.css}" />
-	<script th:src="@{/js/bootstrap/bootstrap.bundle.js}"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyectos - Portfolio Social</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #8b5cf6;
+            --dark-bg: #1a1a2e;
+            --card-bg: #16213e;
+            --text-light: #e0e0e0;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #0f0f1e 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar {
+            background: rgba(22, 33, 62, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .project-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(99, 102, 241, 0.5);
+        }
+
+        .badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+        }
+
+        .tech-badge {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--primary-color);
+            margin: 0.2rem;
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+        }
+
+        .vote-btn {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .vote-btn:hover, .vote-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .alert {
+            border-radius: 10px;
+            border: none;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-    <h1 class="my-4">Lista de Proyectos</h1>
-    <a th:href="@{/proyectos/nuevo}" class="btn btn-primary mb-3">Añadir Proyecto</a>
-    <a th:href="@{/proyectos/favoritos}" class="btn btn-primary mb-3">Proyectos Favoritos</a>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">
+                <span style="color: var(--primary-color);">Portfolio</span> Social
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/proyectos/lista}">Proyectos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/proyectos/ranking}">Ranking</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" th:href="@{/proyectos/favoritos}">Mis Favoritos</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" th:href="@{/proyectos/nuevo}">
+                            <i class="bi bi-plus-circle"></i> Nuevo Proyecto
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                        <a class="nav-link" th:href="@{/admin/dashboard}">Admin Panel</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasRole('USER')">
+                        <a class="nav-link" th:href="@{/usuario/dashboard}">Mi Dashboard</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <form th:action="@{/logout}" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-outline-danger btn-sm ms-2">Cerrar Sesión</button>
+                        </form>
+                    </li>
+                    <li class="nav-item" sec:authorize="!isAuthenticated()">
+                        <a class="btn btn-primary btn-sm ms-2" th:href="@{/login}">Iniciar Sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-    
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>Título</th>
-            <th>Descripción</th>
-            <th>Tecnologías</th>
-            <th>Likes</th>
-            <th>Acciones</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="proyecto : ${proyectos}">
-            <td th:text="${proyecto.titulo}">Título</td>
-            <td th:text="${proyecto.descripcion}">Descripción</td>
-            <td th:text="${proyecto.tecnologias}">Tecnologías</td>
-            <td th:text="${proyecto.totalLikes}">0</td>
-            <td>
-                <a th:href="@{/proyectos/{id}/editar(id=${proyecto.id})}" class="btn btn-warning btn-sm">Editar</a>
-               
-                <form th:action="@{/proyectos/{id}/favoritar(id=${proyecto.id})}" method="post" class="d-inline">
-			        <button type="submit" class="btn btn-success btn-sm" sec:authorize="isAuthenticated()">★ Favorito</button>
-			    </form>
-                
-                <form th:action="@{/proyectos/{id}/eliminar(id=${proyecto.id})}" method="post" class="d-inline">
-                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    
-</div>
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="display-4 mb-3">
+                <span th:if="${isRanking}">🏆 Ranking de Proyectos</span>
+                <span th:unless="${isRanking}">📂 Explorar Proyectos</span>
+            </h1>
+            <p class="lead mb-0" th:if="${isRanking}">Los proyectos más votados de la plataforma</p>
+            <p class="lead mb-0" th:unless="${isRanking}">Descubre los portfolios y proyectos de nuestra comunidad</p>
+        </div>
+
+        <!-- Alerts -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>✓</strong> <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>✗</strong> <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Projects Grid -->
+        <div class="row g-4">
+            <div class="col-12" th:if="${#lists.isEmpty(proyectos)}">
+                <div class="alert alert-info text-center">
+                    <h4>No hay proyectos disponibles</h4>
+                    <p sec:authorize="isAuthenticated()">¡Sé el primero en publicar un proyecto!</p>
+                    <a sec:authorize="isAuthenticated()" th:href="@{/proyectos/nuevo}" class="btn btn-primary mt-3">
+                        Crear Primer Proyecto
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4" th:each="proyecto, iterStat : ${proyectos}">
+                <div class="project-card">
+                    <div class="card-body p-4">
+                        <!-- Ranking Badge -->
+                        <div th:if="${isRanking}" class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="badge bg-warning text-dark fs-5">
+                                #<span th:text="${iterStat.count}"></span>
+                            </span>
+                            <span class="badge bg-primary">
+                                ❤️ <span th:text="${proyecto.totalLikes}"></span> votos
+                            </span>
+                        </div>
+
+                        <!-- Project Title -->
+                        <h4 class="card-title mb-3">
+                            <a th:href="@{/proyectos/{id}(id=${proyecto.id})}"
+                               class="text-decoration-none text-light">
+                                <span th:text="${proyecto.titulo}"></span>
+                            </a>
+                        </h4>
+
+                        <!-- Author -->
+                        <p class="text-muted mb-2">
+                            <small>por <strong th:text="${proyecto.usuario.nombre}"></strong></small>
+                        </p>
+
+                        <!-- Description -->
+                        <p class="card-text text-secondary"
+                           th:text="${#strings.abbreviate(proyecto.descripcion, 120)}"></p>
+
+                        <!-- Technologies -->
+                        <div class="mb-3" th:if="${proyecto.tecnologias}">
+                            <span class="tech-badge"
+                                  th:each="tech : ${#strings.arraySplit(proyecto.tecnologias, ',')}"
+                                  th:text="${#strings.trim(tech)}"></span>
+                        </div>
+
+                        <!-- Stats and Actions -->
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div>
+                                <span class="badge bg-success me-2">
+                                    ❤️ <span th:text="${proyecto.totalLikes}"></span>
+                                </span>
+                            </div>
+                            <a th:href="@{/proyectos/{id}(id=${proyecto.id})}"
+                               class="btn btn-sm btn-outline-primary">
+                                Ver Detalles →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="text-center mt-5 py-5" sec:authorize="!isAuthenticated()">
+            <div class="page-header">
+                <h3>¿Quieres mostrar tu trabajo?</h3>
+                <p class="lead">Únete a nuestra comunidad y comparte tus proyectos</p>
+                <a th:href="@{/login}" class="btn btn-primary btn-lg mt-3">
+                    Crear Cuenta Gratis
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/bootstrap/bootstrap.bundle.min.js}"></script>
 </body>
 </html>
+

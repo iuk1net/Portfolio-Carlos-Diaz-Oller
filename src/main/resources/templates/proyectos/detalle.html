@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${proyecto.titulo} + ' - Portfolio Social'">Proyecto</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #8b5cf6;
+            --dark-bg: #1a1a2e;
+            --card-bg: #16213e;
+            --text-light: #e0e0e0;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #0f0f1e 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(22, 33, 62, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .project-header {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+            border-radius: 15px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .project-content {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .tech-badge {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--primary-color);
+            margin: 0.3rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-block;
+        }
+
+        .action-btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .vote-btn {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .vote-btn:hover, .vote-btn.voted {
+            background: var(--primary-color);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .favorite-btn {
+            background: transparent;
+            border: 2px solid #f59e0b;
+            color: #f59e0b;
+        }
+
+        .favorite-btn:hover, .favorite-btn.favorited {
+            background: #f59e0b;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .stats-card {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand fw-bold" th:href="@{/proyectos/lista}">
+                <span style="color: var(--primary-color);">Portfolio</span> Social
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/proyectos/lista}">← Volver a Proyectos</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Alerts -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show">
+            <strong>✓</strong> <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+            <strong>✗</strong> <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Project Header -->
+        <div class="project-header">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="display-4 mb-3" th:text="${proyecto.titulo}">Título del Proyecto</h1>
+                    <p class="lead text-muted mb-3">
+                        Por <strong th:text="${proyecto.usuario.nombre}">Autor</strong>
+                    </p>
+                </div>
+                <div class="col-lg-4 text-lg-end">
+                    <!-- Edit/Delete buttons (only for owner or admin) -->
+                    <div th:if="${puedeEditar}" class="btn-group mb-3" role="group">
+                        <a th:href="@{/proyectos/{id}/editar(id=${proyecto.id})}"
+                           class="btn btn-outline-primary action-btn">
+                            ✏️ Editar
+                        </a>
+                        <form th:action="@{/proyectos/{id}/eliminar(id=${proyecto.id})}"
+                              method="post"
+                              onsubmit="return confirm('¿Estás seguro de eliminar este proyecto?');"
+                              class="d-inline">
+                            <button type="submit" class="btn btn-danger action-btn">
+                                🗑️ Eliminar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Main Content -->
+            <div class="col-lg-8">
+                <!-- Description -->
+                <div class="project-content mb-4">
+                    <h3 class="mb-3">📋 Descripción</h3>
+                    <p th:text="${proyecto.descripcion}" class="lead">
+                        Descripción del proyecto...
+                    </p>
+                </div>
+
+                <!-- Technologies -->
+                <div class="project-content mb-4" th:if="${proyecto.tecnologias}">
+                    <h3 class="mb-3">🛠️ Tecnologías Utilizadas</h3>
+                    <div>
+                        <span class="tech-badge"
+                              th:each="tech : ${#strings.arraySplit(proyecto.tecnologias, ',')}"
+                              th:text="${#strings.trim(tech)}"></span>
+                    </div>
+                </div>
+
+                <!-- Link -->
+                <div class="project-content" th:if="${proyecto.enlaceWeb}">
+                    <h3 class="mb-3">🔗 Enlaces</h3>
+                    <a th:href="${proyecto.enlaceWeb}"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="btn btn-outline-primary action-btn">
+                        Ver Proyecto en Vivo →
+                    </a>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Stats -->
+                <div class="stats-card mb-4">
+                    <h2 class="display-3 mb-2" th:text="${proyecto.totalLikes}">0</h2>
+                    <p class="text-muted mb-0">❤️ Votos recibidos</p>
+                </div>
+
+                <!-- Actions (authenticated users only) -->
+                <div sec:authorize="isAuthenticated()" class="project-content">
+                    <h5 class="mb-3">💫 Interactuar</h5>
+
+                    <!-- Vote Button -->
+                    <form th:if="${!yaVoto}"
+                          th:action="@{/proyectos/{id}/votar(id=${proyecto.id})}"
+                          method="post"
+                          class="mb-3">
+                        <button type="submit" class="btn vote-btn w-100 action-btn">
+                            ❤️ Votar Proyecto
+                        </button>
+                    </form>
+
+                    <form th:if="${yaVoto}"
+                          th:action="@{/proyectos/{id}/quitar-voto(id=${proyecto.id})}"
+                          method="post"
+                          class="mb-3">
+                        <button type="submit" class="btn vote-btn voted w-100 action-btn">
+                            💔 Quitar Voto
+                        </button>
+                    </form>
+
+                    <!-- Favorite Button -->
+                    <form th:if="${!esFavorito}"
+                          th:action="@{/proyectos/{id}/favorito(id=${proyecto.id})}"
+                          method="post">
+                        <button type="submit" class="btn favorite-btn w-100 action-btn">
+                            ⭐ Agregar a Favoritos
+                        </button>
+                    </form>
+
+                    <form th:if="${esFavorito}"
+                          th:action="@{/proyectos/{id}/quitar-favorito(id=${proyecto.id})}"
+                          method="post">
+                        <button type="submit" class="btn favorite-btn favorited w-100 action-btn">
+                            ⭐ En Favoritos
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Call to action for non-authenticated -->
+                <div sec:authorize="!isAuthenticated()" class="project-content">
+                    <h5 class="mb-3">¿Te gusta este proyecto?</h5>
+                    <p class="text-muted mb-3">Inicia sesión para votar y guardar en favoritos</p>
+                    <a th:href="@{/login}" class="btn btn-primary w-100 action-btn">
+                        Iniciar Sesión
+                    </a>
+                </div>
+
+                <!-- Author Info -->
+                <div class="project-content mt-4">
+                    <h5 class="mb-3">👤 Sobre el Autor</h5>
+                    <p><strong th:text="${proyecto.usuario.nombre}">Nombre</strong></p>
+                    <p class="text-muted" th:if="${proyecto.usuario.email}">
+                        <small th:text="${proyecto.usuario.email}">email@example.com</small>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/bootstrap/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
+
