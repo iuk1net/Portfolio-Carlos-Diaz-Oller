@@ -81,3 +81,114 @@ Proporcionar guías y procedimientos claros para el desarrollo de la **plataform
 - Conflictos de fusión: minimizar los conflictos al trabajar con ramas de funcionalidades, idealmente menos del 5%.
 - Revisiones de código: asegurar que el código revisado cumpla con los estándares y no presente errores importantes antes de fusionar a `main`.
 - Estabilidad de la aplicación: las funcionalidades principales (registro/login, gestión de proyectos, votación y ranking) deben funcionar correctamente en al menos el 95% de los casos de uso.
+
+## 8. Gestión de Archivos y Galería de Imágenes
+
+### 8.1. Galería de Imágenes en Proyectos
+
+La aplicación permite a los usuarios subir múltiples imágenes para cada proyecto, con la primera imagen funcionando como **imagen principal o carátula**.
+
+#### 8.1.1. Ubicación de la Funcionalidad
+
+**NO disponible en `/proyectos/nuevo`**
+- Razón: El proyecto debe existir en BD (tener ID) antes de asociarle imágenes.
+- Flujo: Crear proyecto → Redirige a editar → Subir imágenes.
+
+**Disponible en `/proyectos/{id}/editar`**
+- Editor completo de galería después del formulario principal.
+- Permite: subir, eliminar y establecer imagen principal.
+
+**Visualización en `/proyectos/{id}`**
+- Carrusel Bootstrap con navegación (anterior/siguiente).
+- Lightbox 2.11.4 para ver imágenes en tamaño completo.
+- Badge "⭐ Principal" en la primera imagen.
+
+**Carátula en `/proyectos/lista`**
+- La primera imagen aparece como portada de la tarjeta.
+- Hover effect con zoom suave.
+
+#### 8.1.2. Características Técnicas
+
+**Formatos soportados**: JPG, JPEG, PNG, GIF, WEBP  
+**Tamaño máximo**: 5 MB por imagen  
+**Cantidad**: Ilimitada (recomendado: 3-10 imágenes)
+
+**Validaciones**:
+- Frontend: JavaScript valida tipo y tamaño antes de subir.
+- Backend: Java valida extensión y tamaño en servidor.
+- Feedback: Notificaciones toast informan resultados.
+
+**Almacenamiento**:
+```
+uploads/images/
+├── {proyecto_id}/
+│   ├── {timestamp}.jpg
+│   ├── {timestamp}.png
+│   └── ...
+```
+
+#### 8.1.3. Flujo de Trabajo
+
+1. **Crear Proyecto**:
+   - Usuario crea proyecto en `/proyectos/nuevo`
+   - Sistema guarda proyecto y genera ID
+   - Redirige automáticamente a `/proyectos/{id}/editar`
+
+2. **Subir Imágenes**:
+   - Usuario hace scroll hasta "Galería de Imágenes"
+   - Click en "📤 Subir Imágenes"
+   - Selecciona una o más imágenes (máx 5MB c/u)
+   - Primera imagen seleccionada = automáticamente principal
+   - Sistema valida y sube las imágenes
+   - Muestra preview durante la carga
+
+3. **Gestionar Galería**:
+   - Cambiar principal: Click en "⭐ Principal" de cualquier imagen
+   - Eliminar: Click en "🗑️ Eliminar" (con confirmación)
+   - Las imágenes se actualizan automáticamente en lista y detalle
+
+4. **Visualizar**:
+   - En lista: Primera imagen como carátula de tarjeta
+   - En detalle: Carrusel navegable + Lightbox para zoom
+   - Click en imagen → Vista fullscreen con navegación
+
+#### 8.1.4. Componentes Implementados
+
+**Backend**:
+- `GaleriaImagenesController`: API REST para CRUD de imágenes
+- `WebMvcConfig`: Configuración para servir archivos estáticos
+- Endpoints:
+  - `POST /api/proyectos/{id}/imagenes` - Subir imagen
+  - `DELETE /api/proyectos/{id}/imagenes/{index}` - Eliminar
+  - `PUT /api/proyectos/{id}/imagenes/{index}/principal` - Establecer principal
+
+**Frontend**:
+- `galeria.js`: Manager JavaScript para gestión
+- Bootstrap 5 Carousel: Navegación de imágenes
+- Lightbox 2.11.4: Visualización fullscreen
+- jQuery 3.6.0: Requerido por Lightbox
+
+### 8.2. Gestión de CVs
+
+Los usuarios pueden subir múltiples versiones de su CV en formatos PDF, DOCX o TXT.
+
+**Ubicación**: `/usuario/cv/lista`  
+**Tamaño máximo**: 10 MB por archivo  
+**Formatos permitidos**: PDF, DOCX, TXT
+
+**Funcionalidades**:
+- Subida con drag & drop o selección tradicional
+- Descarga protegida (solo propietario)
+- Eliminación segura
+- Historial de versiones
+
+**Almacenamiento**:
+```
+uploads/cvs/
+├── {usuario_id}/
+│   ├── {timestamp}.pdf
+│   ├── {timestamp}.docx
+│   └── ...
+```
+
+

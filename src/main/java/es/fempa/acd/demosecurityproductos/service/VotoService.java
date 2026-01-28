@@ -34,10 +34,15 @@ public class VotoService {
      * @param usuario el usuario que vota
      * @param proyecto el proyecto a votar
      * @return el voto creado
-     * @throws IllegalArgumentException si el usuario ya votó por este proyecto
+     * @throws IllegalArgumentException si el usuario ya votó por este proyecto o si intenta votar su propio proyecto
      */
     @Transactional
     public Voto votar(Usuario usuario, Proyecto proyecto) {
+        // Validar que el usuario no vote su propio proyecto
+        if (proyecto.getUsuario().getId().equals(usuario.getId())) {
+            throw new IllegalArgumentException("No puedes votar tu propio proyecto");
+        }
+
         // Validar que no exista ya un voto
         if (votoRepository.existsByUsuarioAndProyecto(usuario, proyecto)) {
             throw new IllegalArgumentException("Ya has votado por este proyecto");

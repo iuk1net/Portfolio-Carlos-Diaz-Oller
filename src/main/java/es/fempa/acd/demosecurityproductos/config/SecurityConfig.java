@@ -44,6 +44,9 @@ public class SecurityConfig {
                         .requestMatchers("/proyectos/lista", "/proyectos/ranking", "/proyectos/*/").permitAll()
                         .requestMatchers("/proyectos/**").authenticated()
 
+                        // Perfiles públicos de usuario (sin autenticación)
+                        .requestMatchers("/usuarios/perfil/**").permitAll()
+
                         // Dashboards por rol
                         .requestMatchers("/admin/**").hasRole(Rol.ADMIN.name())
                         .requestMatchers("/usuario/**").hasRole(Rol.USER.name())

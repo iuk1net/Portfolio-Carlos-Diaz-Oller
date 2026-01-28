@@ -29,6 +29,61 @@ Cada entrada del registro contiene:
 
 ---
 
+## [2.1.1] - 2026-01-28
+**Tipo:** PATCH - Corrección de bug crítico
+
+**Cambios realizados:**
+- 🐛 **Corrección Sistema de Votación**: Corregido bug que permitía a usuarios votar sus propios proyectos.
+  - Agregada validación en backend (`VotoService.votar()`) para rechazar votos propios
+  - Modificado frontend en `proyectos/detalle.html` para mostrar mensaje informativo al propietario
+  - Modificado frontend en `proyectos/lista.html` para ocultar botón de voto en proyectos propios
+  - Mensaje de error claro: "No puedes votar tu propio proyecto"
+
+**Reglas de negocio validadas:**
+- ✅ Un usuario no puede votar dos veces el mismo proyecto
+- ✅ **Un usuario no puede votar su propio proyecto** (NUEVO)
+- ✅ Solo usuarios autenticados pueden votar
+- ✅ El contador de votos se actualiza correctamente
+
+**Impacto:**
+- Seguridad mejorada: Validación en backend impide bypass desde API
+- UX mejorada: Usuario ve por qué no puede votar
+- Integridad de datos: Rankings ahora reflejan votos legítimos
+
+**Archivos modificados:**
+- `VotoService.java` (+4 líneas)
+- `proyectos/detalle.html` (+8 líneas)
+- `proyectos/lista.html` (+1 línea)
+
+**Documentación:**
+- Creado `CORRECCION-SISTEMA-VOTACION.md` con análisis completo
+
+**Autor:** Carlos Díaz Oller
+
+## [2.1.0] - 2026-01-28
+**Cambios realizados:**
+- ✅ **Gestión de CVs**: Sistema completo de subida, descarga y eliminación de currículums (PDF, DOCX, TXT).
+- ✅ **Votación AJAX**: Sistema de votación sin recargar página con animaciones y notificaciones toast.
+- ✅ **Perfil Público de Usuario**: Vista pública con estadísticas, proyectos y datos de contacto.
+- ✅ **Edición de Perfil**: Formulario dinámico para actualizar datos personales y enlaces a redes sociales.
+- ✅ **Publicación en RRSS**: Sistema para compartir proyectos en LinkedIn, Twitter, Facebook y GitHub con historial.
+- ✅ **Ranking Visual**: Medallas animadas (🥇🥈🥉) para los top 3 proyectos más votados.
+- ✅ **Galería de Imágenes**: Sistema completo de gestión de imágenes para proyectos:
+  - Subida múltiple de imágenes (JPG, PNG, GIF, WEBP)
+  - Primera imagen como imagen principal/carátula
+  - Carrusel Bootstrap + Lightbox en vista de detalle
+  - Imagen de portada en tarjetas de lista
+  - Editor de galería en formulario de edición
+  - Validaciones frontend y backend (máx 5MB por imagen)
+
+**Mejoras técnicas:**
+- Integración de Lightbox 2.11.4 para visualización de imágenes
+- API REST completa para gestión de galería (`GaleriaImagenesController`)
+- Configuración de archivos estáticos (`WebMvcConfig`)
+- Redirección mejorada: crear proyecto → editar (permite agregar imágenes inmediatamente)
+
+**Autor:** Carlos Díaz Oller
+
 ## [2.0.0] - 2026-01-20
 **Cambios realizados:**
 - Cambio de alcance del proyecto: de portfolio personal a **plataforma social de portfolios** (v2.0).

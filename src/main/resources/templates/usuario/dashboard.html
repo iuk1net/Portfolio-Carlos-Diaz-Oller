@@ -168,6 +168,9 @@
                     <span class="user-role">👤 Usuario</span>
                 </div>
                 <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <a th:href="@{/usuarios/perfil/editar}" class="btn btn-outline-primary me-2">
+                        ✏️ Editar Perfil
+                    </a>
                     <a th:href="@{/proyectos/nuevo}" class="btn btn-primary btn-lg">
                         ➕ Crear Nuevo Proyecto
                     </a>
@@ -233,6 +236,40 @@
                     <h5>Ranking</h5>
                     <p class="text-muted mb-0">Top proyectos</p>
                 </a>
+            </div>
+            <div class="col-md-3">
+                <a th:href="@{/usuarios/perfil/editar}" class="action-card">
+                    <div class="action-icon">✏️</div>
+                    <h5>Editar Perfil</h5>
+                    <p class="text-muted mb-0">Actualiza tu info</p>
+                </a>
+            </div>
+        </div>
+
+        <!-- CV Management Section -->
+        <div class="section-card mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="mb-0">📄 Mis CVs</h3>
+                <a th:href="@{/usuario/cv/lista}" class="btn btn-outline-primary">Gestionar CVs</a>
+            </div>
+
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <div id="cvStatus">
+                        <div class="d-flex align-items-center">
+                            <div class="me-3" style="font-size: 2.5rem;">📋</div>
+                            <div>
+                                <p class="mb-1" id="cvStatusText">Cargando información de CVs...</p>
+                                <small class="text-muted" id="cvStatusDetail">Por favor, espera...</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <a th:href="@{/usuario/cv/lista}" class="btn btn-success">
+                        📤 Subir CV
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -340,5 +377,40 @@
     </div>
 
     <script th:src="@{/js/bootstrap/bootstrap.bundle.min.js}"></script>
+    <script>
+        // Cargar estado del CV más reciente del usuario
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/usuario/cv/activo')
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else if (response.status === 404) {
+                        return null;
+                    }
+                    throw new Error('Error al cargar información del CV');
+                })
+                .then(data => {
+                    const statusText = document.getElementById('cvStatusText');
+                    const statusDetail = document.getElementById('cvStatusDetail');
+
+                    if (data) {
+                        // Usuario tiene CV
+                        statusText.innerHTML = '<strong class="text-success">✅ Tienes un CV activo</strong>';
+                        statusDetail.textContent = `Formato: ${data.tipoArchivo} | Subido: ${new Date(data.fechaSubida).toLocaleDateString('es-ES')}`;
+                    } else {
+                        // Usuario no tiene CV
+                        statusText.innerHTML = '<strong class="text-warning">⚠️ No tienes ningún CV subido</strong>';
+                        statusDetail.textContent = 'Sube tu CV para que las empresas puedan conocerte mejor';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    const statusText = document.getElementById('cvStatusText');
+                    const statusDetail = document.getElementById('cvStatusDetail');
+                    statusText.innerHTML = '<strong class="text-muted">ℹ️ Información no disponible</strong>';
+                    statusDetail.textContent = 'Haz clic en "Gestionar CVs" para más información';
+                });
+        });
+    </script>
 </body>
 </html>

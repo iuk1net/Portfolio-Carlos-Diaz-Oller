@@ -175,12 +175,92 @@
                             </button>
                         </div>
                     </form>
+
+                    <!-- Galería de Imágenes (fuera del formulario principal) -->
+                    <div class="mt-5 pt-5 border-top">
+                        <h3 class="mb-4">🖼️ Galería de Imágenes</h3>
+                        <p class="text-muted mb-4">
+                            La primera imagen será la imagen principal del proyecto (carátula)
+                        </p>
+
+                        <!-- Input oculto para subir -->
+                        <input type="file"
+                               id="galeriaInput"
+                               accept="image/*"
+                               multiple
+                               style="display: none;">
+
+                        <!-- Botón para agregar -->
+                        <button type="button"
+                                class="btn btn-success mb-4"
+                                id="btnAgregarImagenes">
+                            📤 Subir Imágenes (máx 5MB c/u)
+                        </button>
+
+                        <!-- Container de preview temporal -->
+                        <div id="galeriaPreview" class="row mb-4"></div>
+
+                        <!-- Galería actual -->
+                        <div id="galeriaContainer"
+                             th:data-proyecto-id="${proyecto.id}"
+                             class="row g-3">
+
+                            <div class="col-md-4"
+                                 th:each="imagen, iterStat : ${proyecto.galeriaImagenes}">
+                                <div class="card bg-dark position-relative">
+                                    <!-- Badge de imagen principal -->
+                                    <div th:if="${iterStat.index == 0}"
+                                         class="position-absolute top-0 start-0 m-2">
+                                        <span class="badge bg-primary">
+                                            ⭐ Principal
+                                        </span>
+                                    </div>
+
+                                    <!-- Imagen -->
+                                    <img th:src="${imagen}"
+                                         class="card-img-top"
+                                         alt="Imagen del proyecto"
+                                         style="height: 200px; object-fit: cover;">
+
+                                    <!-- Controles -->
+                                    <div class="card-body">
+                                        <div class="d-flex gap-2 justify-content-between">
+                                            <button type="button"
+                                                    class="btn btn-sm btn-warning btn-principal-imagen"
+                                                    th:data-index="${iterStat.index}"
+                                                    th:if="${iterStat.index > 0}">
+                                                ⭐ Principal
+                                            </button>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-danger btn-eliminar-imagen"
+                                                    th:data-index="${iterStat.index}">
+                                                🗑️ Eliminar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Empty state -->
+                            <div class="col-12"
+                                 th:if="${proyecto.galeriaImagenes == null or proyecto.galeriaImagenes.isEmpty()}">
+                                <div class="alert alert-info text-center">
+                                    <i class="fas fa-images fa-3x mb-3"></i>
+                                    <p class="mb-0">
+                                        No hay imágenes en la galería.
+                                        ¡Sube algunas para destacar tu proyecto!
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script th:src="@{/js/bootstrap/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/js/galeria.js}"></script>
 </body>
 </html>
 

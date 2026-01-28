@@ -42,12 +42,70 @@ Este documento agrupa la documentación entregable del proyecto y enlaza a cada 
 
 ## Estado del Proyecto
 
-✅ **Implementación completa y verificada**
+✅ **Implementación completa al 100%**
 - Modelo de datos: 100% implementado
 - Repositorios: 6/6 funcionales
 - Servicios: 6/6 con todos los métodos UML
-- Controladores: Endpoints verificados
+- Controladores: Endpoints verificados y funcionales
 - Reglas de negocio: Todas implementadas
+
+### Funcionalidades Principales Implementadas
+
+#### 1. Gestión de Usuarios
+- ✅ Registro y autenticación con Spring Security
+- ✅ Roles: ADMIN y USER
+- ✅ Perfil público visible para todos
+- ✅ Edición de perfil con datos de contacto y enlaces RRSS
+
+#### 2. Gestión de Proyectos
+- ✅ CRUD completo de proyectos (crear, leer, actualizar, eliminar)
+- ✅ **Galería de imágenes**: Subida múltiple, imagen principal/carátula, carrusel con Lightbox
+- ✅ Publicación en redes sociales (LinkedIn, Twitter, Facebook, GitHub)
+- ✅ Sistema de favoritos
+- ✅ Listado público con filtros
+
+#### 3. Sistema de Votación
+- ✅ Un voto por usuario y proyecto (regla de negocio)
+- ✅ Votación AJAX sin recargar página
+- ✅ Contador en tiempo real
+- ✅ Animaciones y feedback visual
+
+#### 4. Ranking
+- ✅ Ranking global por votos
+- ✅ **Medallas visuales** para top 3 (🥇🥈🥉)
+- ✅ Ordenamiento automático por totalLikes
+
+#### 5. Gestión de CVs
+- ✅ Subida de múltiples versiones (PDF, DOCX, TXT)
+- ✅ Descarga protegida (solo propietario)
+- ✅ Interfaz drag & drop
+- ✅ Validaciones de formato y tamaño (máx 10MB)
+
+#### 6. Publicación en RRSS
+- ✅ Compartir proyectos en redes sociales
+- ✅ Historial de publicaciones con estados
+- ✅ Botón reintentar para publicaciones fallidas
+
+### Tecnologías Utilizadas
+
+**Backend:**
+- Java 17+
+- Spring Boot 3.x (MVC, Security, Data JPA)
+- PostgreSQL 15+
+- Maven
+
+**Frontend:**
+- Thymeleaf
+- Bootstrap 5
+- JavaScript ES6 (Fetch API, AJAX)
+- jQuery 3.6.0 (para Lightbox)
+- Lightbox 2.11.4 (galería de imágenes)
+
+**Herramientas:**
+- Git & GitHub
+- IntelliJ IDEA
+- DBeaver (gestión BD)
+
 
 ## Enlaces Útiles
 - [Repositorio GitHub](https://github.com/iuk1net/Portfolio-Carlos-Diaz-Oller)

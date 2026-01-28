@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis CVs - Portfolio Social</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #8b5cf6;
+            --dark-bg: #1a1a2e;
+            --card-bg: #16213e;
+            --text-light: #e0e0e0;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #0f0f1e 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar {
+            background: rgba(22, 33, 62, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .cv-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .cv-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary-color);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+        }
+
+        .file-icon {
+            font-size: 3rem;
+            margin-right: 1rem;
+        }
+
+        .file-type-pdf { color: #ef4444; }
+        .file-type-docx { color: #3b82f6; }
+        .file-type-txt { color: #10b981; }
+
+        .upload-area {
+            background: var(--card-bg);
+            border: 2px dashed rgba(99, 102, 241, 0.5);
+            border-radius: 12px;
+            padding: 3rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .upload-area.drag-over {
+            border-color: var(--success-color);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            padding: 0.8rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(99, 102, 241, 0.5);
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            border: none;
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            border: none;
+        }
+
+        .alert {
+            border-radius: 10px;
+            border: none;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .alert-danger {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid var(--danger-color);
+            color: var(--danger-color);
+        }
+
+        .file-info {
+            flex: 1;
+        }
+
+        .file-meta {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .badge-file-type {
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .empty-state-icon {
+            font-size: 5rem;
+            opacity: 0.5;
+            margin-bottom: 1rem;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .upload-instructions {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        .stat-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid var(--primary-color);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand fw-bold" th:href="@{/proyectos/lista}">
+                <span style="color: var(--primary-color);">Portfolio</span> Social
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/proyectos/lista}">Explorar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/usuario/dashboard}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/usuario/cv/lista}">Mis CVs</a>
+                    </li>
+                    <li class="nav-item">
+                        <form th:action="@{/logout}" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-outline-danger btn-sm ms-2">Cerrar Sesión</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="display-5 mb-2">📄 Gestión de CVs</h1>
+                    <p class="lead mb-0">Administra tus currículums vitae</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <span class="stat-badge">
+                        <strong th:text="${totalCVs}">0</strong> CV(s) guardado(s)
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alerts -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show">
+            <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+            <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Upload Area -->
+        <div class="mb-4">
+            <form th:action="@{/usuario/cv/subir}" method="post" enctype="multipart/form-data" id="uploadForm">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon mb-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor"
+                             class="text-primary" viewBox="0 0 16 16">
+                            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                            <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+                        </svg>
+                    </div>
+                    <h4 class="mb-3">Subir Nuevo CV</h4>
+                    <div class="file-input-wrapper">
+                        <button type="button" class="btn btn-primary btn-lg" onclick="document.getElementById('fileInput').click()">
+                            📤 Seleccionar Archivo
+                        </button>
+                        <input type="file" name="file" id="fileInput" accept=".pdf,.docx,.txt" required>
+                    </div>
+                    <div class="upload-instructions">
+                        <p class="mb-1"><strong>Formatos permitidos:</strong> PDF, DOCX, TXT</p>
+                        <p class="mb-0"><strong>Tamaño máximo:</strong> 10 MB</p>
+                    </div>
+                    <div id="selectedFileName" class="mt-3 text-success" style="display: none;"></div>
+                </div>
+            </form>
+        </div>
+
+        <!-- CVs List -->
+        <div th:if="${cvs != null and !cvs.isEmpty()}">
+            <h3 class="mb-4">📋 Mis CVs Guardados</h3>
+
+            <div th:each="cv : ${cvs}" class="cv-card">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <div class="file-icon"
+                             th:classappend="${cv.tipoArchivo == 'PDF'} ? 'file-type-pdf' :
+                                            (${cv.tipoArchivo == 'DOCX'} ? 'file-type-docx' : 'file-type-txt')">
+                            <span th:if="${cv.tipoArchivo == 'PDF'}">📕</span>
+                            <span th:if="${cv.tipoArchivo == 'DOCX'}">📘</span>
+                            <span th:if="${cv.tipoArchivo == 'TXT'}">📄</span>
+                        </div>
+                    </div>
+                    <div class="col file-info">
+                        <h5 class="mb-1">
+                            CV - <span th:text="${usuario.nombre}">Usuario</span>
+                            <span class="badge-file-type ms-2"
+                                  th:style="'background: ' + (${cv.tipoArchivo == 'PDF'} ? 'rgba(239, 68, 68, 0.2); color: #ef4444;' :
+                                            (${cv.tipoArchivo == 'DOCX'} ? 'rgba(59, 130, 246, 0.2); color: #3b82f6;' : 'rgba(16, 185, 129, 0.2); color: #10b981;'))"
+                                  th:text="${cv.tipoArchivo}">
+                                PDF
+                            </span>
+                        </h5>
+                        <div class="file-meta">
+                            <span>📅 Subido el: </span>
+                            <span th:text="${#temporals.format(cv.fechaSubida, 'dd/MM/yyyy HH:mm')}">
+                                01/01/2024 12:00
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <a th:href="@{/usuario/cv/descargar/{id}(id=${cv.id})}"
+                           class="btn btn-success me-2"
+                           download>
+                            ⬇️ Descargar
+                        </a>
+                        <form th:action="@{/usuario/cv/{id}/eliminar(id=${cv.id})}"
+                              method="post"
+                              class="d-inline"
+                              onsubmit="return confirm('¿Estás seguro de eliminar este CV? Esta acción no se puede deshacer.');">
+                            <button type="submit" class="btn btn-danger">
+                                🗑️ Eliminar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div th:if="${cvs == null or cvs.isEmpty()}" class="empty-state">
+            <div class="empty-state-icon">📭</div>
+            <h3>No tienes CVs guardados</h3>
+            <p class="text-muted">Sube tu primer curriculum vitae utilizando el formulario de arriba</p>
+        </div>
+
+        <!-- Back to Dashboard -->
+        <div class="text-center mt-5">
+            <a th:href="@{/usuario/dashboard}" class="btn btn-outline-primary">
+                ← Volver al Dashboard
+            </a>
+        </div>
+    </div>
+
+    <script th:src="@{/js/bootsprap/bootstrap.bundle.min.js}"></script>
+    <script>
+        // File input handler
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name;
+            const selectedFileDiv = document.getElementById('selectedFileName');
+
+            if (fileName) {
+                selectedFileDiv.textContent = '✅ Archivo seleccionado: ' + fileName;
+                selectedFileDiv.style.display = 'block';
+
+                // Auto-submit del formulario
+                document.getElementById('uploadForm').submit();
+            }
+        });
+
+        // Drag and drop handlers
+        const uploadArea = document.getElementById('uploadArea');
+
+        uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            uploadArea.classList.add('drag-over');
+        });
+
+        uploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('drag-over');
+        });
+
+        uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('drag-over');
+
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                const fileInput = document.getElementById('fileInput');
+                fileInput.files = files;
+
+                // Trigger change event
+                const event = new Event('change');
+                fileInput.dispatchEvent(event);
+            }
+        });
+
+        // Auto-dismiss alerts after 5 seconds
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 5000);
+    </script>
+</body>
+</html>
+

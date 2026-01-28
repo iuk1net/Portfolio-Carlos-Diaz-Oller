@@ -42,6 +42,27 @@
             box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
         }
 
+        /* Estilos para imagen de carátula */
+        .project-image-wrapper {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+
+        .project-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .project-image-wrapper:hover .project-image {
+            transform: scale(1.1);
+        }
+
         .btn-primary {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             border: none;
@@ -73,16 +94,78 @@
             border: 2px solid var(--primary-color);
             color: var(--primary-color);
             transition: all 0.3s ease;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
         }
 
-        .vote-btn:hover, .vote-btn.active {
+        .vote-btn:hover {
             background: var(--primary-color);
             color: white;
+            transform: scale(1.1);
+        }
+
+        .vote-btn.voted {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .vote-btn .vote-icon {
+            font-size: 1rem;
         }
 
         .alert {
             border-radius: 10px;
             border: none;
+        }
+
+        /* Estilos para Medallas de Ranking */
+        .ranking-medal {
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .ranking-medal.gold {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #333;
+            animation: pulse-gold 2s infinite;
+        }
+
+        .ranking-medal.silver {
+            background: linear-gradient(135deg, #C0C0C0, #A8A8A8);
+            color: #333;
+            animation: pulse-silver 2s infinite;
+        }
+
+        .ranking-medal.bronze {
+            background: linear-gradient(135deg, #CD7F32, #B8733A);
+            color: white;
+            animation: pulse-bronze 2s infinite;
+        }
+
+        .medal-icon {
+            font-size: 2rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        @keyframes pulse-gold {
+            0%, 100% { box-shadow: 0 4px 12px rgba(255, 215, 0, 0.5); }
+            50% { box-shadow: 0 4px 20px rgba(255, 215, 0, 0.8); }
+        }
+
+        @keyframes pulse-silver {
+            0%, 100% { box-shadow: 0 4px 12px rgba(192, 192, 192, 0.5); }
+            50% { box-shadow: 0 4px 20px rgba(192, 192, 192, 0.8); }
+        }
+
+        @keyframes pulse-bronze {
+            0%, 100% { box-shadow: 0 4px 12px rgba(205, 127, 50, 0.5); }
+            50% { box-shadow: 0 4px 20px rgba(205, 127, 50, 0.8); }
         }
 
         .page-header {
@@ -175,11 +258,26 @@
 
             <div class="col-md-6 col-lg-4" th:each="proyecto, iterStat : ${proyectos}">
                 <div class="project-card">
+                    <!-- Imagen principal como carátula -->
+                    <div th:if="${proyecto.galeriaImagenes != null and !proyecto.galeriaImagenes.isEmpty()}"
+                         class="project-image-wrapper">
+                        <a th:href="@{/proyectos/{id}(id=${proyecto.id})}">
+                            <img th:src="${proyecto.galeriaImagenes[0]}"
+                                 class="project-image"
+                                 th:alt="${proyecto.titulo}">
+                        </a>
+                    </div>
+
                     <div class="card-body p-4">
-                        <!-- Ranking Badge -->
+                        <!-- Ranking Badge Mejorado -->
                         <div th:if="${isRanking}" class="d-flex justify-content-between align-items-center mb-3">
-                            <span class="badge bg-warning text-dark fs-5">
-                                #<span th:text="${iterStat.count}"></span>
+                            <!-- Medalla para Top 3 -->
+                            <span class="ranking-medal"
+                                  th:classappend="${iterStat.index == 0} ? 'gold' : (${iterStat.index == 1} ? 'silver' : (${iterStat.index == 2} ? 'bronze' : ''))">
+                                <span th:if="${iterStat.index == 0}" class="medal-icon">🥇</span>
+                                <span th:if="${iterStat.index == 1}" class="medal-icon">🥈</span>
+                                <span th:if="${iterStat.index == 2}" class="medal-icon">🥉</span>
+                                <span th:if="${iterStat.index > 2}">#<span th:text="${iterStat.count}"></span></span>
                             </span>
                             <span class="badge bg-primary">
                                 ❤️ <span th:text="${proyecto.totalLikes}"></span> votos
@@ -196,7 +294,12 @@
 
                         <!-- Author -->
                         <p class="text-muted mb-2">
-                            <small>por <strong th:text="${proyecto.usuario.nombre}"></strong></small>
+                            <small>por
+                                <a th:href="@{/usuarios/perfil/{username}(username=${proyecto.usuario.email})}"
+                                   class="text-decoration-none">
+                                    <strong th:text="${proyecto.usuario.nombre}"></strong>
+                                </a>
+                            </small>
                         </p>
 
                         <!-- Description -->
@@ -213,14 +316,25 @@
                         <!-- Stats and Actions -->
                         <div class="d-flex justify-content-between align-items-center mt-3">
                             <div>
-                                <span class="badge bg-success me-2">
-                                    ❤️ <span th:text="${proyecto.totalLikes}"></span>
+                                <span class="badge bg-success me-2 badge-likes">
+                                    ❤️ <span class="like-counter" th:text="${proyecto.totalLikes}">0</span>
                                 </span>
                             </div>
-                            <a th:href="@{/proyectos/{id}(id=${proyecto.id})}"
-                               class="btn btn-sm btn-outline-primary">
-                                Ver Detalles →
-                            </a>
+                            <div>
+                                <!-- Vote Button AJAX (solo usuarios autenticados que NO sean propietarios) -->
+                                <button sec:authorize="isAuthenticated()"
+                                        th:if="${usuarioActual != null and usuarioActual.id != proyecto.usuario.id}"
+                                        class="btn btn-sm vote-btn vote-btn-ajax me-2"
+                                        th:data-proyecto-id="${proyecto.id}"
+                                        th:classappend="${usuarioActual != null and proyecto.votos != null and #lists.contains(proyecto.votos.![usuario.id], usuarioActual.id)} ? 'voted' : ''">
+                                    <span class="vote-icon">❤️</span>
+                                </button>
+
+                                <a th:href="@{/proyectos/{id}(id=${proyecto.id})}"
+                                   class="btn btn-sm btn-outline-primary">
+                                    Ver Detalles →
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -240,6 +354,7 @@
     </div>
 
     <script th:src="@{/js/bootstrap/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/js/votacion.js}"></script>
 </body>
 </html>
 

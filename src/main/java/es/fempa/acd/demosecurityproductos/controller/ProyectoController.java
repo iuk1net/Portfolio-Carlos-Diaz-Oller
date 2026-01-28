@@ -145,8 +145,9 @@ public class ProyectoController {
 
             Proyecto proyectoCreado = proyectoService.crearProyecto(proyecto, usuario);
 
-            redirectAttributes.addFlashAttribute("success", "Proyecto creado exitosamente");
-            return "redirect:/proyectos/" + proyectoCreado.getId();
+            redirectAttributes.addFlashAttribute("success",
+                "✅ Proyecto creado exitosamente. Ahora puedes agregar imágenes a la galería.");
+            return "redirect:/proyectos/" + proyectoCreado.getId() + "/editar";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error al crear el proyecto: " + e.getMessage());
             return "redirect:/proyectos/nuevo";
