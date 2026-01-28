@@ -29,6 +29,29 @@ Cada entrada del registro contiene:
 
 ---
 
+## [2.1.2] - 2026-01-28
+**Tipo:** PATCH - Corrección de bug en notificaciones
+
+**Cambios realizados:**
+- 🐛 **Corrección votación.js**: Eliminados mensajes duplicados al votar
+  - Agregada verificación `response.ok` antes de procesar JSON
+  - Mejora en manejo de errores HTTP (400, 500)
+  - Ahora muestra un solo mensaje (éxito o error, no ambos)
+- 🔒 **Validación reforzada en VotoService**: 
+  - Validación de propietario en `toggleVoto()` para evitar procesamiento innecesario
+  - Mantenida validación en `votar()` para llamadas directas desde otros endpoints
+
+**Comportamiento corregido:**
+- ✅ Votar proyecto ajeno: Solo mensaje "¡Voto registrado!"
+- ✅ Quitar voto: Solo mensaje "Voto eliminado"
+- ❌ Intentar votar propio proyecto: Solo mensaje "No puedes votar tu propio proyecto"
+
+**Archivos modificados:**
+- `votacion.js` (+4 líneas)
+- `VotoService.java` (+4 líneas)
+
+**Autor:** Carlos Díaz Oller
+
 ## [2.1.1] - 2026-01-28
 **Tipo:** PATCH - Corrección de bug crítico
 
