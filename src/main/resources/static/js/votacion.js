@@ -77,6 +77,12 @@
 
                 const data = await response.json();
 
+                // Verificar si la respuesta HTTP fue exitosa
+                if (!response.ok) {
+                    // Error del servidor (4xx o 5xx)
+                    throw new Error(data.error || 'Error al procesar el voto');
+                }
+
                 if (data.success) {
                     // Actualizar UI
                     this.actualizarUIVotacion(button, data);

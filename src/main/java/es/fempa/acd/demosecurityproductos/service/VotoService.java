@@ -92,6 +92,11 @@ public class VotoService {
      */
     @Transactional
     public boolean toggleVoto(Usuario usuario, Proyecto proyecto) {
+        // Validar que el usuario no vote su propio proyecto
+        if (proyecto.getUsuario().getId().equals(usuario.getId())) {
+            throw new IllegalArgumentException("No puedes votar tu propio proyecto");
+        }
+
         if (votoRepository.existsByUsuarioAndProyecto(usuario, proyecto)) {
             quitarVoto(usuario, proyecto);
             return false;
