@@ -1,110 +1,114 @@
-# Documento de Requisitos del Proyecto: Portfolio
+# Documento de Requisitos
 
-## 1. Título del proyecto
-**Plataforma Social de Portfolios — Carlos Díaz Oller (v2.0)**
+## 1. Título del Proyecto
+**Plataforma Social de Portfolios v2.0**
 
 ## 2. Introducción
-El proyecto **“Portfolio Carlos Díaz Oller”** evoluciona a una **plataforma social de portfolios**, orientada a que **múltiples usuarios** puedan registrarse, crear y gestionar su propio portfolio, publicar proyectos y participar en un sistema de votación que genera un **ranking público** de proyectos.
+Plataforma web que permite a múltiples usuarios registrarse, crear y gestionar portfolios profesionales, publicar proyectos y participar en un sistema de votación que genera un ranking público. El proyecto aplica buenas prácticas de desarrollo, arquitectura MVC y cumple con estándares de seguridad profesionales.
 
-La finalidad académica del proyecto es aplicar, en un contexto más cercano a un sistema real, buenas prácticas de análisis, diseño, desarrollo y documentación de software. Se desarrolla una aplicación web completa con backend y persistencia en base de datos, con requisitos de seguridad, organización del código y mantenimiento.
+## 3. Objetivos
 
-## 3. Objetivos del proyecto
+### 3.1. Objetivo General
+Desarrollar una plataforma social de portfolios con arquitectura Spring Boot, persistencia en base de datos relacional y patrón MVC, permitiendo registro, publicación de proyectos, sistema de votación y ranking global.
 
-### 3.1. Objetivo general
-Desarrollar una **plataforma social de portfolios** basada en una arquitectura backend con **Spring Boot**, persistencia en **base de datos relacional** y patrón **MVC**, que permita a los usuarios registrarse, publicar proyectos, votar proyectos de otros usuarios y consultar un ranking global, cumpliendo requisitos de seguridad y buenas prácticas propias de un entorno profesional.
+### 3.2. Objetivos Específicos
+- Implementar arquitectura MVC con separación clara de capas
+- Desarrollar backend con Spring Boot siguiendo principios SOLID
+- Implementar autenticación y autorización con control de acceso por roles
+- Gestionar persistencia con JPA/Hibernate y PostgreSQL
+- Implementar sistema de votación con restricción única por usuario/proyecto
+- Aplicar control de versiones con Git/GitHub
+- Garantizar seguridad: cifrado BCrypt y validación de datos
+- Cumplir estándares de accesibilidad web (WCAG)
 
-### 3.2. Objetivos específicos
-- Diseñar e implementar la aplicación siguiendo el patrón **MVC**, separando correctamente lógica de negocio, presentación y acceso a datos.
-- Desarrollar el backend con **Spring Boot**, con una arquitectura clara y mantenible.
-- Implementar un sistema de **autenticación y autorización** para usuarios y administración, con control de acceso por roles.
-- Incorporar persistencia en base de datos relacional para gestionar usuarios, portfolios, proyectos y votos.
-- Implementar un sistema de **votación** (likes) sobre proyectos y un **ranking** público en función de las votaciones.
-- Aplicar buenas prácticas de control de versiones con **Git/GitHub** y planificación con **Trello**.
-- Garantizar un nivel adecuado de seguridad: cifrado de contraseñas, validación de datos y protección de accesos.
-- Implementar requisitos transversales optativos: accesibilidad y requisitos legales básicos de una web.
-- Desplegar la aplicación en un entorno online accesible públicamente.
+## 4. Requisitos Funcionales
 
-## 4. Requisitos funcionales
+### 4.1. Visualización de Portfolios y Proyectos
+- Listado público de proyectos con paginación
+- Vista detallada de proyectos con galería de imágenes
+- Acceso a perfil público del autor
+- Ranking global ordenado por votos
 
-### 4.1. Visualización de portfolios y proyectos
-- Listado público de proyectos publicados en la plataforma.
-- Acceso al portfolio completo del autor desde un proyecto.
-- Visualización de información del usuario propietario del portfolio.
-- Listado de proyectos ordenado por número de votos (ranking global).
+### 4.2. Gestión de Usuarios
+- Registro con validación de email único
+- Autenticación con Spring Security
+- Gestión de perfil (datos personales y enlaces a RRSS)
+- Roles: ADMIN y USER
+- Estados: activo, bloqueado
 
-### 4.2. Gestión de usuarios y perfil
-- Registro de nuevos usuarios.
-- Inicio de sesión y cierre de sesión.
-- Gestión del perfil del usuario (datos de contacto y enlaces a redes sociales).
-- Estados de usuario: activo, deshabilitado y bloqueado.
+### 4.3. Gestión de Proyectos
+- CRUD completo con control de permisos
+- Subida múltiple de imágenes (JPG, PNG, GIF, WEBP)
+- Imagen principal/carátula
+- Enlaces a repositorios y demos
+- Tecnologías utilizadas
 
-### 4.3. Gestión de proyectos (por usuario)
-- Creación, edición y eliminación de proyectos propios.
-- Inclusión de enlace web del proyecto.
-- Gestión de galería de imágenes asociadas a proyectos.
+### 4.4. Sistema de Votación
+- Un voto por usuario y proyecto (constraint BD)
+- Posibilidad de quitar voto
+- Actualización automática del contador
+- Votación AJAX sin recarga
 
-### 4.4. Sistema de votación y ranking
-- Los usuarios pueden votar/dar like a proyectos.
-- Restricción: un usuario solo puede votar una vez por proyecto.
-- Posibilidad de quitar el voto.
-- Cálculo y visualización del total de votos por proyecto.
-
-### 4.5. Sistema de favoritos
-- Los usuarios pueden marcar proyectos como favoritos para acceso rápido.
-- Listado personal de proyectos favoritos.
-- Gestión de favoritos (añadir/eliminar) desde el perfil del usuario.
-- Los favoritos son independientes del sistema de votación.
+### 4.5. Sistema de Favoritos
+- Marcar/desmarcar proyectos como favoritos
+- Listado personal de favoritos
+- Independiente del sistema de votación
 
 ### 4.6. Gestión de CV
-- Subida de archivos de CV al servidor.
-- Descarga del CV.
-- Soporte para múltiples formatos: PDF, DOCX y TXT.
+- Subida de archivos (PDF, DOCX, TXT)
+- Descarga protegida (solo propietario)
+- Múltiples versiones por usuario
+- Tamaño máximo: 10MB
 
-### 4.7. Publicación en redes sociales
-- **Compartir proyectos**: publicación automatizada en LinkedIn, Twitter, Facebook u otras redes sociales.
-- **Estados de publicación**:
-  - **Pendiente**: la publicación está en cola de procesamiento
-  - **Publicado**: se compartió exitosamente en la red social
-  - **Error**: falló la publicación (problema de conectividad, tokens expirados, etc.)
-- **Registro de publicaciones**: se guarda el historial con:
-  - Red social utilizada (`redSocial`)
-  - Fecha y hora de publicación (`fechaPublicacion`)
-  - Estado actual de la publicación (`estado`)
+### 4.7. Publicación en Redes Sociales
+- Compartir en LinkedIn, Twitter, Facebook, GitHub
+- Estados: pendiente, publicado, error
+- Historial de publicaciones
+- Reintentar publicaciones fallidas
 
-### 4.8. Panel de administración (rol Admin)
-- CRUD completo de usuarios.
-- Habilitar/deshabilitar/bloquear usuarios.
-- Moderación de proyectos.
-- Consulta de estadísticas globales básicas de la plataforma.
+### 4.8. Panel de Administración
+- CRUD de usuarios
+- Bloquear/desbloquear usuarios
+- Moderación de proyectos
+- Estadísticas globales
 
-## 5. Requisitos no funcionales
+## 5. Requisitos No Funcionales
 
 ### 5.1. Seguridad
-- Autenticación y autorización con control de permisos por roles (Admin / Usuario).
-- Cifrado de contraseñas con algoritmo seguro (p. ej. BCrypt).
-- Protección de rutas sensibles.
-- Validación de datos de entrada.
+- Autenticación con Spring Security
+- Cifrado de contraseñas con BCrypt (factor 12)
+- Protección CSRF
+- Validación de entrada en frontend y backend
+- Prevención de SQL Injection (JPA/parametrizadas)
 
 ### 5.2. Rendimiento
-- Respuesta de la aplicación en menos de 2 segundos en condiciones normales.
-- Carga del ranking en menos de 1 segundo en escenarios de uso habitual.
+- Tiempo de respuesta < 2 segundos
+- Carga de ranking < 1 segundo
+- Paginación en listados
+- Optimización de consultas con índices
 
 ### 5.3. Compatibilidad
-- Aplicación web accesible desde móviles, tablets y ordenadores.
-- Compatible con navegadores modernos (Chrome, Firefox, Edge, Safari).
+- Diseño responsive (móvil, tablet, escritorio)
+- Navegadores: Chrome, Firefox, Edge, Safari
+- Accesibilidad WCAG 2.1 nivel AA
 
 ### 5.4. Usabilidad
-- Diseño responsivo y navegación intuitiva.
-- Uso de estándares A11y: estructura semántica de HTML, contraste de colores y soporte para lectores de pantalla.
+- Interfaz intuitiva y consistente
+- Feedback visual en acciones
+- Notificaciones toast para mensajes
+- Validación en tiempo real en formularios
 
 ## 6. Restricciones
-- La aplicación debe ser responsiva y funcionar correctamente en móviles, tablets y ordenadores.
-- El proyecto se realiza de manera individual.
-- Se usarán únicamente herramientas gratuitas o disponibles en el entorno académico.
-- Debe cumplir requisitos mínimos obligatorios: **MVC**, **Spring Boot**, seguridad y persistencia en base de datos.
+- Desarrollo individual
+- Herramientas gratuitas o académicas
+- Requisitos mínimos: MVC, Spring Boot, seguridad, persistencia
+- Responsive obligatorio
 
-## 7. Suposiciones iniciales
-- Los usuarios tendrán acceso a conexión a Internet estable.
-- Los usuarios publicarán y mantendrán actualizados sus portfolios y proyectos.
-- El sistema de votación se basará en la regla de **un voto por usuario y proyecto**.
-- La aplicación funcionará en los navegadores y dispositivos compatibles definidos en los requisitos.
+## 7. Reglas de Negocio
+- Un usuario no puede votar su propio proyecto
+- Un usuario solo puede votar una vez por proyecto
+- Solo el propietario puede editar su proyecto
+- Los administradores pueden moderar cualquier contenido
+- Email único por usuario
+- Las contraseñas deben cumplir criterios mínimos de seguridad
+

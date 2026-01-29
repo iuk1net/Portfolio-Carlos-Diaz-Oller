@@ -1,194 +1,454 @@
-# Manual de Desarrollo: Portfolio
+# Manual de Desarrollo
 
-## 1. Objetivo del manual de desarrollo
-Proporcionar guías y procedimientos claros para el desarrollo de la **plataforma social de portfolios (v2.0)**, asegurando la calidad del código, la correcta organización de los archivos, la integridad de los datos y un despliegue eficiente de la aplicación.
+## 1. Objetivo
+Establecer procedimientos, estándares y buenas prácticas para el desarrollo, mantenimiento y evolución de la plataforma.
 
-## 2. Procedimientos
+## 2. Entorno de Desarrollo
 
-### 2.1. Creación de ramas
-- Naming convention: las ramas deben seguir la estructura `tipo/descripcion`.
-  - Ejemplos:
-    - `feature/registro-usuarios`
-    - `feature/sistema-votos`
-    - `feature/ranking-global`
-    - `bugfix/regla-un-voto-por-proyecto`
-    - `hotfix/ajuste-seguridad`
-- Flujo de trabajo:
-  1. Crear una nueva rama a partir de `main` para trabajar en cada funcionalidad.
-  2. Realizar commits frecuentes con mensajes claros y descriptivos para documentar los cambios.
-  3. Fusionar la rama con `main` una vez completada y probada la funcionalidad.
+### 2.1. Requisitos
+- **Java JDK**: 17 o superior
+- **Maven**: 3.6+
+- **PostgreSQL**: 15+
+- **IDE**: IntelliJ IDEA (recomendado) o Eclipse
+- **Git**: 2.30+
 
-### 2.2. Revisión de código
-- Aunque es un proyecto individual, se recomienda revisar cada cambio antes de fusionarlo a `main`.
-- Verificar que el código cumpla con los estándares de codificación y que la funcionalidad se comporte correctamente.
-- Documentar cualquier ajuste o corrección en los commits para mantener un historial claro.
+### 2.2. Configuración Inicial
+```bash
+# Clonar repositorio
+git clone https://github.com/usuario/portfolio-social.git
+cd portfolio-social
 
-## 3. Estándares de codificación
+# Configurar base de datos
+createdb portfolio_db
+psql portfolio_db < schema.sql
 
-### 3.1. Convenciones de nombres
-- Clases: nombres en **PascalCase** (ej.: `UsuarioController`, `ProyectoController`, `VotoService`).
-- Métodos y variables: **camelCase** (ej.: `registrarUsuario`, `listarRanking`, `darVoto`).
-- Constantes: todo en mayúsculas con guiones bajos (ej.: `MAX_TAMANO_ARCHIVO`, `ROL_ADMIN`).
+# Configurar variables de entorno
+export DB_USERNAME=portfolio_user
+export DB_PASSWORD=secure_password
 
-### 3.2. Estilo de código
-- Formato:
-  - Indentación de 4 espacios.
-  - Líneas de máximo 120 caracteres.
-- Comentarios:
-  - Usar `//` para comentarios cortos.
-  - Usar `/** */` para documentación extensa de clases y métodos.
-- Buenas prácticas:
-  - Evitar código duplicado, creando métodos reutilizables.
-  - Utilizar nombres claros y descriptivos para clases, métodos y variables.
-  - Mantener la organización del proyecto clara y coherente.
+# Compilar proyecto
+mvn clean install
 
-## 4. Uso de Git
-
-### 4.1. Flujo de trabajo GitHub
-- Rama principal (`main`): contiene siempre el código estable y probado.
-- Ramas de características (`feature`): se crean para desarrollar nuevas funcionalidades o cambios específicos.
-- Fusión de ramas: una vez que la funcionalidad está lista y probada, se fusiona a `main`.
-
-### 4.2. Buenas prácticas en Git
-- Realizar commits frecuentes con mensajes claros y descriptivos.
-- Formato sugerido: `[tipo]: descripción breve`.
-  - Ej.: `feat: añadir ranking global por votos`.
-- Mantener el repositorio actualizado sincronizando `main` con las ramas de desarrollo antes de fusionar cambios.
-- Usar tags para marcar versiones importantes del proyecto (ej.: `v2.0.0`, `v2.1.0`).
-
-## 5. Resolución de conflictos
-
-### 5.1. Estrategias
-- Antes de fusionar:
-  - Actualizar la rama local con los últimos cambios desde la rama de destino (e.g., `main` o `develop`).
-  - Resolver los conflictos localmente antes de crear un PR.
-- Durante la revisión:
-  - Utilizar herramientas como las interfaces de GitHub o GitKraken para identificar y resolver conflictos.
-- Buena práctica:
-  - Comentar los cambios realizados para resolver conflictos, indicando el motivo de las decisiones tomadas.
-
-## 6. Gestor de versiones y CI/CD
-
-### 6.1. Control de versiones
-- Utilizar etiquetas (tags) para identificar versiones significativas del proyecto (e.g., `v2.0.0`, `v2.0.1`).
-
-### 6.2. Integración y despliegue continuo
-- Configurar pipelines automáticos para pruebas y despliegue con GitHub Actions.
-- Realizar despliegues en entornos de pruebas antes de pasar a producción.
-
-## 7. Indicadores de calidad
-- Cobertura de pruebas: mantener pruebas unitarias y de integración con una cobertura mínima del 80% en funcionalidades críticas (registro/login, votación y ranking).
-- Conflictos de fusión: minimizar los conflictos al trabajar con ramas de funcionalidades, idealmente menos del 5%.
-- Revisiones de código: asegurar que el código revisado cumpla con los estándares y no presente errores importantes antes de fusionar a `main`.
-- Estabilidad de la aplicación: las funcionalidades principales (registro/login, gestión de proyectos, votación y ranking) deben funcionar correctamente en al menos el 95% de los casos de uso.
-
-## 8. Gestión de Archivos y Galería de Imágenes
-
-### 8.1. Galería de Imágenes en Proyectos
-
-La aplicación permite a los usuarios subir múltiples imágenes para cada proyecto, con la primera imagen funcionando como **imagen principal o carátula**.
-
-#### 8.1.1. Ubicación de la Funcionalidad
-
-**NO disponible en `/proyectos/nuevo`**
-- Razón: El proyecto debe existir en BD (tener ID) antes de asociarle imágenes.
-- Flujo: Crear proyecto → Redirige a editar → Subir imágenes.
-
-**Disponible en `/proyectos/{id}/editar`**
-- Editor completo de galería después del formulario principal.
-- Permite: subir, eliminar y establecer imagen principal.
-
-**Visualización en `/proyectos/{id}`**
-- Carrusel Bootstrap con navegación (anterior/siguiente).
-- Lightbox 2.11.4 para ver imágenes en tamaño completo.
-- Badge "⭐ Principal" en la primera imagen.
-
-**Carátula en `/proyectos/lista`**
-- La primera imagen aparece como portada de la tarjeta.
-- Hover effect con zoom suave.
-
-#### 8.1.2. Características Técnicas
-
-**Formatos soportados**: JPG, JPEG, PNG, GIF, WEBP  
-**Tamaño máximo**: 5 MB por imagen  
-**Cantidad**: Ilimitada (recomendado: 3-10 imágenes)
-
-**Validaciones**:
-- Frontend: JavaScript valida tipo y tamaño antes de subir.
-- Backend: Java valida extensión y tamaño en servidor.
-- Feedback: Notificaciones toast informan resultados.
-
-**Almacenamiento**:
-```
-uploads/images/
-├── {proyecto_id}/
-│   ├── {timestamp}.jpg
-│   ├── {timestamp}.png
-│   └── ...
+# Ejecutar aplicación
+mvn spring-boot:run
 ```
 
-#### 8.1.3. Flujo de Trabajo
+## 3. Estructura del Proyecto
 
-1. **Crear Proyecto**:
-   - Usuario crea proyecto en `/proyectos/nuevo`
-   - Sistema guarda proyecto y genera ID
-   - Redirige automáticamente a `/proyectos/{id}/editar`
-
-2. **Subir Imágenes**:
-   - Usuario hace scroll hasta "Galería de Imágenes"
-   - Click en "📤 Subir Imágenes"
-   - Selecciona una o más imágenes (máx 5MB c/u)
-   - Primera imagen seleccionada = automáticamente principal
-   - Sistema valida y sube las imágenes
-   - Muestra preview durante la carga
-
-3. **Gestionar Galería**:
-   - Cambiar principal: Click en "⭐ Principal" de cualquier imagen
-   - Eliminar: Click en "🗑️ Eliminar" (con confirmación)
-   - Las imágenes se actualizan automáticamente en lista y detalle
-
-4. **Visualizar**:
-   - En lista: Primera imagen como carátula de tarjeta
-   - En detalle: Carrusel navegable + Lightbox para zoom
-   - Click en imagen → Vista fullscreen con navegación
-
-#### 8.1.4. Componentes Implementados
-
-**Backend**:
-- `GaleriaImagenesController`: API REST para CRUD de imágenes
-- `WebMvcConfig`: Configuración para servir archivos estáticos
-- Endpoints:
-  - `POST /api/proyectos/{id}/imagenes` - Subir imagen
-  - `DELETE /api/proyectos/{id}/imagenes/{index}` - Eliminar
-  - `PUT /api/proyectos/{id}/imagenes/{index}/principal` - Establecer principal
-
-**Frontend**:
-- `galeria.js`: Manager JavaScript para gestión
-- Bootstrap 5 Carousel: Navegación de imágenes
-- Lightbox 2.11.4: Visualización fullscreen
-- jQuery 3.6.0: Requerido por Lightbox
-
-### 8.2. Gestión de CVs
-
-Los usuarios pueden subir múltiples versiones de su CV en formatos PDF, DOCX o TXT.
-
-**Ubicación**: `/usuario/cv/lista`  
-**Tamaño máximo**: 10 MB por archivo  
-**Formatos permitidos**: PDF, DOCX, TXT
-
-**Funcionalidades**:
-- Subida con drag & drop o selección tradicional
-- Descarga protegida (solo propietario)
-- Eliminación segura
-- Historial de versiones
-
-**Almacenamiento**:
 ```
-uploads/cvs/
-├── {usuario_id}/
-│   ├── {timestamp}.pdf
-│   ├── {timestamp}.docx
-│   └── ...
+src/main/java/es/fempa/acd/demosecurityproductos/
+├── config/              # Configuración (Security, MVC, etc.)
+├── controller/          # Controladores MVC y REST
+├── model/               # Entidades JPA
+│   └── enums/          # Enumeraciones
+├── repository/          # Repositorios JPA
+├── service/            # Lógica de negocio
+└── DemoSecurityProductosApplication.java
+
+src/main/resources/
+├── application.properties
+├── static/             # CSS, JS, imágenes
+└── templates/          # Vistas Thymeleaf
+
+src/test/java/          # Tests unitarios e integración
 ```
 
+## 4. Flujo de Trabajo Git
+
+### 4.1. Estrategia de Branching
+- **main**: Código estable en producción
+- **develop**: Rama de integración (opcional)
+- **feature/**: Nuevas funcionalidades
+- **bugfix/**: Correcciones de bugs
+- **hotfix/**: Fixes urgentes en producción
+
+### 4.2. Convenciones de Commits
+```
+feat: Añadir sistema de votación AJAX
+fix: Corregir validación de voto duplicado
+docs: Actualizar documentación de API
+refactor: Optimizar consultas de ranking
+test: Añadir tests para VotoService
+chore: Actualizar dependencias Spring Boot
+```
+
+### 4.3. Proceso de Desarrollo
+```bash
+# 1. Crear branch desde main
+git checkout main
+git pull origin main
+git checkout -b feature/nueva-funcionalidad
+
+# 2. Desarrollo con commits frecuentes
+git add .
+git commit -m "feat: implementar base de nueva funcionalidad"
+
+# 3. Mantener actualizado
+git fetch origin
+git rebase origin/main
+
+# 4. Push y crear Pull Request
+git push origin feature/nueva-funcionalidad
+# Crear PR en GitHub
+
+# 5. Después de aprobación
+git checkout main
+git pull origin main
+git branch -d feature/nueva-funcionalidad
+```
+
+## 5. Estándares de Código
+
+### 5.1. Convenciones de Nomenclatura
+```java
+// Clases: PascalCase
+public class ProyectoService { }
+
+// Métodos y variables: camelCase
+public void crearProyecto() { }
+private String nombreUsuario;
+
+// Constantes: UPPER_SNAKE_CASE
+private static final int MAX_FILE_SIZE = 10;
+
+// Paquetes: lowercase
+package es.fempa.acd.demosecurityproductos.service;
+```
+
+### 5.2. Documentación JavaDoc
+```java
+/**
+ * Registra un voto de un usuario a un proyecto
+ * 
+ * @param usuario el usuario que vota
+ * @param proyecto el proyecto a votar
+ * @return el voto creado
+ * @throws IllegalArgumentException si el usuario ya votó
+ */
+@Transactional
+public Voto votar(Usuario usuario, Proyecto proyecto) {
+    // Implementación
+}
+```
+
+### 5.3. Manejo de Excepciones
+```java
+// Excepciones específicas
+throw new IllegalArgumentException("Mensaje descriptivo");
+throw new AccessDeniedException("Sin permisos");
+
+// Try-catch con logging
+try {
+    // Operación
+} catch (IOException e) {
+    log.error("Error al procesar archivo: {}", e.getMessage());
+    throw new RuntimeException("Error al subir archivo", e);
+}
+```
+
+### 5.4. Transacciones
+```java
+// Operaciones que modifican BD
+@Transactional
+public void crearProyecto(Proyecto proyecto) {
+    // Múltiples operaciones atómicas
+    proyectoRepository.save(proyecto);
+    auditService.registrar("Proyecto creado");
+}
+```
+
+## 6. Testing
+
+### 6.1. Tests Unitarios
+```java
+@SpringBootTest
+class VotoServiceTest {
+    
+    @Autowired
+    private VotoService votoService;
+    
+    @Test
+    void testVotarProyecto() {
+        // Given
+        Usuario usuario = crearUsuarioTest();
+        Proyecto proyecto = crearProyectoTest();
+        
+        // When
+        Voto voto = votoService.votar(usuario, proyecto);
+        
+        // Then
+        assertNotNull(voto);
+        assertEquals(1, proyecto.getTotalLikes());
+    }
+    
+    @Test
+    void testNoPermitirVotoDuplicado() {
+        // Verificar excepción
+        assertThrows(IllegalArgumentException.class, () -> {
+            votoService.votar(usuario, proyecto);
+            votoService.votar(usuario, proyecto); // Duplicado
+        });
+    }
+}
+```
+
+### 6.2. Tests de Integración
+```java
+@WebMvcTest(ProyectoController.class)
+class ProyectoControllerTest {
+    
+    @Autowired
+    private MockMvc mockMvc;
+    
+    @Test
+    @WithMockUser(roles = "USER")
+    void testListarProyectos() throws Exception {
+        mockMvc.perform(get("/proyectos/lista"))
+            .andExpect(status().isOk())
+            .andExpect(view().name("proyectos/lista"));
+    }
+}
+```
+
+### 6.3. Ejecutar Tests
+```bash
+# Todos los tests
+mvn test
+
+# Test específico
+mvn test -Dtest=VotoServiceTest
+
+# Con cobertura
+mvn test jacoco:report
+```
+
+## 7. Base de Datos
+
+### 7.1. Migraciones
+```sql
+-- V1__create_usuarios_table.sql
+CREATE TABLE usuarios (
+    id BIGSERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    contraseña VARCHAR(255) NOT NULL,
+    rol VARCHAR(20) NOT NULL,
+    estado VARCHAR(20) NOT NULL
+);
+
+-- V2__add_indexes.sql
+CREATE INDEX idx_proyectos_totalLikes ON proyectos(total_likes DESC);
+CREATE INDEX idx_votos_usuario_proyecto ON votos(id_usuario, id_proyecto);
+```
+
+### 7.2. Consultas Optimizadas
+```java
+// Repositorio con consultas custom
+@Repository
+public interface ProyectoRepository extends JpaRepository<Proyecto, Long> {
+    
+    @Query("SELECT p FROM Proyecto p LEFT JOIN FETCH p.usuario ORDER BY p.totalLikes DESC")
+    List<Proyecto> findRankingConUsuario();
+    
+    @Query("SELECT p FROM Proyecto p WHERE p.usuario.id = :usuarioId")
+    List<Proyecto> findByUsuarioId(@Param("usuarioId") Long usuarioId);
+}
+```
+
+## 8. Seguridad
+
+### 8.1. Validación de Entrada
+```java
+// En controlador
+@PostMapping("/proyectos")
+public String crear(@Valid @ModelAttribute Proyecto proyecto, 
+                   BindingResult result) {
+    if (result.hasErrors()) {
+        return "proyectos/nuevo";
+    }
+    // Procesar
+}
+
+// En entidad
+@Entity
+public class Proyecto {
+    @NotBlank(message = "El título es obligatorio")
+    @Size(max = 200)
+    private String titulo;
+    
+    @NotBlank
+    @Size(max = 5000)
+    private String descripcion;
+}
+```
+
+### 8.2. Autorización
+```java
+// En servicio
+@PreAuthorize("hasRole('ADMIN')")
+public void eliminarUsuario(Long id) {
+    usuarioRepository.deleteById(id);
+}
+
+// Verificación manual
+public void actualizarProyecto(Long id, String username) {
+    Proyecto proyecto = obtenerProyecto(id);
+    if (!proyecto.getUsuario().getUsername().equals(username)) {
+        throw new AccessDeniedException("Sin permisos");
+    }
+    // Actualizar
+}
+```
+
+## 9. Despliegue
+
+### 9.1. Build de Producción
+```bash
+# Crear JAR ejecutable
+mvn clean package -DskipTests
+
+# JAR generado en:
+target/demoSecurityProductos-1.0.0.jar
+```
+
+### 9.2. Variables de Entorno
+```bash
+# En producción
+export SPRING_PROFILES_ACTIVE=prod
+export DB_URL=jdbc:postgresql://prod-server:5432/portfolio_db
+export DB_USERNAME=prod_user
+export DB_PASSWORD=secure_prod_password
+export JWT_SECRET=very_secure_secret_key
+```
+
+### 9.3. Ejecutar en Producción
+```bash
+java -jar demoSecurityProductos-1.0.0.jar \
+  --spring.profiles.active=prod \
+  --server.port=8080
+```
+
+### 9.4. Docker (Opcional)
+```dockerfile
+FROM openjdk:17-alpine
+WORKDIR /app
+COPY target/*.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]
+```
+
+```bash
+# Build imagen
+docker build -t portfolio-social:1.0.0 .
+
+# Ejecutar contenedor
+docker run -p 8080:8080 \
+  -e DB_URL=jdbc:postgresql://db:5432/portfolio \
+  portfolio-social:1.0.0
+```
+
+## 10. Monitoreo y Logs
+
+### 10.1. Logging
+```java
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+@Service
+public class ProyectoService {
+    private static final Logger log = LoggerFactory.getLogger(ProyectoService.class);
+    
+    public void crearProyecto(Proyecto proyecto) {
+        log.info("Creando proyecto: {}", proyecto.getTitulo());
+        try {
+            proyectoRepository.save(proyecto);
+            log.info("Proyecto creado con ID: {}", proyecto.getId());
+        } catch (Exception e) {
+            log.error("Error al crear proyecto", e);
+            throw e;
+        }
+    }
+}
+```
+
+### 10.2. Actuator (Opcional)
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+```
+
+```properties
+management.endpoints.web.exposure.include=health,info,metrics
+management.endpoint.health.show-details=when-authorized
+```
+
+## 11. Resolución de Problemas
+
+### 11.1. Errores Comunes
+
+**Error: Port already in use**
+```bash
+# Windows
+netstat -ano | findstr :8080
+taskkill /PID <PID> /F
+
+# Linux/Mac
+lsof -ti:8080 | xargs kill -9
+```
+
+**Error: Database connection refused**
+```bash
+# Verificar PostgreSQL
+pg_isready -h localhost -p 5432
+
+# Reiniciar servicio
+sudo service postgresql restart
+```
+
+**Error: Tests fallan**
+```bash
+# Limpiar y recompilar
+mvn clean install -U
+
+# Verificar base de datos de test
+dropdb test_db && createdb test_db
+```
+
+## 12. Buenas Prácticas
+
+### 12.1. Código Limpio
+- Métodos cortos (< 20 líneas)
+- Nombres descriptivos
+- Evitar código duplicado (DRY)
+- Un solo nivel de abstracción por método
+- Comentarios solo para lógica compleja
+
+### 12.2. Performance
+- Usar `@Transactional` solo cuando sea necesario
+- Lazy loading en relaciones JPA
+- Índices en columnas de búsqueda frecuente
+- Paginación en listados grandes
+- Cache para consultas frecuentes
+
+### 12.3. Seguridad
+- Nunca commitear credenciales
+- Validar entrada en frontend Y backend
+- Usar prepared statements (JPA)
+- Implementar rate limiting
+- Logs sin información sensible
+
+## 13. Recursos
+
+### 13.1. Documentación
+- [Spring Boot Docs](https://docs.spring.io/spring-boot/docs/current/reference/html/)
+- [Spring Security Reference](https://docs.spring.io/spring-security/reference/)
+- [Thymeleaf Docs](https://www.thymeleaf.org/documentation.html)
+
+### 13.2. Herramientas
+- **DBeaver**: Gestión de PostgreSQL
+- **Postman**: Testing de API
+- **SonarLint**: Análisis de código en IDE
+- **Git Extensions**: Interfaz Git visual
 
