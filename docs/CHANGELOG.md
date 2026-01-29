@@ -29,6 +29,26 @@ Cada entrada del registro contiene:
 
 ---
 
+## [2.1.3] - 2026-01-29
+**Tipo:** PATCH - Optimización y corrección de bugs
+
+**Cambios realizados:**
+- 🔧 **Optimización VotoService**: Método privado `crearVotoInterno()` para evitar validación duplicada
+- 🐛 **Corrección votacion.js**: Eliminados event listeners duplicados en vista detalle
+  - Selector cambiado a `.vote-btn-ajax:not(#voteButton)`
+  - Resuelto problema de 2 mensajes al votar en `/proyectos/{id}`
+
+**Mejoras de performance:**
+- ✅ Reducción de validaciones duplicadas en toggleVoto() (-50%)
+- ✅ Un solo event listener por botón
+- ✅ Mensajes únicos y claros
+
+**Archivos modificados:**
+- `VotoService.java` (+27 líneas)
+- `votacion.js` (+1 línea)
+
+**Autor:** Carlos Díaz Oller
+
 ## [2.1.2] - 2026-01-28
 **Tipo:** PATCH - Corrección de bug en notificaciones
 
