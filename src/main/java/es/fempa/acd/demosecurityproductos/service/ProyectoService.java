@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,11 +62,11 @@ public class ProyectoService {
      */
     @Transactional
     public Proyecto actualizarProyecto(Long proyectoId, Proyecto proyectoActualizado, String username) {
-        Proyecto proyecto = proyectoRepository.findById(proyectoId)
+        Proyecto proyecto = proyectoRepository.findByIdWithUsuario(proyectoId)
             .orElseThrow(() -> new IllegalArgumentException("Proyecto no encontrado"));
 
-        // Verificar que el usuario es el propietario
-        if (!proyecto.getUsuario().getUsername().equals(username)) {
+        // Verificar que el usuario es el propietario (usar email)
+        if (!proyecto.getUsuario().getEmail().equals(username)) {
             throw new AccessDeniedException("No tienes permisos para actualizar este proyecto");
         }
 
@@ -151,12 +152,18 @@ public class ProyectoService {
      */
     @Transactional
     public Proyecto agregarImagen(Long proyectoId, String rutaImagen, String username) {
-        Proyecto proyecto = proyectoRepository.findById(proyectoId)
+        // Usar el método con JOIN FETCH para cargar el usuario
+        Proyecto proyecto = proyectoRepository.findByIdWithUsuario(proyectoId)
             .orElseThrow(() -> new IllegalArgumentException("Proyecto no encontrado"));
 
-        // Verificar que el usuario es el propietario
-        if (!proyecto.getUsuario().getUsername().equals(username)) {
+        // Verificar que el usuario es el propietario (usar email directamente)
+        if (!proyecto.getUsuario().getEmail().equals(username)) {
             throw new AccessDeniedException("No tienes permisos para modificar este proyecto");
+        }
+
+        // Inicializar la lista si es null
+        if (proyecto.getGaleriaImagenes() == null) {
+            proyecto.setGaleriaImagenes(new ArrayList<>());
         }
 
         proyecto.getGaleriaImagenes().add(rutaImagen);
@@ -174,11 +181,11 @@ public class ProyectoService {
      */
     @Transactional
     public Proyecto eliminarImagen(Long proyectoId, String rutaImagen, String username) {
-        Proyecto proyecto = proyectoRepository.findById(proyectoId)
+        Proyecto proyecto = proyectoRepository.findByIdWithUsuario(proyectoId)
             .orElseThrow(() -> new IllegalArgumentException("Proyecto no encontrado"));
 
-        // Verificar que el usuario es el propietario
-        if (!proyecto.getUsuario().getUsername().equals(username)) {
+        // Verificar que el usuario es el propietario (usar email)
+        if (!proyecto.getUsuario().getEmail().equals(username)) {
             throw new AccessDeniedException("No tienes permisos para modificar este proyecto");
         }
 

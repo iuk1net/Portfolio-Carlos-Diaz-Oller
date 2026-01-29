@@ -4,6 +4,17 @@ Registro de cambios siguiendo versionado semántico (MAJOR.MINOR.PATCH).
 
 ---
 
+## [2.2.1] - 2026-01-29
+**Corrección crítica: Error en guardado de galería de imágenes**
+- Corregido LazyInitializationException al acceder al usuario del proyecto
+- Añadido método `findByIdWithUsuario()` con JOIN FETCH en ProyectoRepository
+- Inicialización segura de lista `galeriaImagenes` cuando es null
+- Uso consistente de email en verificaciones de permisos
+- Simplificación de GaleriaImagenesController
+- Mejor manejo de errores con mensajes descriptivos
+
+---
+
 ## [2.2.0] - 2026-01-29
 **Documentación profesionalizada**
 - Reescritura completa de documentos con lenguaje técnico

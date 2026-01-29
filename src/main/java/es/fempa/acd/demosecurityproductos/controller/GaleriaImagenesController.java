@@ -64,17 +64,7 @@ public class GaleriaImagenesController {
                                         @RequestParam(defaultValue = "false") boolean esPrincipal,
                                         Authentication authentication) {
         try {
-            // Obtener proyecto
-            Proyecto proyecto = proyectoService.buscarPorId(proyectoId);
-
-            // Verificar permisos
-            String emailUsuario = authentication.getName();
-            if (!proyecto.getUsuario().getEmail().equals(emailUsuario)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(crearErrorResponse("No tienes permisos para modificar este proyecto"));
-            }
-
-            // Validar archivo
+            // Validar archivo PRIMERO antes de consultar la BD
             if (file.isEmpty()) {
                 return ResponseEntity.badRequest()
                         .body(crearErrorResponse("El archivo está vacío"));
@@ -103,23 +93,12 @@ public class GaleriaImagenesController {
             // Guardar archivo
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-            // Actualizar proyecto
-            List<String> galeria = proyecto.getGaleriaImagenes();
-            if (galeria == null) {
-                galeria = new ArrayList<>();
-            }
-
+            // Actualizar galería del proyecto usando el servicio
             String urlImagen = "/uploads/images/" + proyectoId + "/" + filename;
+            String emailUsuario = authentication.getName();
 
-            // Si es principal, ponerla al inicio
-            if (esPrincipal) {
-                galeria.add(0, urlImagen);
-            } else {
-                galeria.add(urlImagen);
-            }
-
-            proyecto.setGaleriaImagenes(galeria);
-            proyectoService.actualizarProyecto(proyectoId, proyecto, emailUsuario);
+            // Usar el método del servicio que maneja la transacción correctamente
+            proyectoService.agregarImagen(proyectoId, urlImagen, emailUsuario);
 
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
@@ -134,10 +113,11 @@ public class GaleriaImagenesController {
                     .body(crearErrorResponse(e.getMessage()));
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(crearErrorResponse("Error al guardar la imagen"));
+                    .body(crearErrorResponse("Error al guardar la imagen: " + e.getMessage()));
         } catch (Exception e) {
+            e.printStackTrace(); // Para debugging
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(crearErrorResponse("Error inesperado"));
+                    .body(crearErrorResponse("Error inesperado: " + e.getMessage()));
         }
     }
 
