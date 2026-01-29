@@ -101,9 +101,36 @@ public class VotoService {
             quitarVoto(usuario, proyecto);
             return false;
         } else {
-            votar(usuario, proyecto);
+            // Llamar al método privado que no valida propietario (ya validado arriba)
+            crearVotoInterno(usuario, proyecto);
             return true;
         }
+    }
+
+    /**
+     * Crea un voto sin validar propietario (uso interno)
+     * Este método asume que las validaciones ya se hicieron
+     * NOTA: Se ejecuta dentro de la transacción del método padre
+     *
+     * @param usuario el usuario que vota
+     * @param proyecto el proyecto a votar
+     * @return el voto creado
+     */
+    private Voto crearVotoInterno(Usuario usuario, Proyecto proyecto) {
+        // Validar que no exista ya un voto
+        if (votoRepository.existsByUsuarioAndProyecto(usuario, proyecto)) {
+            throw new IllegalArgumentException("Ya has votado por este proyecto");
+        }
+
+        // Crear el voto
+        Voto voto = new Voto(usuario, proyecto);
+        voto = votoRepository.save(voto);
+
+        // Incrementar el contador de likes del proyecto
+        proyecto.setTotalLikes(proyecto.getTotalLikes() + 1);
+        proyectoRepository.save(proyecto);
+
+        return voto;
     }
 
     /**

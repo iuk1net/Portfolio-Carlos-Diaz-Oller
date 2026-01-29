@@ -45,7 +45,8 @@
             }
 
             // Botones en lista de proyectos (múltiples)
-            const voteButtons = document.querySelectorAll('.vote-btn-ajax');
+            // Excluir el botón con ID para evitar duplicación
+            const voteButtons = document.querySelectorAll('.vote-btn-ajax:not(#voteButton)');
             voteButtons.forEach(button => {
                 button.addEventListener('click', (e) => {
                     e.preventDefault();
