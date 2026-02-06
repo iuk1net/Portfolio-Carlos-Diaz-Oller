@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${usuario.nombre} + ' - Portfolio Social'">Perfil de Usuario</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #8b5cf6;
+            --dark-bg: #1a1a2e;
+            --card-bg: #16213e;
+            --text-light: #e0e0e0;
+            --success-color: #10b981;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #0f0f1e 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar {
+            background: rgba(22, 33, 62, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .perfil-header {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+            border-radius: 15px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .perfil-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.1), transparent);
+            border-radius: 50%;
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            margin-bottom: 1.5rem;
+            border: 4px solid rgba(99, 102, 241, 0.5);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+        }
+
+        .perfil-nombre {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .contacto-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .contacto-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+            transition: all 0.3s ease;
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .contacto-item:hover {
+            background: rgba(99, 102, 241, 0.1);
+            transform: translateX(5px);
+        }
+
+        .contacto-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 2px solid rgba(99, 102, 241, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .project-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .tech-badge {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--primary-color);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin: 0.2rem;
+        }
+
+        .badge-likes {
+            background: var(--success-color);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: var(--card-bg);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+        }
+
+        .empty-state-icon {
+            font-size: 5rem;
+            opacity: 0.5;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            padding: 0.8rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(99, 102, 241, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand fw-bold" th:href="@{/proyectos/lista}">
+                <span style="color: var(--primary-color);">Portfolio</span> Social
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/proyectos/lista}">Explorar</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" th:href="@{/usuario/dashboard}">Dashboard</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="!isAuthenticated()">
+                        <a class="btn btn-primary btn-sm ms-2" th:href="@{/login}">Iniciar Sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Perfil Header -->
+        <div class="perfil-header">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center">
+                        <div class="avatar" th:text="${#strings.substring(usuario.nombre, 0, 1)}">U</div>
+                        <div>
+                            <h1 class="perfil-nombre" th:text="${usuario.nombre}">Nombre Usuario</h1>
+                            <p class="text-muted mb-0">
+                                <i class="fas fa-envelope me-2"></i>
+                                <span th:text="${usuario.email}">email@example.com</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <a th:href="@{/usuarios/perfil/{username}/proyectos(username=${usuario.email})}"
+                       class="btn btn-primary">
+                        Ver Todos los Proyectos →
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar - Información de Contacto -->
+            <div class="col-lg-4">
+                <!-- Estadísticas -->
+                <div class="row g-3 mb-4">
+                    <div class="col-6">
+                        <div class="stat-card">
+                            <div class="stat-number" th:text="${totalProyectos}">0</div>
+                            <p class="text-muted mb-0">📁 Proyectos</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="stat-card">
+                            <div class="stat-number" th:text="${totalVotosRecibidos}">0</div>
+                            <p class="text-muted mb-0">❤️ Votos</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información de Contacto -->
+                <div class="contacto-card" th:if="${usuario.emailProfesional != null or usuario.whatsapp != null or usuario.telefono != null}">
+                    <h4 class="mb-3">📞 Contacto</h4>
+
+                    <div class="contacto-item" th:if="${usuario.emailProfesional != null}">
+                        <div class="contacto-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted d-block">Email Profesional</small>
+                            <a th:href="'mailto:' + ${usuario.emailProfesional}"
+                               class="text-light text-decoration-none"
+                               th:text="${usuario.emailProfesional}">
+                                email@example.com
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="contacto-item" th:if="${usuario.whatsapp != null}">
+                        <div class="contacto-icon">
+                            <i class="fab fa-whatsapp"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted d-block">WhatsApp</small>
+                            <a th:href="'https://wa.me/' + ${usuario.whatsapp}"
+                               target="_blank"
+                               class="text-light text-decoration-none"
+                               th:text="${usuario.whatsapp}">
+                                +34 123 456 789
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="contacto-item" th:if="${usuario.telefono != null}">
+                        <div class="contacto-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted d-block">Teléfono</small>
+                            <a th:href="'tel:' + ${usuario.telefono}"
+                               class="text-light text-decoration-none"
+                               th:text="${usuario.telefono}">
+                                +34 987 654 321
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Redes Sociales -->
+                <div class="contacto-card" th:if="${usuario.enlacesRRSS != null and !usuario.enlacesRRSS.isEmpty()}">
+                    <h4 class="mb-3">🌐 Redes Sociales</h4>
+                    <div class="social-links">
+                        <a th:each="enlace : ${usuario.enlacesRRSS}"
+                           th:href="${enlace}"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="social-link"
+                           th:title="${enlace}">
+                            <i class="fas fa-link"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content - Proyectos -->
+            <div class="col-lg-8">
+                <h2 class="section-title">
+                    <i class="fas fa-folder-open"></i>
+                    Proyectos Recientes
+                </h2>
+
+                <!-- Proyectos -->
+                <div th:if="${proyectos != null and !proyectos.isEmpty()}">
+                    <div class="row g-4">
+                        <div class="col-md-6" th:each="proyecto : ${proyectos}">
+                            <div class="project-card">
+                                <div class="card-body p-4">
+                                    <h4 class="card-title mb-3">
+                                        <a th:href="@{/proyectos/{id}(id=${proyecto.id})}"
+                                           class="text-decoration-none text-light">
+                                            <span th:text="${proyecto.titulo}"></span>
+                                        </a>
+                                    </h4>
+
+                                    <p class="card-text text-secondary mb-3"
+                                       th:text="${#strings.abbreviate(proyecto.descripcion, 100)}">
+                                    </p>
+
+                                    <!-- Technologies -->
+                                    <div class="mb-3" th:if="${proyecto.tecnologias}">
+                                        <span class="tech-badge"
+                                              th:each="tech : ${#strings.arraySplit(proyecto.tecnologias, ',')}"
+                                              th:text="${#strings.trim(tech)}"></span>
+                                    </div>
+
+                                    <!-- Stats -->
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="badge-likes">
+                                            ❤️ <span th:text="${proyecto.totalLikes}">0</span>
+                                        </span>
+                                        <a th:href="@{/proyectos/{id}(id=${proyecto.id})}"
+                                           class="btn btn-sm btn-outline-primary">
+                                            Ver Detalles →
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ver Todos los Proyectos -->
+                    <div class="text-center mt-4" th:if="${totalProyectos > 4}">
+                        <a th:href="@{/usuarios/perfil/{username}/proyectos(username=${usuario.email})}"
+                           class="btn btn-primary btn-lg">
+                            Ver Todos los Proyectos (
+                            <span th:text="${totalProyectos}">0</span>
+                            )
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Empty State -->
+                <div th:if="${proyectos == null or proyectos.isEmpty()}" class="empty-state">
+                    <div class="empty-state-icon">📭</div>
+                    <h3>Sin proyectos aún</h3>
+                    <p class="text-muted">
+                        <span th:text="${usuario.nombre}">Este usuario</span> aún no ha publicado ningún proyecto.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/bootstrap/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
+

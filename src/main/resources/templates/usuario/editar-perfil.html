@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Perfil - Portfolio Social</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #8b5cf6;
+            --dark-bg: #1a1a2e;
+            --card-bg: #16213e;
+            --text-light: #e0e0e0;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #0f0f1e 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar {
+            background: rgba(22, 33, 62, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .form-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-label {
+            color: var(--text-light);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            color: var(--text-light);
+            padding: 0.8rem;
+            border-radius: 8px;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary-color);
+            color: var(--text-light);
+            box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25);
+        }
+
+        .form-control::placeholder {
+            color: rgba(224, 224, 224, 0.5);
+        }
+
+        .enlace-item {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            align-items: center;
+        }
+
+        .enlace-item input {
+            flex: 1;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            padding: 0.8rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(99, 102, 241, 0.5);
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            border: none;
+        }
+
+        .btn-success {
+            background: #10b981;
+            border: none;
+        }
+
+        .alert {
+            border-radius: 10px;
+            border: none;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid #10b981;
+            color: #10b981;
+        }
+
+        .alert-danger {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            color: #ef4444;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .help-text {
+            font-size: 0.85rem;
+            color: rgba(224, 224, 224, 0.6);
+            margin-top: 0.3rem;
+        }
+
+        .required-mark {
+            color: #ef4444;
+            margin-left: 0.2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand fw-bold" th:href="@{/proyectos/lista}">
+                <span style="color: var(--primary-color);">Portfolio</span> Social
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/usuario/dashboard}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/usuarios/perfil/editar}">Editar Perfil</a>
+                    </li>
+                    <li class="nav-item">
+                        <form th:action="@{/logout}" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-outline-danger btn-sm ms-2">Cerrar Sesión</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="display-5 mb-2">✏️ Editar Mi Perfil</h1>
+            <p class="lead mb-0">Actualiza tu información pública y de contacto</p>
+        </div>
+
+        <!-- Alerts -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show">
+            <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+            <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Formulario de Edición -->
+        <form th:action="@{/usuarios/perfil/editar}" method="post" id="editarPerfilForm">
+
+            <!-- Información Personal -->
+            <div class="form-card">
+                <h3 class="section-title">👤 Información Personal</h3>
+
+                <!-- Nombre -->
+                <div class="mb-4">
+                    <label for="nombre" class="form-label">
+                        Nombre Completo
+                        <span class="required-mark">*</span>
+                    </label>
+                    <input type="text"
+                           class="form-control"
+                           id="nombre"
+                           name="nombre"
+                           th:value="${usuario.nombre}"
+                           required
+                           placeholder="Tu nombre completo">
+                    <div class="help-text">Este nombre será visible públicamente en tus proyectos</div>
+                </div>
+
+                <!-- Email de cuenta (no editable) -->
+                <div class="mb-4">
+                    <label class="form-label">Email de Cuenta</label>
+                    <input type="email"
+                           class="form-control"
+                           th:value="${usuario.email}"
+                           disabled
+                           readonly>
+                    <div class="help-text">Este es tu email de inicio de sesión y no puede ser modificado</div>
+                </div>
+            </div>
+
+            <!-- Información de Contacto -->
+            <div class="form-card">
+                <h3 class="section-title">📞 Información de Contacto Pública</h3>
+                <p class="text-muted mb-3">
+                    Esta información será visible en tu perfil público para que otros usuarios puedan contactarte
+                </p>
+
+                <!-- Email Profesional -->
+                <div class="mb-4">
+                    <label for="emailProfesional" class="form-label">Email Profesional</label>
+                    <input type="email"
+                           class="form-control"
+                           id="emailProfesional"
+                           name="emailProfesional"
+                           th:value="${usuario.emailProfesional}"
+                           placeholder="contacto@ejemplo.com">
+                    <div class="help-text">Email alternativo para contacto profesional</div>
+                </div>
+
+                <!-- WhatsApp -->
+                <div class="mb-4">
+                    <label for="whatsapp" class="form-label">WhatsApp</label>
+                    <input type="tel"
+                           class="form-control"
+                           id="whatsapp"
+                           name="whatsapp"
+                           th:value="${usuario.whatsapp}"
+                           placeholder="+34 612 345 678"
+                           pattern="[\+]?[0-9\s\-\(\)]+"
+                           title="Formato: +34 612345678">
+                    <div class="help-text">Número con código de país (ej: +34 612345678) para enlace directo</div>
+                </div>
+
+                <!-- Teléfono -->
+                <div class="mb-4">
+                    <label for="telefono" class="form-label">Teléfono</label>
+                    <input type="tel"
+                           class="form-control"
+                           id="telefono"
+                           name="telefono"
+                           th:value="${usuario.telefono}"
+                           placeholder="+34 987 654 321"
+                           pattern="[\+]?[0-9\s\-\(\)]+"
+                           title="Formato: +34 987654321">
+                    <div class="help-text">Número de teléfono alternativo</div>
+                </div>
+            </div>
+
+            <!-- Redes Sociales -->
+            <div class="form-card">
+                <h3 class="section-title">🌐 Enlaces a Redes Sociales</h3>
+                <p class="text-muted mb-3">
+                    Agrega enlaces a tus perfiles de redes sociales profesionales (LinkedIn, GitHub, Twitter, etc.)
+                </p>
+
+                <div id="enlacesContainer">
+                    <!-- Enlaces existentes -->
+                    <div class="enlace-item" th:each="enlace, iterStat : ${usuario.enlacesRRSS}">
+                        <input type="url"
+                               class="form-control enlace-input"
+                               name="enlacesRRSS"
+                               th:value="${enlace}"
+                               placeholder="https://linkedin.com/in/tu-perfil"
+                               pattern="https?://.+"
+                               title="Debe ser una URL válida (https://...)">
+                        <button type="button" class="btn btn-danger btn-eliminar-enlace">
+                            🗑️
+                        </button>
+                    </div>
+
+                    <!-- Si no hay enlaces, mostrar uno vacío -->
+                    <div class="enlace-item" th:if="${usuario.enlacesRRSS == null or usuario.enlacesRRSS.isEmpty()}">
+                        <input type="url"
+                               class="form-control enlace-input"
+                               name="enlacesRRSS"
+                               placeholder="https://linkedin.com/in/tu-perfil"
+                               pattern="https?://.+"
+                               title="Debe ser una URL válida (https://...)">
+                        <button type="button" class="btn btn-danger btn-eliminar-enlace">
+                            🗑️
+                        </button>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-success mt-3" id="btnAgregarEnlace">
+                    ➕ Agregar Enlace
+                </button>
+                <div class="help-text mt-2">
+                    Ejemplos: LinkedIn, GitHub, Twitter, Behance, Dribbble, tu sitio web personal, etc.
+                </div>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="d-flex justify-content-between align-items-center">
+                <a th:href="@{/usuario/dashboard}" class="btn btn-outline-secondary">
+                    ← Cancelar
+                </a>
+                <button type="submit" class="btn btn-primary btn-lg">
+                    💾 Guardar Cambios
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script th:src="@{/js/bootstrap/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/js/perfil-editor.js}"></script>
+</body>
+</html>
+

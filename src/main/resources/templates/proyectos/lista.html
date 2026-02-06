@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyectos - Portfolio Social</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #8b5cf6;
+            --dark-bg: #1a1a2e;
+            --card-bg: #16213e;
+            --text-light: #e0e0e0;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #0f0f1e 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar {
+            background: rgba(22, 33, 62, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .project-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Estilos para imagen de carátula */
+        .project-image-wrapper {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+
+        .project-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .project-image-wrapper:hover .project-image {
+            transform: scale(1.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(99, 102, 241, 0.5);
+        }
+
+        .badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+        }
+
+        .tech-badge {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--primary-color);
+            margin: 0.2rem;
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+        }
+
+        .vote-btn {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+        }
+
+        .vote-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .vote-btn.voted {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .vote-btn .vote-icon {
+            font-size: 1rem;
+        }
+
+        .alert {
+            border-radius: 10px;
+            border: none;
+        }
+
+        /* Estilos para Medallas de Ranking */
+        .ranking-medal {
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .ranking-medal.gold {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #333;
+            animation: pulse-gold 2s infinite;
+        }
+
+        .ranking-medal.silver {
+            background: linear-gradient(135deg, #C0C0C0, #A8A8A8);
+            color: #333;
+            animation: pulse-silver 2s infinite;
+        }
+
+        .ranking-medal.bronze {
+            background: linear-gradient(135deg, #CD7F32, #B8733A);
+            color: white;
+            animation: pulse-bronze 2s infinite;
+        }
+
+        .medal-icon {
+            font-size: 2rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        @keyframes pulse-gold {
+            0%, 100% { box-shadow: 0 4px 12px rgba(255, 215, 0, 0.5); }
+            50% { box-shadow: 0 4px 20px rgba(255, 215, 0, 0.8); }
+        }
+
+        @keyframes pulse-silver {
+            0%, 100% { box-shadow: 0 4px 12px rgba(192, 192, 192, 0.5); }
+            50% { box-shadow: 0 4px 20px rgba(192, 192, 192, 0.8); }
+        }
+
+        @keyframes pulse-bronze {
+            0%, 100% { box-shadow: 0 4px 12px rgba(205, 127, 50, 0.5); }
+            50% { box-shadow: 0 4px 20px rgba(205, 127, 50, 0.8); }
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">
+                <span style="color: var(--primary-color);">Portfolio</span> Social
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/proyectos/lista}">Proyectos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/proyectos/ranking}">Ranking</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" th:href="@{/proyectos/favoritos}">Mis Favoritos</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" th:href="@{/proyectos/nuevo}">
+                            <i class="bi bi-plus-circle"></i> Nuevo Proyecto
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                        <a class="nav-link" th:href="@{/admin/dashboard}">Admin Panel</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasRole('USER')">
+                        <a class="nav-link" th:href="@{/usuario/dashboard}">Mi Dashboard</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <form th:action="@{/logout}" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-outline-danger btn-sm ms-2">Cerrar Sesión</button>
+                        </form>
+                    </li>
+                    <li class="nav-item" sec:authorize="!isAuthenticated()">
+                        <a class="btn btn-primary btn-sm ms-2" th:href="@{/login}">Iniciar Sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="display-4 mb-3">
+                <span th:if="${isRanking}">🏆 Ranking de Proyectos</span>
+                <span th:unless="${isRanking}">📂 Explorar Proyectos</span>
+            </h1>
+            <p class="lead mb-0" th:if="${isRanking}">Los proyectos más votados de la plataforma</p>
+            <p class="lead mb-0" th:unless="${isRanking}">Descubre los portfolios y proyectos de nuestra comunidad</p>
+        </div>
+
+        <!-- Alerts -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>✓</strong> <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>✗</strong> <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Projects Grid -->
+        <div class="row g-4">
+            <div class="col-12" th:if="${#lists.isEmpty(proyectos)}">
+                <div class="alert alert-info text-center">
+                    <h4>No hay proyectos disponibles</h4>
+                    <p sec:authorize="isAuthenticated()">¡Sé el primero en publicar un proyecto!</p>
+                    <a sec:authorize="isAuthenticated()" th:href="@{/proyectos/nuevo}" class="btn btn-primary mt-3">
+                        Crear Primer Proyecto
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4" th:each="proyecto, iterStat : ${proyectos}">
+                <div class="project-card">
+                    <!-- Imagen principal como carátula -->
+                    <div th:if="${proyecto.galeriaImagenes != null and !proyecto.galeriaImagenes.isEmpty()}"
+                         class="project-image-wrapper">
+                        <a th:href="@{/proyectos/{id}(id=${proyecto.id})}">
+                            <img th:src="${proyecto.galeriaImagenes[0]}"
+                                 class="project-image"
+                                 th:alt="${proyecto.titulo}">
+                        </a>
+                    </div>
+
+                    <div class="card-body p-4">
+                        <!-- Ranking Badge Mejorado -->
+                        <div th:if="${isRanking}" class="d-flex justify-content-between align-items-center mb-3">
+                            <!-- Medalla para Top 3 -->
+                            <span class="ranking-medal"
+                                  th:classappend="${iterStat.index == 0} ? 'gold' : (${iterStat.index == 1} ? 'silver' : (${iterStat.index == 2} ? 'bronze' : ''))">
+                                <span th:if="${iterStat.index == 0}" class="medal-icon">🥇</span>
+                                <span th:if="${iterStat.index == 1}" class="medal-icon">🥈</span>
+                                <span th:if="${iterStat.index == 2}" class="medal-icon">🥉</span>
+                                <span th:if="${iterStat.index > 2}">#<span th:text="${iterStat.count}"></span></span>
+                            </span>
+                            <span class="badge bg-primary">
+                                ❤️ <span th:text="${proyecto.totalLikes}"></span> votos
+                            </span>
+                        </div>
+
+                        <!-- Project Title -->
+                        <h4 class="card-title mb-3">
+                            <a th:href="@{/proyectos/{id}(id=${proyecto.id})}"
+                               class="text-decoration-none text-light">
+                                <span th:text="${proyecto.titulo}"></span>
+                            </a>
+                        </h4>
+
+                        <!-- Author -->
+                        <p class="text-muted mb-2">
+                            <small>por
+                                <a th:href="@{/usuarios/perfil/{username}(username=${proyecto.usuario.email})}"
+                                   class="text-decoration-none">
+                                    <strong th:text="${proyecto.usuario.nombre}"></strong>
+                                </a>
+                            </small>
+                        </p>
+
+                        <!-- Description -->
+                        <p class="card-text text-secondary"
+                           th:text="${#strings.abbreviate(proyecto.descripcion, 120)}"></p>
+
+                        <!-- Technologies -->
+                        <div class="mb-3" th:if="${proyecto.tecnologias}">
+                            <span class="tech-badge"
+                                  th:each="tech : ${#strings.arraySplit(proyecto.tecnologias, ',')}"
+                                  th:text="${#strings.trim(tech)}"></span>
+                        </div>
+
+                        <!-- Stats and Actions -->
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div>
+                                <span class="badge bg-success me-2 badge-likes">
+                                    ❤️ <span class="like-counter" th:text="${proyecto.totalLikes}">0</span>
+                                </span>
+                            </div>
+                            <div>
+                                <!-- Vote Button AJAX (solo usuarios autenticados que NO sean propietarios) -->
+                                <button sec:authorize="isAuthenticated()"
+                                        th:if="${usuarioActual != null and usuarioActual.id != proyecto.usuario.id}"
+                                        class="btn btn-sm vote-btn vote-btn-ajax me-2"
+                                        th:data-proyecto-id="${proyecto.id}"
+                                        th:classappend="${usuarioActual != null and proyecto.votos != null and #lists.contains(proyecto.votos.![usuario.id], usuarioActual.id)} ? 'voted' : ''">
+                                    <span class="vote-icon">❤️</span>
+                                </button>
+
+                                <a th:href="@{/proyectos/{id}(id=${proyecto.id})}"
+                                   class="btn btn-sm btn-outline-primary">
+                                    Ver Detalles →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="text-center mt-5 py-5" sec:authorize="!isAuthenticated()">
+            <div class="page-header">
+                <h3>¿Quieres mostrar tu trabajo?</h3>
+                <p class="lead">Únete a nuestra comunidad y comparte tus proyectos</p>
+                <a th:href="@{/login}" class="btn btn-primary btn-lg mt-3">
+                    Crear Cuenta Gratis
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/bootstrap/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/js/votacion.js}"></script>
+</body>
+</html>
+

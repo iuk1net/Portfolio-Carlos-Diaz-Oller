@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevo Proyecto - Portfolio Social</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #8b5cf6;
+            --dark-bg: #1a1a2e;
+            --card-bg: #16213e;
+            --text-light: #e0e0e0;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #0f0f1e 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(22, 33, 62, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .form-container {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 3rem;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .form-label {
+            color: var(--text-light);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control, .form-select {
+            background: rgba(15, 15, 30, 0.5);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            color: var(--text-light);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background: rgba(15, 15, 30, 0.7);
+            border-color: var(--primary-color);
+            color: var(--text-light);
+            box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25);
+        }
+
+        .form-control::placeholder {
+            color: rgba(224, 224, 224, 0.4);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            padding: 0.8rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(99, 102, 241, 0.5);
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+        }
+
+        .char-counter {
+            font-size: 0.85rem;
+            color: rgba(224, 224, 224, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand fw-bold" th:href="@{/proyectos/lista}">
+                <span style="color: var(--primary-color);">Portfolio</span> Social
+            </a>
+            <div class="ms-auto">
+                <a th:href="@{/proyectos/lista}" class="btn btn-outline-secondary">
+                    ← Cancelar
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <h1 class="display-5 mb-2">📝 Crear Nuevo Proyecto</h1>
+                    <p class="lead mb-0">Comparte tu trabajo con la comunidad</p>
+                </div>
+
+                <!-- Alerts -->
+                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+                    <strong>✗</strong> <span th:text="${error}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+
+                <!-- Form -->
+                <div class="form-container">
+                    <form th:action="@{/proyectos/nuevo}" method="post" id="proyectoForm">
+                        <!-- Título -->
+                        <div class="mb-4">
+                            <label for="titulo" class="form-label">
+                                Título del Proyecto <span class="text-danger">*</span>
+                            </label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="titulo"
+                                   name="titulo"
+                                   maxlength="200"
+                                   placeholder="Ej: Sistema de Gestión de Inventario"
+                                   required>
+                            <div class="char-counter mt-1">
+                                <span id="tituloCount">0</span>/200 caracteres
+                            </div>
+                        </div>
+
+                        <!-- Descripción -->
+                        <div class="mb-4">
+                            <label for="descripcion" class="form-label">
+                                Descripción <span class="text-danger">*</span>
+                            </label>
+                            <textarea class="form-control"
+                                      id="descripcion"
+                                      name="descripcion"
+                                      rows="6"
+                                      placeholder="Describe tu proyecto: ¿Qué problema resuelve? ¿Cuáles fueron los principales desafíos?"
+                                      required></textarea>
+                            <small class="text-muted mt-1 d-block">
+                                Explica los objetivos, funcionalidades y logros del proyecto
+                            </small>
+                        </div>
+
+                        <!-- Tecnologías -->
+                        <div class="mb-4">
+                            <label for="tecnologias" class="form-label">
+                                Tecnologías Utilizadas
+                            </label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="tecnologias"
+                                   name="tecnologias"
+                                   maxlength="500"
+                                   placeholder="Ej: Java, Spring Boot, PostgreSQL, React">
+                            <small class="text-muted mt-1 d-block">
+                                Separa las tecnologías con comas
+                            </small>
+                        </div>
+
+                        <!-- Enlace Web -->
+                        <div class="mb-4">
+                            <label for="enlaceWeb" class="form-label">
+                                Enlace al Proyecto
+                            </label>
+                            <input type="url"
+                                   class="form-control"
+                                   id="enlaceWeb"
+                                   name="enlaceWeb"
+                                   maxlength="500"
+                                   placeholder="https://github.com/usuario/proyecto">
+                            <small class="text-muted mt-1 d-block">
+                                URL del repositorio, demo en vivo o documentación
+                            </small>
+                        </div>
+
+                        <!-- Información sobre galería -->
+                        <div class="alert alert-info" style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); color: var(--text-light);">
+                            <h6 class="mb-2">
+                                <i class="fas fa-info-circle"></i> 🖼️ Galería de Imágenes
+                            </h6>
+                            <p class="mb-0 small">
+                                Después de crear el proyecto, podrás agregar imágenes a la galería.
+                                La primera imagen será la carátula principal que se mostrará en la lista de proyectos.
+                            </p>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex justify-content-between align-items-center mt-5">
+                            <a th:href="@{/proyectos/lista}" class="btn btn-outline-secondary btn-lg">
+                                Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                ✓ Crear Proyecto
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Help Section -->
+                <div class="mt-4 p-3 rounded" style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.2);">
+                    <h6 class="fw-bold mb-2">💡 Consejos</h6>
+                    <ul class="mb-0 small text-muted">
+                        <li>Usa un título claro y descriptivo</li>
+                        <li>Explica el contexto y los resultados del proyecto</li>
+                        <li>Menciona las tecnologías principales</li>
+                        <li>Incluye un enlace al código o demo si está disponible</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/bootstrap/bootstrap.bundle.min.js}"></script>
+    <script>
+        // Character counter for title
+        document.getElementById('titulo').addEventListener('input', function(e) {
+            document.getElementById('tituloCount').textContent = e.target.value.length;
+        });
+
+        // Form validation feedback
+        document.getElementById('proyectoForm').addEventListener('submit', function(e) {
+            const titulo = document.getElementById('titulo').value.trim();
+            const descripcion = document.getElementById('descripcion').value.trim();
+
+            if (titulo.length < 5) {
+                e.preventDefault();
+                alert('El título debe tener al menos 5 caracteres');
+                return false;
+            }
+
+            if (descripcion.length < 20) {
+                e.preventDefault();
+                alert('La descripción debe tener al menos 20 caracteres');
+                return false;
+            }
+        });
+    </script>
+</body>
+</html>
+

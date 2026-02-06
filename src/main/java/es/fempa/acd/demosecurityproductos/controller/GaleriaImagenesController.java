@@ -1,0 +1,253 @@
+package es.fempa.acd.demosecurityproductos.controller;
+
+import es.fempa.acd.demosecurityproductos.model.Proyecto;
+import es.fempa.acd.demosecurityproductos.service.ProyectoService;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.*;
+
+/**
+ * API REST Controller para gestión de galería de imágenes de proyectos
+ * Maneja subida, eliminación y establecimiento de imagen principal
+ *
+ * @author Portfolio Social v2.0
+ * @version 1.0
+ */
+@RestController
+@RequestMapping("/api/proyectos")
+@PreAuthorize("isAuthenticated()")
+public class GaleriaImagenesController {
+
+    private final ProyectoService proyectoService;
+    private final Path uploadPath;
+
+    // Tamaño máximo: 5 MB por imagen
+    private static final long MAX_FILE_SIZE = 5 * 1024 * 1024;
+
+    // Formatos permitidos
+    private static final List<String> ALLOWED_EXTENSIONS = List.of("jpg", "jpeg", "png", "gif", "webp");
+
+    public GaleriaImagenesController(ProyectoService proyectoService,
+                                    @Value("${app.upload.images.dir:uploads/images}") String uploadDirectory) {
+        this.proyectoService = proyectoService;
+        this.uploadPath = Paths.get(uploadDirectory);
+        try {
+            Files.createDirectories(this.uploadPath);
+        } catch (IOException e) {
+            throw new RuntimeException("No se pudo crear el directorio de imágenes", e);
+        }
+    }
+
+    /**
+     * Sube varias imágenes a la galería del proyecto en una sola petición
+     *
+     * @param proyectoId ID del proyecto
+     * @param files lista de archivos de imagen
+     * @param authentication usuario autenticado
+     * @return ResponseEntity con el resultado
+     */
+    @PostMapping("/{proyectoId}/imagenes")
+    public ResponseEntity<?> subirImagenes(@PathVariable Long proyectoId,
+                                           @RequestParam("files") List<MultipartFile> files,
+                                           Authentication authentication) {
+        System.out.println("============ SUBIDA DE IMÁGENES ============");
+        System.out.println("Proyecto ID: " + proyectoId);
+        System.out.println("Número de archivos recibidos: " + files.size());
+        System.out.println("Usuario: " + authentication.getName());
+        System.out.println("Upload path: " + uploadPath.toAbsolutePath());
+
+        List<String> rutasGuardadas = new ArrayList<>();
+        List<String> errores = new ArrayList<>();
+        try {
+            for (MultipartFile file : files) {
+                System.out.println("Procesando archivo: " + file.getOriginalFilename() + " - Tamaño: " + file.getSize());
+                if (file.isEmpty()) {
+                    errores.add(file.getOriginalFilename() + ": vacío");
+                    continue;
+                }
+                if (file.getSize() > MAX_FILE_SIZE) {
+                    errores.add(file.getOriginalFilename() + ": excede 5MB");
+                    continue;
+                }
+                String extension = obtenerExtension(file.getOriginalFilename());
+                if (!ALLOWED_EXTENSIONS.contains(extension.toLowerCase())) {
+                    errores.add(file.getOriginalFilename() + ": formato no permitido");
+                    continue;
+                }
+                // Crear directorio del proyecto
+                Path proyectoDir = uploadPath.resolve(String.valueOf(proyectoId));
+                Files.createDirectories(proyectoDir);
+                System.out.println("Directorio creado: " + proyectoDir.toAbsolutePath());
+                // Generar nombre único
+                String timestamp = String.valueOf(System.currentTimeMillis()) + "_" + UUID.randomUUID();
+                String filename = timestamp + "." + extension;
+                Path filePath = proyectoDir.resolve(filename);
+                System.out.println("Guardando en: " + filePath.toAbsolutePath());
+                // Guardar archivo
+                Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+                System.out.println("Archivo guardado exitosamente");
+                // Ruta para la galería
+                String urlImagen = "/uploads/images/" + proyectoId + "/" + filename;
+                rutasGuardadas.add(urlImagen);
+            }
+            if (!rutasGuardadas.isEmpty()) {
+                String emailUsuario = authentication.getName();
+                System.out.println("Guardando " + rutasGuardadas.size() + " rutas en la BD");
+                proyectoService.agregarImagenes(proyectoId, rutasGuardadas, emailUsuario);
+                System.out.println("Rutas guardadas en BD exitosamente");
+            }
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", errores.isEmpty());
+            response.put("imagenesGuardadas", rutasGuardadas);
+            response.put("errores", errores);
+            response.put("mensaje", errores.isEmpty() ? "Todas las imágenes subidas correctamente" : "Algunas imágenes no se subieron");
+            System.out.println("Respuesta: " + response);
+            System.out.println("============================================");
+            return errores.isEmpty() ? ResponseEntity.ok(response) : ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).body(response);
+        } catch (Exception e) {
+            System.err.println("ERROR en subida de imágenes: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(crearErrorResponse("Error inesperado: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * Elimina una imagen de la galería
+     *
+     * @param proyectoId ID del proyecto
+     * @param index índice de la imagen en la galería
+     * @param authentication usuario autenticado
+     * @return ResponseEntity con el resultado
+     */
+    @DeleteMapping("/{proyectoId}/imagenes/{index}")
+    public ResponseEntity<?> eliminarImagen(@PathVariable Long proyectoId,
+                                           @PathVariable int index,
+                                           Authentication authentication) {
+        try {
+            Proyecto proyecto = proyectoService.buscarPorId(proyectoId);
+
+            // Verificar permisos
+            String emailUsuario = authentication.getName();
+            if (!proyecto.getUsuario().getEmail().equals(emailUsuario)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(crearErrorResponse("No tienes permisos"));
+            }
+
+            List<String> galeria = proyecto.getGaleriaImagenes();
+            if (galeria == null || index < 0 || index >= galeria.size()) {
+                return ResponseEntity.badRequest()
+                        .body(crearErrorResponse("Índice inválido"));
+            }
+
+            // Obtener URL de la imagen
+            String urlImagen = galeria.get(index);
+
+            // Eliminar archivo físico
+            try {
+                String filename = urlImagen.substring(urlImagen.lastIndexOf("/") + 1);
+                Path filePath = uploadPath.resolve(proyectoId + "/" + filename);
+                Files.deleteIfExists(filePath);
+            } catch (IOException e) {
+                // Continuar aunque falle la eliminación física
+            }
+
+            // Eliminar de la galería
+            galeria.remove(index);
+            proyecto.setGaleriaImagenes(galeria);
+            proyectoService.actualizarProyecto(proyectoId, proyecto, emailUsuario);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("mensaje", "Imagen eliminada correctamente");
+
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(crearErrorResponse("Error al eliminar la imagen"));
+        }
+    }
+
+    /**
+     * Establece una imagen como principal (mueve al inicio del array)
+     *
+     * @param proyectoId ID del proyecto
+     * @param index índice de la imagen
+     * @param authentication usuario autenticado
+     * @return ResponseEntity con el resultado
+     */
+    @PutMapping("/{proyectoId}/imagenes/{index}/principal")
+    public ResponseEntity<?> establecerImagenPrincipal(@PathVariable Long proyectoId,
+                                                       @PathVariable int index,
+                                                       Authentication authentication) {
+        try {
+            Proyecto proyecto = proyectoService.buscarPorId(proyectoId);
+
+            // Verificar permisos
+            String emailUsuario = authentication.getName();
+            if (!proyecto.getUsuario().getEmail().equals(emailUsuario)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(crearErrorResponse("No tienes permisos"));
+            }
+
+            List<String> galeria = proyecto.getGaleriaImagenes();
+            if (galeria == null || index < 0 || index >= galeria.size()) {
+                return ResponseEntity.badRequest()
+                        .body(crearErrorResponse("Índice inválido"));
+            }
+
+            // Mover imagen al inicio
+            String imagenPrincipal = galeria.remove(index);
+            galeria.add(0, imagenPrincipal);
+
+            proyecto.setGaleriaImagenes(galeria);
+            proyectoService.actualizarProyecto(proyectoId, proyecto, emailUsuario);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("mensaje", "Imagen principal establecida");
+
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(crearErrorResponse("Error al establecer imagen principal"));
+        }
+    }
+
+    /**
+     * Obtiene la extensión de un archivo
+     */
+    private String obtenerExtension(String filename) {
+        if (filename == null || filename.isEmpty()) {
+            return "";
+        }
+        int lastDot = filename.lastIndexOf('.');
+        if (lastDot == -1) {
+            return "";
+        }
+        return filename.substring(lastDot + 1);
+    }
+
+    /**
+     * Crea una respuesta de error
+     */
+    private Map<String, Object> crearErrorResponse(String mensaje) {
+        Map<String, Object> error = new HashMap<>();
+        error.put("success", false);
+        error.put("error", mensaje);
+        return error;
+    }
+}

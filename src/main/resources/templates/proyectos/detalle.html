@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${proyecto.titulo} + ' - Portfolio Social'">Proyecto</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap/lightbox/lightbox.css}">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #8b5cf6;
+            --dark-bg: #1a1a2e;
+            --card-bg: #16213e;
+            --text-light: #e0e0e0;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #0f0f1e 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(22, 33, 62, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .project-header {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+            border-radius: 15px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .project-content {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .tech-badge {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--primary-color);
+            margin: 0.3rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-block;
+        }
+
+        .action-btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .vote-btn {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .vote-btn:hover, .vote-btn.voted {
+            background: var(--primary-color);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .favorite-btn {
+            background: transparent;
+            border: 2px solid #f59e0b;
+            color: #f59e0b;
+        }
+
+        .favorite-btn:hover, .favorite-btn.favorited {
+            background: #f59e0b;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .stats-card {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand fw-bold" th:href="@{/proyectos/lista}">
+                <span style="color: var(--primary-color);">Portfolio</span> Social
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/proyectos/lista}">← Volver a Proyectos</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Alerts -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show">
+            <strong>✓</strong> <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+            <strong>✗</strong> <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Project Header -->
+        <div class="project-header">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="display-4 mb-3" th:text="${proyecto.titulo}">Título del Proyecto</h1>
+                    <p class="lead text-muted mb-3">
+                        Por <strong th:text="${proyecto.usuario.nombre}">Autor</strong>
+                    </p>
+                </div>
+                <div class="col-lg-4 text-lg-end">
+                    <!-- Edit/Delete buttons (only for owner or admin) -->
+                    <div th:if="${puedeEditar}" class="btn-group mb-3" role="group">
+                        <a th:href="@{/proyectos/{id}/editar(id=${proyecto.id})}"
+                           class="btn btn-outline-primary action-btn">
+                            ✏️ Editar
+                        </a>
+                        <form th:action="@{/proyectos/{id}/eliminar(id=${proyecto.id})}"
+                              method="post"
+                              onsubmit="return confirm('¿Estás seguro de eliminar este proyecto?');"
+                              class="d-inline">
+                            <button type="submit" class="btn btn-danger action-btn">
+                                🗑️ Eliminar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Galería de Imágenes con Lightbox -->
+            <div class="col-12 mb-4" th:if="${proyecto.galeriaImagenes != null and !proyecto.galeriaImagenes.isEmpty()}">
+                <div class="project-content">
+                    <h3 class="mb-3">🖼️ Galería del Proyecto</h3>
+
+                    <!-- Carrusel Bootstrap + Lightbox -->
+                    <div id="carouselGaleria" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-indicators">
+                            <button type="button"
+                                    th:each="img, iterStat : ${proyecto.galeriaImagenes}"
+                                    data-bs-target="#carouselGaleria"
+                                    th:data-bs-slide-to="${iterStat.index}"
+                                    th:class="${iterStat.index == 0} ? 'active' : ''"
+                                    th:aria-current="${iterStat.index == 0} ? 'true' : 'false'"
+                                    th:aria-label="'Slide ' + ${iterStat.count}"></button>
+                        </div>
+
+                        <div class="carousel-inner" style="border-radius: 12px; overflow: hidden;">
+                            <div th:each="imagen, iterStat : ${proyecto.galeriaImagenes}"
+                                 th:class="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
+
+                                <!-- Enlace con Lightbox -->
+                                <a th:href="${imagen}"
+                                   data-lightbox="galeria-proyecto"
+                                   th:data-title="${proyecto.titulo}">
+                                    <img th:src="${imagen}"
+                                         class="d-block w-100"
+                                         th:alt="'Imagen ' + ${iterStat.count} + ' de ' + ${proyecto.titulo}"
+                                         style="height: 500px; object-fit: cover;">
+
+                                    <!-- Badge de imagen principal -->
+                                    <div th:if="${iterStat.index == 0}"
+                                         style="position: absolute; top: 15px; left: 15px;">
+                                        <span class="badge bg-primary fs-6">
+                                            ⭐ Imagen Principal
+                                        </span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Controles del carrusel -->
+                        <button class="carousel-control-prev"
+                                type="button"
+                                data-bs-target="#carouselGaleria"
+                                data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Anterior</span>
+                        </button>
+                        <button class="carousel-control-next"
+                                type="button"
+                                data-bs-target="#carouselGaleria"
+                                data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Siguiente</span>
+                        </button>
+                    </div>
+
+                    <p class="text-muted text-center mt-2 mb-0">
+                        <small>Click en la imagen para verla en tamaño completo</small>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-8">
+                <!-- Description -->
+                <div class="project-content mb-4">
+                    <h3 class="mb-3">📋 Descripción</h3>
+                    <p th:text="${proyecto.descripcion}" class="lead">
+                        Descripción del proyecto...
+                    </p>
+                </div>
+
+                <!-- Technologies -->
+                <div class="project-content mb-4" th:if="${proyecto.tecnologias}">
+                    <h3 class="mb-3">🛠️ Tecnologías Utilizadas</h3>
+                    <div>
+                        <span class="tech-badge"
+                              th:each="tech : ${#strings.arraySplit(proyecto.tecnologias, ',')}"
+                              th:text="${#strings.trim(tech)}"></span>
+                    </div>
+                </div>
+
+                <!-- Link -->
+                <div class="project-content" th:if="${proyecto.enlaceWeb}">
+                    <h3 class="mb-3">🔗 Enlaces</h3>
+                    <a th:href="${proyecto.enlaceWeb}"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="btn btn-outline-primary action-btn">
+                        Ver Proyecto en Vivo →
+                    </a>
+                </div>
+
+                <!-- Compartir en Redes Sociales (solo propietario) -->
+                <div class="project-content" th:if="${puedeEditar}">
+                    <h3 class="mb-3">📢 Compartir Proyecto</h3>
+                    <p class="text-muted mb-3">Comparte tu proyecto en redes sociales</p>
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <button class="btn btn-linkedin w-100 btn-share-rrss"
+                                    th:data-proyecto-id="${proyecto.id}"
+                                    data-red-social="LinkedIn"
+                                    style="background: #0077b5; color: white;">
+                                <i class="fab fa-linkedin me-1"></i> LinkedIn
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-twitter w-100 btn-share-rrss"
+                                    th:data-proyecto-id="${proyecto.id}"
+                                    data-red-social="Twitter"
+                                    style="background: #1da1f2; color: white;">
+                                <i class="fab fa-twitter me-1"></i> Twitter
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-facebook w-100 btn-share-rrss"
+                                    th:data-proyecto-id="${proyecto.id}"
+                                    data-red-social="Facebook"
+                                    style="background: #4267B2; color: white;">
+                                <i class="fab fa-facebook me-1"></i> Facebook
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-github w-100 btn-share-rrss"
+                                    th:data-proyecto-id="${proyecto.id}"
+                                    data-red-social="GitHub"
+                                    style="background: #333; color: white;">
+                                <i class="fab fa-github me-1"></i> GitHub
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Historial de Publicaciones -->
+                    <div class="mt-4">
+                        <h5 class="mb-3">📊 Historial de Publicaciones</h5>
+                        <div id="historialPublicaciones"
+                             th:data-proyecto-id="${proyecto.id}"
+                             style="max-height: 300px; overflow-y: auto;">
+                            <div class="text-center py-3">
+                                <div class="spinner-border spinner-border-sm" role="status">
+                                    <span class="visually-hidden">Cargando...</span>
+                                </div>
+                                <p class="text-muted mt-2 mb-0">Cargando historial...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Stats -->
+                <div class="stats-card mb-4">
+                    <h2 class="display-3 mb-2 like-counter" th:text="${proyecto.totalLikes}">0</h2>
+                    <p class="text-muted mb-0">❤️ Votos recibidos</p>
+                </div>
+
+                <!-- Actions (authenticated users only) -->
+                <div sec:authorize="isAuthenticated()" class="project-content">
+                    <h5 class="mb-3">💫 Interactuar</h5>
+
+                    <!-- Vote Button AJAX - No visible para el propietario -->
+                    <div th:if="${!puedeEditar}">
+                        <button id="voteButton"
+                                th:data-proyecto-id="${proyecto.id}"
+                                th:class="${yaVoto} ? 'btn vote-btn voted w-100 action-btn mb-3 vote-btn-ajax' : 'btn vote-btn w-100 action-btn mb-3 vote-btn-ajax'">
+                            <span class="vote-icon" th:text="${yaVoto} ? '💔' : '❤️'">❤️</span>
+                            <span class="vote-text" th:text="${yaVoto} ? 'Quitar Voto' : 'Votar Proyecto'">Votar Proyecto</span>
+                        </button>
+                    </div>
+
+                    <!-- Mensaje informativo para el propietario -->
+                    <div th:if="${puedeEditar}" class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> No puedes votar tu propio proyecto
+                    </div>
+
+                    <!-- Favorite Button -->
+                    <form th:if="${!esFavorito}"
+                          th:action="@{/proyectos/{id}/favorito(id=${proyecto.id})}"
+                          method="post">
+                        <button type="submit" class="btn favorite-btn w-100 action-btn">
+                            ⭐ Agregar a Favoritos
+                        </button>
+                    </form>
+
+                    <form th:if="${esFavorito}"
+                          th:action="@{/proyectos/{id}/quitar-favorito(id=${proyecto.id})}"
+                          method="post">
+                        <button type="submit" class="btn favorite-btn favorited w-100 action-btn">
+                            ⭐ En Favoritos
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Call to action for non-authenticated -->
+                <div sec:authorize="!isAuthenticated()" class="project-content">
+                    <h5 class="mb-3">¿Te gusta este proyecto?</h5>
+                    <p class="text-muted mb-3">Inicia sesión para votar y guardar en favoritos</p>
+                    <a th:href="@{/login}" class="btn btn-primary w-100 action-btn">
+                        Iniciar Sesión
+                    </a>
+                </div>
+
+                <!-- Author Info -->
+                <div class="project-content mt-4">
+                    <h5 class="mb-3">👤 Sobre el Autor</h5>
+                    <p>
+                        <a th:href="@{/usuarios/perfil/{username}(username=${proyecto.usuario.email})}"
+                           class="text-decoration-none">
+                            <strong th:text="${proyecto.usuario.nombre}">Nombre</strong>
+                        </a>
+                    </p>
+                    <p class="text-muted" th:if="${proyecto.usuario.email}">
+                        <small th:text="${proyecto.usuario.email}">email@example.com</small>
+                    </p>
+                    <a th:href="@{/usuarios/perfil/{username}(username=${proyecto.usuario.email})}"
+                       class="btn btn-sm btn-outline-primary mt-2">
+                        Ver Perfil Completo →
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:src="@{/js/bootstrap/lightbox/lightbox.js}"></script>
+    <script th:src="@{/js/bootstrap/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/js/votacion.js}"></script>
+    <script th:src="@{/js/publicacion-rrss.js}"></script>
+    <script>
+        // Configurar Lightbox
+        if (typeof lightbox !== 'undefined') {
+            lightbox.option({
+                'resizeDuration': 200,
+                'wrapAround': true,
+                'albumLabel': 'Imagen %1 de %2',
+                'fadeDuration': 600,
+                'imageFadeDuration': 600
+            });
+        }
+    </script>
+</body>
+</html>
+
