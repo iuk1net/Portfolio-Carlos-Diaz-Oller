@@ -146,6 +146,46 @@
             font-size: 0.875rem;
             margin-top: 0.25rem;
         }
+
+        .password-match-error {
+            color: #fca5a5;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .password-match-success {
+            color: #6ee7b7;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .form-control.is-invalid {
+            border-color: #ef4444;
+        }
+
+        .form-control.is-valid {
+            border-color: #10b981;
+        }
+
+        .password-requirements {
+            background: rgba(99, 102, 241, 0.1);
+            border-left: 3px solid var(--primary-color);
+            padding: 0.75rem;
+            border-radius: 5px;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .password-requirements ul {
+            margin: 0.5rem 0 0 0;
+            padding-left: 1.25rem;
+        }
+
+        .password-requirements li {
+            margin: 0.25rem 0;
+        }
     </style>
 </head>
 <body>
@@ -176,13 +216,35 @@
                            placeholder="tu@email.com" required>
                     <div class="form-text">Usarás este email para iniciar sesión</div>
                 </div>
-                <div class="mb-4">
+
+                <!-- Campos de contraseña juntos -->
+                <div class="mb-2">
                     <label for="password" class="form-label">Contraseña</label>
                     <input type="password" class="form-control" id="password" name="password"
                            placeholder="••••••••" required minlength="6">
-                    <div class="form-text">Mínimo 6 caracteres</div>
                 </div>
-                <button type="submit" class="btn btn-primary">
+                <div class="mb-3">
+                    <label for="passwordConfirm" class="form-label">Confirmar Contraseña</label>
+                    <input type="password" class="form-control" id="passwordConfirm" name="passwordConfirm"
+                           placeholder="••••••••" required minlength="6">
+                    <div id="password-match-error" class="password-match-error">
+                        ⚠️ Las contraseñas no coinciden
+                    </div>
+                    <div id="password-match-success" class="password-match-success">
+                        ✓ Las contraseñas coinciden
+                    </div>
+                </div>
+
+                <!-- Requisitos después de ambos campos -->
+                <div class="password-requirements mb-4">
+                    <strong>📋 Requisitos de contraseña:</strong>
+                    <ul>
+                        <li>Mínimo 6 caracteres</li>
+                        <li>Recomendado: Combinar letras y números</li>
+                    </ul>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="submitBtn">
                     Crear Cuenta
                 </button>
             </form>
@@ -192,5 +254,72 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Validación en tiempo real de contraseñas
+        const passwordInput = document.getElementById('password');
+        const confirmInput = document.getElementById('passwordConfirm');
+        const errorMessage = document.getElementById('password-match-error');
+        const successMessage = document.getElementById('password-match-success');
+        const submitBtn = document.getElementById('submitBtn');
+        const registerForm = document.querySelector('form');
+
+        function validatePasswords() {
+            const password = passwordInput.value;
+            const confirm = confirmInput.value;
+
+            // Solo validar si el campo de confirmación tiene contenido
+            if (confirm.length === 0) {
+                confirmInput.classList.remove('is-invalid', 'is-valid');
+                errorMessage.style.display = 'none';
+                successMessage.style.display = 'none';
+                submitBtn.disabled = false;
+                return;
+            }
+
+            if (password !== confirm) {
+                // No coinciden
+                confirmInput.classList.add('is-invalid');
+                confirmInput.classList.remove('is-valid');
+                errorMessage.style.display = 'block';
+                successMessage.style.display = 'none';
+                submitBtn.disabled = true;
+            } else {
+                // Coinciden
+                confirmInput.classList.add('is-valid');
+                confirmInput.classList.remove('is-invalid');
+                errorMessage.style.display = 'none';
+                successMessage.style.display = 'block';
+                submitBtn.disabled = false;
+            }
+        }
+
+        // Validar mientras escribe en cualquiera de los dos campos
+        passwordInput.addEventListener('input', validatePasswords);
+        confirmInput.addEventListener('input', validatePasswords);
+
+        // Validación final al enviar el formulario
+        registerForm.addEventListener('submit', function(e) {
+            const password = passwordInput.value;
+            const confirm = confirmInput.value;
+
+            if (password !== confirm) {
+                e.preventDefault();
+                confirmInput.focus();
+                errorMessage.style.display = 'block';
+                confirmInput.classList.add('is-invalid');
+                return false;
+            }
+
+            if (password.length < 6) {
+                e.preventDefault();
+                alert('La contraseña debe tener al menos 6 caracteres');
+                passwordInput.focus();
+                return false;
+            }
+
+            return true;
+        });
+    </script>
 </body>
 </html>

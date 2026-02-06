@@ -108,6 +108,7 @@ public class AuthController {
     public String registerUser(@RequestParam String nombre,
                               @RequestParam String email,
                               @RequestParam String password,
+                              @RequestParam String passwordConfirm,
                               Model model) {
         try {
             // Validar campos vacíos
@@ -123,6 +124,18 @@ public class AuthController {
 
             if (password == null || password.trim().isEmpty()) {
                 model.addAttribute("error", "La contraseña es obligatoria");
+                return "register";
+            }
+
+            // Validar que las contraseñas coinciden
+            if (!password.equals(passwordConfirm)) {
+                model.addAttribute("error", "Las contraseñas no coinciden");
+                return "register";
+            }
+
+            // Validar longitud mínima de contraseña
+            if (password.length() < 6) {
+                model.addAttribute("error", "La contraseña debe tener al menos 6 caracteres");
                 return "register";
             }
 
