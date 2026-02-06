@@ -75,6 +75,11 @@
 			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
 
+        <!-- Spring Boot Mail para verificación de email (v2.6.0) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
 
 	    <dependency>
 	        <groupId>org.springframework.data</groupId>

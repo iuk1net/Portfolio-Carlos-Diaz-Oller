@@ -369,7 +369,7 @@ target/demoSecurityProductos-1.0.0.jar
 ```bash
 # En producción
 export SPRING_PROFILES_ACTIVE=prod
-export DB_URL=jdbc:postgresql://prod-server:5432/portfolio_db
+export DB_URL=jdbc:postgresql://prod-server:5432/portfolio
 export DB_USERNAME=prod_user
 export DB_PASSWORD=secure_prod_password
 export JWT_SECRET=very_secure_secret_key

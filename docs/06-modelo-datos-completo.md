@@ -1,8 +1,8 @@
-# Modelo de Datos Completo - Portfolio Social v2.0
+# Modelo de Datos Completo - Portfolio Social v2.5.1
 
 **Proyecto:** Plataforma Social de Portfolios — Carlos Díaz Oller  
-**Versión:** 2.0  
-**Fecha:** Enero 2026
+**Versión:** 2.5.1  
+**Fecha:** Febrero 2026
 
 ---
 

@@ -1,8 +1,27 @@
-# 📋 RESUMEN EJECUTIVO - Portfolio v2.1
+# 📋 RESUMEN EJECUTIVO - Portfolio v2.5.1
 
-**Proyecto:** Portfolio Social v2.1 con Verificación de Email  
+**Proyecto:** Portfolio Social v2.5.1 - Hito 4 Completado  
 **Fecha:** Febrero 2026  
-**Estado:** ✅ Diagramas Completados - Listo para Implementación
+**Estado:** ✅ Producción - 44 Tests Implementados (100% Exitosos)
+
+---
+
+## 📌 NOTA IMPORTANTE
+
+**Este documento contiene la planificación para una funcionalidad futura (v2.6.0):**
+- 🔮 **Verificación de Email** - Feature planificada pero AÚN NO implementada
+- 📊 **Versión actual del proyecto:** v2.5.1 (completamente funcional)
+- 🎯 **Estado:** Documentación preparatoria para próxima versión
+
+**Funcionalidades actuales (v2.5.1):**
+- ✅ Sistema de usuarios y autenticación (sin verificación email)
+- ✅ CRUD de proyectos con galería de imágenes
+- ✅ Sistema de votación AJAX
+- ✅ Sistema de favoritos
+- ✅ Gestión de CVs
+- ✅ Publicación en RRSS
+- ✅ **44 tests automatizados (70% cobertura)**
+- ✅ Panel de administración
 
 ---
 

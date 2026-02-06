@@ -1,8 +1,16 @@
-# Plan de Implementación - Verificación de Email v2.1
+# Plan de Implementación - Verificación de Email (Feature Futura v2.6.0)
 
 **Proyecto:** Plataforma Social de Portfolios — Carlos Díaz Oller  
-**Versión:** 2.1  
-**Fecha:** Febrero 2026
+**Versión Actual:** 2.5.1  
+**Versión Objetivo:** 2.6.0 (Feature planificada)  
+**Fecha:** Febrero 2026  
+**Estado:** 📋 Documentación preparatoria - NO implementado
+
+---
+
+## ⚠️ IMPORTANTE
+Este documento describe una **funcionalidad futura** que aún NO está implementada.
+La versión actual del proyecto es **v2.5.1** y funciona completamente SIN verificación de email.
 
 ---
 

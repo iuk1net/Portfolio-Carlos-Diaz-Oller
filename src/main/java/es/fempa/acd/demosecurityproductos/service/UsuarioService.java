@@ -109,4 +109,15 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
     }
 
+    /**
+     * Guarda un usuario (usado para actualizar emailVerificado desde VerificacionEmailService).
+     *
+     * @param usuario el usuario a guardar
+     * @return el usuario guardado
+     */
+    @Transactional
+    public Usuario guardar(Usuario usuario) {
+        return usuarioRepository.save(usuario);
+    }
+
 }

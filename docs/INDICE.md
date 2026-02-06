@@ -1,9 +1,9 @@
-# 📚 ÍNDICE DE DOCUMENTACIÓN - Portfolio v2.1
+# 📚 ÍNDICE DE DOCUMENTACIÓN - Portfolio v2.5.1
 
 **Proyecto:** Plataforma Social de Portfolios  
 **Autor:** Carlos Díaz Oller  
 **Fecha:** Febrero 2026  
-**Versión:** 2.1 (con Verificación de Email)
+**Versión:** 2.5.1 (Hito 4 Completado - 44 Tests Implementados)
 
 ---
 

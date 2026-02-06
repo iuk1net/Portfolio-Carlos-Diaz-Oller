@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitar Recuperación - Portfolio Social</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}">
+    <style>
+        :root {
+            --primary-color: #f59e0b;
+            --secondary-color: #d97706;
+            --dark-bg: #1a1a2e;
+            --card-bg: #16213e;
+            --text-light: #e0e0e0;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #0f0f1e 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .form-container {
+            max-width: 450px;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+
+        .card-body {
+            padding: 40px;
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+            padding: 12px 20px;
+            border-radius: 10px;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary-color);
+            color: var(--text-light);
+            box-shadow: 0 0 0 0.2rem rgba(245, 158, 11, 0.25);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+        }
+
+        .alert {
+            border-radius: 10px;
+            border: none;
+        }
+
+        .info-box {
+            background: rgba(245, 158, 11, 0.1);
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="mb-0">🔐 Recuperar Contraseña</h2>
+                <p class="mb-0 mt-2">Te enviaremos un enlace para resetear tu contraseña</p>
+            </div>
+            <div class="card-body">
+                <div th:if="${error}" class="alert alert-danger" role="alert">
+                    <span th:text="${error}"></span>
+                </div>
+
+                <div class="info-box">
+                    <strong>ℹ️ Información:</strong>
+                    <p class="mb-0 mt-2">Recibirás un email con instrucciones para crear una nueva contraseña. El enlace será válido por 24 horas.</p>
+                </div>
+
+                <form th:action="@{/solicitar-recuperacion}" method="post">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email"
+                               placeholder="tu@email.com" required>
+                        <small class="form-text text-muted">
+                            Ingresa el email con el que te registraste
+                        </small>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        📧 Enviar Enlace de Recuperación
+                    </button>
+                </form>
+
+                <div class="text-center mt-4">
+                    <a th:href="@{/login}" style="color: var(--primary-color); text-decoration: none;">
+                        ← Volver al login
+                    </a>
+                    <span class="mx-2">|</span>
+                    <a th:href="@{/reenviar-verificacion}" style="color: var(--primary-color); text-decoration: none;">
+                        ¿Email no verificado?
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-3" style="color: #888;">
+            <p>Portfolio Social © 2026</p>
+        </div>
+    </div>
+
+    <script th:src="@{/js/bootstrap/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
+

@@ -4,6 +4,30 @@ Registro de cambios siguiendo versionado semántico (MAJOR.MINOR.PATCH).
 
 ---
 
+## [2.5.2] - 2026-02-06
+**📝 Actualización de Documentación - Credenciales Correctas**
+
+### 📝 Documentación Actualizada
+- **Actualizado**: Credenciales de base de datos en toda la documentación
+  - Base de datos: `portfolio` (anteriormente `portfolio_db`)
+  - Usuario: `carlos` (valores por defecto para desarrollo)
+  - Password: `postgre` (valores por defecto para desarrollo)
+  - Email Gmail: `carlosiuka88@gmail.com` ✅ (correcto)
+  - App Password: `yguc ccvn dsja dclu` ✅ (correcto)
+
+### 📄 Archivos Actualizados
+- ✅ `docs/04-manual-desarrollo-portfolio.md` - Credenciales actualizadas
+- ✅ `docs/03-especificaciones-tecnicas-portfolio.md` - URL y credenciales actualizadas
+- ✅ `docs/05-guia-configuracion-despliegue.md` - Credenciales en systemd y docker-compose actualizadas
+
+### ✅ Consistencia Lograda
+- ✅ Todos los documentos usan `portfolio` como nombre de base de datos
+- ✅ Credenciales por defecto consistentes: `carlos` / `postgre`
+- ✅ Email Gmail confirmado y consistente en toda la documentación
+- ✅ README.md ya tenía las credenciales correctas
+
+---
+
 ## [2.1.0-rc] - 2026-02-06
 **🔧 Configuración Email Actualizada - Listo para Implementación**
 

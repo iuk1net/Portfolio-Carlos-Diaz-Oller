@@ -191,8 +191,25 @@
             <div th:if="${param.logout}" class="alert alert-success" role="alert">
                 ✓ Has cerrado sesión correctamente
             </div>
-            <div th:if="${param.registered}" class="alert alert-success" role="alert">
+            <div th:if="${param.verify}" class="alert alert-success" role="alert">
+                <strong>✓ Registro exitoso</strong><br>
+                📧 Hemos enviado un email de verificación a tu correo.<br>
+                Por favor, verifica tu email antes de iniciar sesión.
+            </div>
+            <div th:if="${param.registered} and ${not param.verify}" class="alert alert-success" role="alert">
                 ✓ Registro exitoso. Por favor, inicia sesión
+            </div>
+            <div th:if="${param.emailError}" class="alert alert-danger" role="alert">
+                ⚠️ Error al enviar email de verificación. Contacta con soporte.
+            </div>
+            <div th:if="${exito}" class="alert alert-success" role="alert">
+                <span th:text="${exito}"></span>
+            </div>
+            <div th:if="${error}" class="alert alert-danger" role="alert">
+                <span th:text="${error}"></span>
+            </div>
+            <div th:if="${info}" class="alert alert-info" role="alert" style="background: rgba(59, 130, 246, 0.1); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.3);">
+                <span th:text="${info}"></span>
             </div>
 
             <form th:action="@{/login}" method="post">
@@ -205,6 +222,11 @@
                     <label for="password" class="form-label">Contraseña</label>
                     <input type="password" class="form-control" id="password" name="password"
                            placeholder="••••••••" required>
+                    <div style="text-align: right; margin-top: 0.5rem;">
+                        <a th:href="@{/solicitar-recuperacion}" style="color: var(--primary-color); font-size: 0.9rem; text-decoration: none;">
+                            ¿Olvidaste tu contraseña?
+                        </a>
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-primary">
                     Iniciar Sesión
@@ -213,6 +235,11 @@
 
             <div class="register-link">
                 <p class="mb-0">¿No tienes cuenta? <a th:href="@{/register}">Regístrate aquí</a></p>
+                <p class="mb-0 mt-2">
+                    <a th:href="@{/reenviar-verificacion}" style="color: var(--secondary-color); font-size: 0.85rem;">
+                        📧 Reenviar email de verificación
+                    </a>
+                </p>
             </div>
         </div>
     </div>

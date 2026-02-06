@@ -51,6 +51,10 @@ public class Usuario {
     @Column(name = "enlace")
     private List<String> enlacesRRSS = new ArrayList<>();
 
+    // Campo de verificación de email (v2.6.0)
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean emailVerificado = false;
+
     // Relaciones
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Proyecto> proyectos = new HashSet<>();
@@ -63,6 +67,10 @@ public class Usuario {
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Favorito> favoritos = new HashSet<>();
+
+    // Relación con verificación de email (v2.6.0)
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private VerificacionEmail verificacionEmail;
 
     // Constructores
     public Usuario() {
@@ -204,5 +212,22 @@ public class Usuario {
 
     public void setFavoritos(Set<Favorito> favoritos) {
         this.favoritos = favoritos;
+    }
+
+    // Getters y Setters para verificación de email (v2.6.0)
+    public boolean isEmailVerificado() {
+        return emailVerificado;
+    }
+
+    public void setEmailVerificado(boolean emailVerificado) {
+        this.emailVerificado = emailVerificado;
+    }
+
+    public VerificacionEmail getVerificacionEmail() {
+        return verificacionEmail;
+    }
+
+    public void setVerificacionEmail(VerificacionEmail verificacionEmail) {
+        this.verificacionEmail = verificacionEmail;
     }
 }

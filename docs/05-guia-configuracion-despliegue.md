@@ -337,7 +337,7 @@ echo $DB_USERNAME
 echo $DB_PASSWORD
 
 # Probar conexión manual
-psql -h localhost -U portfolio_user -d portfolio
+psql -h localhost -U carlos -d portfolio
 ```
 
 ### Error: "Port 8080 already in use"

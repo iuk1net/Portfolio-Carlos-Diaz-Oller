@@ -288,8 +288,8 @@ app.upload.cvs.dir=uploads/cvs
 
 ### 10.2. Variables de Entorno
 ```bash
-DB_USERNAME=portfolio_user
-DB_PASSWORD=secure_password
+DB_USERNAME=carlos
+DB_PASSWORD=postgre
 SERVER_PORT=8080
 ```
 

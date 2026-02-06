@@ -49,6 +49,9 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private es.fempa.acd.demosecurityproductos.service.VerificacionEmailService verificacionEmailService;
+
     @GetMapping("/login")
     public String login() {
         return "login"; // Apunta a una plantilla Thymeleaf llamada login.html
@@ -135,6 +138,7 @@ public class AuthController {
             usuario.setEmail(email.trim().toLowerCase());
             usuario.setPassword(passwordEncoder.encode(password));
             // El constructor ya establece rol = USER y estado = ACTIVO
+            // Email NO verificado por defecto (emailVerificado = false)
 
             // Guardar en BD y forzar flush para escritura inmediata
             Usuario usuarioGuardado = usuarioRepository.save(usuario);
@@ -147,9 +151,22 @@ public class AuthController {
             System.out.println("   Nombre: " + usuarioGuardado.getNombre());
             System.out.println("   Rol: " + usuarioGuardado.getRol());
             System.out.println("   Estado: " + usuarioGuardado.getEstado());
+            System.out.println("   Email Verificado: " + usuarioGuardado.isEmailVerificado());
             System.out.println("========================================");
 
-            return "redirect:/login?registered=true";
+            // ⭐ NUEVO: Crear token de verificación y enviar email
+            try {
+                verificacionEmailService.crearVerificacionRegistro(usuarioGuardado);
+                System.out.println("📧 Email de verificación enviado a: " + usuarioGuardado.getEmail());
+
+                // Redirigir con mensaje de que debe verificar email
+                return "redirect:/login?registered=true&verify=true";
+            } catch (Exception e) {
+                System.err.println("⚠️ Error al enviar email de verificación: " + e.getMessage());
+                e.printStackTrace();
+                // Aunque falle el email, el usuario se registró correctamente
+                return "redirect:/login?registered=true&emailError=true";
+            }
 
         } catch (Exception e) {
             System.err.println("❌ ERROR al registrar usuario: " + e.getMessage());

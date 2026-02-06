@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificación Exitosa - Portfolio Social</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}">
+    <style>
+        :root {
+            --primary-color: #10b981;
+            --secondary-color: #059669;
+            --dark-bg: #1a1a2e;
+            --card-bg: #16213e;
+            --text-light: #e0e0e0;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #0f0f1e 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .verification-container {
+            max-width: 500px;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-bottom: none;
+        }
+
+        .success-icon {
+            font-size: 64px;
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        @keyframes scaleIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .card-body {
+            padding: 40px;
+            text-align: center;
+        }
+
+        .card-body h1 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .card-body p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            padding: 12px 40px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6);
+        }
+
+        .features {
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            color: var(--text-light);
+        }
+
+        .feature-item i {
+            color: var(--primary-color);
+            margin-right: 15px;
+            font-size: 24px;
+        }
+
+        .footer-text {
+            text-align: center;
+            margin-top: 20px;
+            color: #888;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="verification-container">
+        <div class="card">
+            <div class="card-header">
+                <div class="success-icon">✅</div>
+                <h2 class="mb-0 mt-3">¡Verificación Exitosa!</h2>
+            </div>
+            <div class="card-body">
+                <h1 th:text="${mensaje}">¡Tu cuenta ha sido verificada!</h1>
+                <p th:text="${subtitulo}">Ya puedes iniciar sesión y disfrutar de todas las funcionalidades</p>
+
+                <div class="features">
+                    <div class="feature-item">
+                        <span>✨</span>
+                        <span>Crear y publicar proyectos</span>
+                    </div>
+                    <div class="feature-item">
+                        <span>📄</span>
+                        <span>Subir tu curriculum vitae</span>
+                    </div>
+                    <div class="feature-item">
+                        <span>👍</span>
+                        <span>Votar proyectos de otros usuarios</span>
+                    </div>
+                    <div class="feature-item">
+                        <span>⭐</span>
+                        <span>Guardar proyectos favoritos</span>
+                    </div>
+                    <div class="feature-item">
+                        <span>🔗</span>
+                        <span>Compartir en redes sociales</span>
+                    </div>
+                </div>
+
+                <a th:href="@{/login}" class="btn btn-primary btn-lg">
+                    🚀 Iniciar Sesión
+                </a>
+
+                <p class="footer-text mt-4">
+                    ¿Necesitas ayuda? <a th:href="@{/solicitar-recuperacion}" style="color: var(--primary-color);">Contacta con soporte</a>
+                </p>
+            </div>
+        </div>
+
+        <div class="footer-text">
+            <p>Portfolio Social © 2026 | Carlos Díaz Oller</p>
+        </div>
+    </div>
+
+    <script th:src="@{/js/bootstrap/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
+
