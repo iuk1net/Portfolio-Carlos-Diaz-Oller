@@ -1,10 +1,12 @@
 package es.fempa.acd.demosecurityproductos.controller;
 
-import es.fempa.acd.demosecurityproductos.model.enums.Rol;
 import es.fempa.acd.demosecurityproductos.model.Proyecto;
 import es.fempa.acd.demosecurityproductos.model.Usuario;
+import es.fempa.acd.demosecurityproductos.model.CV;
+import es.fempa.acd.demosecurityproductos.model.enums.Rol;
 import es.fempa.acd.demosecurityproductos.service.ProyectoService;
 import es.fempa.acd.demosecurityproductos.service.UsuarioService;
+import es.fempa.acd.demosecurityproductos.service.CVService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -20,10 +22,12 @@ public class UsuarioController {
 
     private final UsuarioService usuarioService;
     private final ProyectoService proyectoService;
+    private final CVService cvService;
 
-    public UsuarioController(UsuarioService usuarioService, ProyectoService proyectoService) {
+    public UsuarioController(UsuarioService usuarioService, ProyectoService proyectoService, CVService cvService) {
         this.usuarioService = usuarioService;
         this.proyectoService = proyectoService;
+        this.cvService = cvService;
     }
 
     @PreAuthorize("hasRole('ADMIN')") // Solo los administradores pueden listar usuarios
@@ -99,9 +103,13 @@ public class UsuarioController {
                     .mapToInt(Proyecto::getTotalLikes)
                     .sum();
 
+            // Obtener CVs del usuario (públicos para descarga)
+            List<CV> cvsUsuario = cvService.obtenerCVsPorUsuario(usuario);
+
             // Agregar datos al modelo
             model.addAttribute("usuario", usuario);
             model.addAttribute("proyectos", proyectosUsuario);
+            model.addAttribute("cvs", cvsUsuario);
             model.addAttribute("totalProyectos", totalProyectos);
             model.addAttribute("totalVotosRecibidos", totalVotosRecibidos);
 
@@ -133,15 +141,50 @@ public class UsuarioController {
             model.addAttribute("usuario", usuario);
             model.addAttribute("tituloSeccion", "Proyectos de " + usuario.getNombre());
 
-            return "proyectos/lista";
-
+            return "usuario/perfil-proyectos";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", "Usuario no encontrado");
             return "error/404";
         }
     }
 
-    // ========== EDICIÓN DE PERFIL DE USUARIO ==========
+    /**
+     * Descarga pública de CV desde perfil de usuario
+     * Accesible sin autenticación para que reclutadores puedan descargar
+     *
+     * @param cvId ID del CV a descargar
+     * @return ResponseEntity con el archivo para descarga
+     */
+    @GetMapping("/perfil/cv/descargar/{cvId}")
+    public org.springframework.http.ResponseEntity<org.springframework.core.io.Resource> descargarCVPublico(@PathVariable Long cvId) {
+        try {
+            CV cv = cvService.obtenerCVPorId(cvId)
+                    .orElseThrow(() -> new IllegalArgumentException("CV no encontrado"));
+
+            org.springframework.core.io.Resource resource = cvService.descargarCVPublico(cvId);
+
+            // Generar nombre descriptivo para la descarga
+            String filename = "CV_" + cv.getUsuario().getNombre().replace(" ", "_") +
+                             "_" + cvId + "." + cv.getTipoArchivo().toLowerCase();
+
+            // Determinar tipo de contenido
+            org.springframework.http.MediaType mediaType = org.springframework.http.MediaType.APPLICATION_OCTET_STREAM;
+            if (cv.getTipoArchivo().equalsIgnoreCase("PDF")) {
+                mediaType = org.springframework.http.MediaType.APPLICATION_PDF;
+            }
+
+            return org.springframework.http.ResponseEntity.ok()
+                    .contentType(mediaType)
+                    .header(org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
+                           "attachment; filename=\"" + filename + "\"")
+                    .body(resource);
+
+        } catch (Exception e) {
+            return org.springframework.http.ResponseEntity.notFound().build();
+        }
+    }
+
+    // ========== EDITAR PERFIL ==========
 
     /**
      * Muestra el formulario de edición del perfil del usuario autenticado

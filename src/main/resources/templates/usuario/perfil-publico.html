@@ -362,6 +362,35 @@
                         </a>
                     </div>
                 </div>
+
+                <!-- CVs Disponibles para Descarga -->
+                <div class="contacto-card" th:if="${cvs != null and !cvs.isEmpty()}">
+                    <h4 class="mb-3">📄 Curriculum Vitae</h4>
+                    <p class="text-muted small mb-3">
+                        Descarga el CV para conocer más sobre la experiencia y habilidades
+                    </p>
+                    <div class="cv-list">
+                        <div th:each="cv, iterStat : ${cvs}" class="cv-item mb-2">
+                            <a th:href="@{/usuarios/perfil/cv/descargar/{cvId}(cvId=${cv.id})}"
+                               class="btn btn-success w-100 d-flex align-items-center justify-content-between"
+                               download>
+                                <span>
+                                    <i class="fas fa-file-pdf me-2" th:if="${cv.tipoArchivo.toLowerCase() == 'pdf'}"></i>
+                                    <i class="fas fa-file-word me-2" th:if="${cv.tipoArchivo.toLowerCase() == 'docx'}"></i>
+                                    <i class="fas fa-file-alt me-2" th:if="${cv.tipoArchivo.toLowerCase() == 'txt'}"></i>
+                                    CV <span th:if="${#lists.size(cvs) > 1}" th:text="'#' + (iterStat.index + 1)"></span>
+                                </span>
+                                <span>
+                                    <i class="fas fa-download"></i>
+                                </span>
+                            </a>
+                            <small class="text-muted d-block mt-1 text-center">
+                                <i class="far fa-calendar-alt me-1"></i>
+                                Subido el <span th:text="${#temporals.format(cv.fechaSubida, 'dd/MM/yyyy')}"></span>
+                            </small>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Main Content - Proyectos -->

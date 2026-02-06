@@ -183,6 +183,38 @@ public class CVService {
     }
 
     /**
+     * Obtiene CVs por usuario (alias para compatibilidad)
+     *
+     * @param usuario usuario propietario
+     * @return lista de CVs del usuario
+     */
+    public List<CV> obtenerCVsPorUsuario(Usuario usuario) {
+        return listarCVsPorUsuario(usuario);
+    }
+
+    /**
+     * Descarga pública de CV (sin verificación de permisos)
+     * Permite que cualquiera descargue un CV desde el perfil público
+     *
+     * @param cvId ID del CV
+     * @return Resource del archivo
+     * @throws IOException si hay error al leer el archivo
+     */
+    public Resource descargarCVPublico(Long cvId) throws IOException {
+        CV cv = cvRepository.findById(cvId)
+            .orElseThrow(() -> new IllegalArgumentException("CV no encontrado"));
+
+        Path filePath = Paths.get(cv.getRutaServidor());
+        Resource resource = new UrlResource(filePath.toUri());
+
+        if (!resource.exists() || !resource.isReadable()) {
+            throw new IOException("No se pudo leer el archivo del CV");
+        }
+
+        return resource;
+    }
+
+    /**
      * Obtiene el CV más reciente de un usuario
      *
      * @param usuario usuario propietario
