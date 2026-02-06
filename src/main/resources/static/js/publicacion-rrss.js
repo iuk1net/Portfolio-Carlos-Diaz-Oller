@@ -67,6 +67,15 @@
                     credentials: 'same-origin'
                 });
 
+                // DETECTAR SI NO ESTÁ AUTENTICADO
+                if (response.status === 401 || response.status === 403) {
+                    this.mostrarModalLogin('compartir este proyecto');
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                    button.classList.remove('loading');
+                    return;
+                }
+
                 const data = await response.json();
 
                 if (data.success) {
@@ -213,11 +222,61 @@
             } catch (error) {
                 console.error('Error al reintentar:', error);
                 this.mostrarNotificacion(error.message || 'Error al reintentar', 'error');
-            }
+            }, 3000);
         }
 
         /**
-         * Marca un botón como compartido
+         * Muestra modal/notificación pidiendo login
+         *
+         * @param {string} accion - Acción que intentó realizar
+         */
+        mostrarModalLogin(accion) {
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+                background: rgba(0, 0, 0, 0.7); z-index: 99999;
+                display: flex; align-items: center; justify-content: center;
+                animation: fadeIn 0.3s ease-out;
+            `;
+
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+                color: #e0e0e0; padding: 2.5rem; border-radius: 16px;
+                max-width: 450px; width: 90%;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+                border: 1px solid rgba(99, 102, 241, 0.3);
+                animation: scaleIn 0.3s ease-out; text-align: center;
+            `;
+
+            modal.innerHTML = `
+                <div style="font-size: 4rem; margin-bottom: 1rem;">🔒</div>
+                <h3 style="color: #6366f1; margin-bottom: 1rem;">Inicia Sesión para Continuar</h3>
+                <p style="color: #9ca3af; margin-bottom: 1.5rem;">
+                    Para <strong style="color: #e0e0e0;">${accion}</strong>, necesitas una cuenta.
+                </p>
+                <div style="display: flex; gap: 1rem; justify-content: center;">
+                    <a href="/login" style="background: #6366f1; color: white; padding: 0.75rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600;">
+                        Iniciar Sesión
+                    </a>
+                    <a href="/register" style="background: transparent; border: 2px solid #6366f1; color: #6366f1; padding: 0.75rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600;">
+                        Registrarse
+                    </a>
+                </div>
+                <button id="close-modal" style="margin-top: 1.5rem; background: transparent; border: none; color: #9ca3af; cursor: pointer;">
+                    Seguir como visualizador
+                </button>
+            `;
+
+            overlay.appendChild(modal);
+            document.body.appendChild(overlay);
+
+            document.getElementById('close-modal').onclick = () => overlay.remove();
+            overlay.onclick = (e) => e.target === overlay && overlay.remove();
+        }
+
+        /**
+         * Marca un botón como ya compartido
          *
          * @param {HTMLElement} button - Botón de compartir
          * @param {string} redSocial - Nombre de la red social
@@ -287,6 +346,68 @@
                 case 'GitHub': return '<i class="fab fa-github"></i>';
                 default: return '<i class="fas fa-share-alt"></i>';
             }
+        }
+
+        /**
+         * Muestra una notificación con enlace clickeable
+         *
+         * @param {string} mensaje - Mensaje a mostrar
+         * @param {string} url - URL del enlace
+         * @param {string} nombreRed - Nombre de la red social
+         */
+        mostrarNotificacionConEnlace(mensaje, url, nombreRed) {
+            let container = document.getElementById('toast-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'toast-container';
+                container.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    z-index: 10000;
+                `;
+                document.body.appendChild(container);
+            }
+
+            const toast = document.createElement('div');
+            toast.className = 'toast toast-link';
+            toast.style.cssText = `
+                background: #0077b5;
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                margin-bottom: 10px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                animation: slideInRight 0.3s ease-out;
+                display: flex;
+                flex-direction: column;
+                gap: 0.75rem;
+                min-width: 300px;
+                cursor: pointer;
+            `;
+
+            toast.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="font-size: 1.2rem;">🔗</span>
+                    <span style="font-weight: 600;">${mensaje}</span>
+                </div>
+                <a href="${url}" target="_blank" 
+                   style="color: white; text-decoration: underline; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fab fa-linkedin"></i> Abrir ${nombreRed} →
+                </a>
+            `;
+
+            toast.onclick = () => {
+                window.open(url, '_blank');
+            };
+
+            container.appendChild(toast);
+
+            // Auto-remover después de 8 segundos
+            setTimeout(() => {
+                toast.style.animation = 'slideOutRight 0.3s ease-out';
+                setTimeout(() => toast.remove(), 300);
+            }, 8000);
         }
 
         /**

@@ -125,7 +125,8 @@ public class ProyectoService {
         }
 
         // Delegar a PublicacionRRSSService
-        publicacionRRSSService.publicarEnRedSocial(proyecto, redSocial);
+        // Este método es llamado desde el UML antiguo, se asume que NO es admin
+        publicacionRRSSService.publicarEnRedSocial(proyecto, redSocial, false);
     }
 
     /**

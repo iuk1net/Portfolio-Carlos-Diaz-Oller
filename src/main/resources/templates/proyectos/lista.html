@@ -259,12 +259,22 @@
             <div class="col-md-6 col-lg-4" th:each="proyecto, iterStat : ${proyectos}">
                 <div class="project-card">
                     <!-- Imagen principal como carátula -->
-                    <div th:if="${proyecto.galeriaImagenes != null and !proyecto.galeriaImagenes.isEmpty()}"
-                         class="project-image-wrapper">
+                    <div class="project-image-wrapper">
                         <a th:href="@{/proyectos/{id}(id=${proyecto.id})}">
-                            <img th:src="${proyecto.galeriaImagenes[0]}"
+                            <!-- Si tiene imágenes, mostrar la primera -->
+                            <img th:if="${proyecto.galeriaImagenes != null and !proyecto.galeriaImagenes.isEmpty()}"
+                                 th:src="${proyecto.galeriaImagenes[0]}"
                                  class="project-image"
                                  th:alt="${proyecto.titulo}">
+                            <!-- Si NO tiene imágenes, mostrar placeholder -->
+                            <div th:unless="${proyecto.galeriaImagenes != null and !proyecto.galeriaImagenes.isEmpty()}"
+                                 class="project-image placeholder-image"
+                                 style="display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2)); height: 250px;">
+                                <div style="text-align: center; color: rgba(99, 102, 241, 0.6);">
+                                    <i class="fas fa-image" style="font-size: 4rem; margin-bottom: 1rem;"></i>
+                                    <p style="margin: 0; font-size: 0.9rem;">Sin imagen</p>
+                                </div>
+                            </div>
                         </a>
                     </div>
 

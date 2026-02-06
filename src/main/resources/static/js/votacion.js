@@ -76,6 +76,14 @@
                     credentials: 'same-origin'
                 });
 
+                // DETECTAR SI NO ESTÁ AUTENTICADO
+                if (response.status === 401 || response.status === 403) {
+                    this.mostrarModalLogin('votar este proyecto');
+                    button.disabled = false;
+                    button.classList.remove('loading');
+                    return;
+                }
+
                 const data = await response.json();
 
                 // Verificar si la respuesta HTTP fue exitosa
@@ -268,6 +276,117 @@
                 toast.style.animation = 'slideOutRight 0.3s ease-out';
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
+        }
+
+        /**
+         * Muestra modal/notificación pidiendo login
+         *
+         * @param {string} accion - Acción que intentó realizar (ej: "votar este proyecto")
+         */
+        mostrarModalLogin(accion) {
+            // Crear overlay
+            const overlay = document.createElement('div');
+            overlay.id = 'login-required-overlay';
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.7);
+                z-index: 99999;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                animation: fadeIn 0.3s ease-out;
+            `;
+
+            // Crear modal
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+                color: #e0e0e0;
+                padding: 2.5rem;
+                border-radius: 16px;
+                max-width: 450px;
+                width: 90%;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+                border: 1px solid rgba(99, 102, 241, 0.3);
+                animation: scaleIn 0.3s ease-out;
+                text-align: center;
+            `;
+
+            modal.innerHTML = `
+                <div style="font-size: 4rem; margin-bottom: 1rem;">
+                    🔒
+                </div>
+                <h3 style="color: #6366f1; margin-bottom: 1rem; font-size: 1.5rem;">
+                    Inicia Sesión para Continuar
+                </h3>
+                <p style="color: #9ca3af; margin-bottom: 1.5rem; font-size: 1rem;">
+                    Para <strong style="color: #e0e0e0;">${accion}</strong>, 
+                    necesitas tener una cuenta en Portfolio Social.
+                </p>
+                <div style="background: rgba(99, 102, 241, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid rgba(99, 102, 241, 0.2);">
+                    <p style="margin: 0; font-size: 0.9rem; color: #9ca3af;">
+                        <i class="fas fa-info-circle" style="color: #6366f1;"></i>
+                        Puedes explorar todos los proyectos sin cuenta, pero para interactuar necesitas registrarte.
+                    </p>
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: center;">
+                    <a href="/login" 
+                       style="background: #6366f1; color: white; padding: 0.75rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s; display: inline-block;">
+                        <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                    </a>
+                    <a href="/register" 
+                       style="background: transparent; border: 2px solid #6366f1; color: #6366f1; padding: 0.75rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s; display: inline-block;">
+                        <i class="fas fa-user-plus"></i> Registrarse
+                    </a>
+                </div>
+                <button id="close-login-modal" 
+                        style="margin-top: 1.5rem; background: transparent; border: none; color: #9ca3af; cursor: pointer; font-size: 0.9rem;">
+                    Seguir como visualizador
+                </button>
+            `;
+
+            overlay.appendChild(modal);
+            document.body.appendChild(overlay);
+
+            // Cerrar modal
+            const closeBtn = document.getElementById('close-login-modal');
+            closeBtn.addEventListener('click', () => {
+                overlay.style.animation = 'fadeOut 0.3s ease-out';
+                setTimeout(() => overlay.remove(), 300);
+            });
+
+            // Cerrar al hacer click fuera del modal
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.style.animation = 'fadeOut 0.3s ease-out';
+                    setTimeout(() => overlay.remove(), 300);
+                }
+            });
+
+            // Agregar animaciones CSS si no existen
+            if (!document.getElementById('login-modal-animations')) {
+                const style = document.createElement('style');
+                style.id = 'login-modal-animations';
+                style.textContent = `
+                    @keyframes fadeIn {
+                        from { opacity: 0; }
+                        to { opacity: 1; }
+                    }
+                    @keyframes fadeOut {
+                        from { opacity: 1; }
+                        to { opacity: 0; }
+                    }
+                    @keyframes scaleIn {
+                        from { transform: scale(0.8); opacity: 0; }
+                        to { transform: scale(1); opacity: 1; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
         }
 
         /**

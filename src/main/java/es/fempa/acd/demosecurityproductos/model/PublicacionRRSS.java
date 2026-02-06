@@ -30,6 +30,31 @@ public class PublicacionRRSS {
     @Column(nullable = false, length = 20)
     private EstadoPublicacion estado; // PENDIENTE, PUBLICADO, ERROR
 
+    // ========================================
+    // CAMPOS NUEVOS v3.0.0 - LinkedIn Integration
+    // ========================================
+
+    /**
+     * ID externo de la publicación en la red social
+     * Ejemplo LinkedIn: "urn:li:ugcPost:123456789"
+     */
+    @Column(name = "id_externo", length = 200)
+    private String idExterno;
+
+    /**
+     * URL pública de la publicación en la red social
+     * Permite acceder directamente a la publicación
+     */
+    @Column(name = "url_publicacion", length = 500)
+    private String urlPublicacion;
+
+    /**
+     * Mensaje de error si la publicación falló
+     * Se guarda para debugging y reintentos
+     */
+    @Column(name = "mensaje_error", length = 1000)
+    private String mensajeError;
+
     // Constructores
     public PublicacionRRSS() {
         this.fechaPublicacion = LocalDateTime.now();
@@ -81,6 +106,34 @@ public class PublicacionRRSS {
 
     public void setEstado(EstadoPublicacion estado) {
         this.estado = estado;
+    }
+
+    // ========================================
+    // Getters y Setters - Campos nuevos v3.0.0
+    // ========================================
+
+    public String getIdExterno() {
+        return idExterno;
+    }
+
+    public void setIdExterno(String idExterno) {
+        this.idExterno = idExterno;
+    }
+
+    public String getUrlPublicacion() {
+        return urlPublicacion;
+    }
+
+    public void setUrlPublicacion(String urlPublicacion) {
+        this.urlPublicacion = urlPublicacion;
+    }
+
+    public String getMensajeError() {
+        return mensajeError;
+    }
+
+    public void setMensajeError(String mensajeError) {
+        this.mensajeError = mensajeError;
     }
 
     @PrePersist

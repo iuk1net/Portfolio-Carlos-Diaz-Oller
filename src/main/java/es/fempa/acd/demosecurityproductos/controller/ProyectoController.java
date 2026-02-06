@@ -78,11 +78,18 @@ public class ProyectoController {
 
     /**
      * Ver detalle de un proyecto
+     * PÚBLICO - Accesible para usuarios autenticados y visitantes (para compartir en LinkedIn)
      */
     @GetMapping("/{id}")
     public String verDetalleProyecto(@PathVariable Long id, Model model, Authentication authentication) {
         Proyecto proyecto = proyectoService.buscarPorId(id);
         model.addAttribute("proyecto", proyecto);
+
+        // Por defecto, es visitante (no puede editar, votar, etc.)
+        model.addAttribute("puedeEditar", false);
+        model.addAttribute("yaVoto", false);
+        model.addAttribute("esFavorito", false);
+        model.addAttribute("esVisitante", authentication == null);
 
         // Verificar si el usuario actual es el propietario o admin
         if (authentication != null) {
@@ -90,6 +97,8 @@ public class ProyectoController {
             Usuario usuario = usuarioService.buscarPorEmail(email).orElse(null);
 
             if (usuario != null) {
+                model.addAttribute("esVisitante", false);
+
                 boolean isOwner = proyecto.getUsuario().getId().equals(usuario.getId());
                 boolean isAdmin = authentication.getAuthorities()
                         .contains(new SimpleGrantedAuthority("ROLE_ADMIN"));

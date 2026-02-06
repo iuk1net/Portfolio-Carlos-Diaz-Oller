@@ -4,10 +4,17 @@ Portfolio web personal con backend (Spring Boot) y persistencia en base de datos
 
 ## 🎯 Estado del Proyecto
 **Hito 4 Completado:** ✅ **APROBADO**  
-**Versión:** 2.5.1  
-**Fecha:** 03/02/2026
+**Versión:** 3.0.1  
+**Fecha:** 06/02/2026
+
+### 🚀 Novedad: LinkedIn Configurado
+- ✅ Integración con LinkedIn completada
+- ✅ Access Token obtenido y configurado
+- ✅ Sistema listo para publicaciones reales en LinkedIn
+- 📋 Próximo paso: Implementación del MVP (DÍA 1)
 
 ## 📚 Documentación
+- **Índice completo**: [`docs/INDICE.md`](./docs/INDICE.md)
 - **Documentación principal**: [`docs/DOCUMENTACION-PORTFOLIO.md`](./docs/DOCUMENTACION-PORTFOLIO.md)
 
 ### Documentos Técnicos

@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
  * API REST Controller para publicación en redes sociales
  * Proporciona endpoints AJAX para compartir proyectos en RRSS
  *
- * @author Portfolio Social v2.0
- * @version 1.0
+ * @author Portfolio Social v3.0
+ * @version 3.0.0 - LinkedIn Integration
  */
 @RestController
 @RequestMapping("/api/publicaciones")
@@ -60,13 +60,35 @@ public class PublicacionRRSSController {
             }
 
             // Publicar en la red social
-            PublicacionRRSS publicacion = publicacionRRSSService.publicarEnRedSocial(proyecto, redSocial);
+            // LinkedIn → SIEMPRE automático (todos los usuarios)
+            // Otras redes → Abre ventana para compartir manualmente
+            boolean esAdmin = false; // Ya no importa, LinkedIn es automático para todos
+            PublicacionRRSS publicacion = publicacionRRSSService.publicarEnRedSocial(proyecto, redSocial, esAdmin);
 
             // Construir respuesta
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("publicacion", crearPublicacionDTO(publicacion));
-            response.put("mensaje", "¡Proyecto compartido en " + redSocial + "!");
+
+            // Mensaje diferente según la red social
+            if ("LinkedIn".equals(redSocial)) {
+                // LinkedIn → Publicación automática exitosa
+                if (publicacion.getEstado().name().equals("PUBLICADO")) {
+                    response.put("mensaje", "¡Proyecto publicado automáticamente en LinkedIn!");
+                    response.put("url", publicacion.getUrlPublicacion());
+                    response.put("verEnLinkedIn", true);
+                } else if (publicacion.getEstado().name().equals("ERROR")) {
+                    response.put("mensaje", "Error al publicar en LinkedIn: " + publicacion.getMensajeError());
+                    response.put("error", true);
+                } else {
+                    response.put("mensaje", "Publicando en LinkedIn...");
+                }
+            } else {
+                // Otras redes → Abrir ventana para compartir manualmente
+                response.put("mensaje", "Abriendo " + redSocial + " para compartir...");
+                response.put("url", publicacion.getUrlPublicacion());
+                response.put("abrirEnNuevaVentana", true);
+            }
 
             return ResponseEntity.ok(response);
 
@@ -116,12 +138,10 @@ public class PublicacionRRSSController {
      * Reintenta una publicación fallida (AJAX)
      *
      * @param publicacionId ID de la publicación
-     * @param authentication datos del usuario autenticado
      * @return ResponseEntity con el resultado
      */
     @PostMapping("/{publicacionId}/reintentar")
-    public ResponseEntity<?> reintentarPublicacion(@PathVariable Long publicacionId,
-                                                   Authentication authentication) {
+    public ResponseEntity<?> reintentarPublicacion(@PathVariable Long publicacionId) {
         try {
             // Reintentar publicación
             PublicacionRRSS publicacion = publicacionRRSSService.reintentarPublicacion(publicacionId);

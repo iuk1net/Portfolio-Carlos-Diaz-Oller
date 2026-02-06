@@ -43,6 +43,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Recursos estáticos públicos
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico", "/webjars/**").permitAll()
+                        .requestMatchers("/uploads/**").permitAll() // Imágenes subidas por usuarios (galerías, CVs, etc.)
                         .requestMatchers("/error", "/error/**").permitAll()
                         .requestMatchers("/login", "/", "/logout", "/register").permitAll()
 
@@ -50,9 +51,12 @@ public class SecurityConfig {
                         .requestMatchers("/verificar-email", "/reenviar-verificacion",
                                        "/solicitar-recuperacion", "/recuperar-password").permitAll()
 
-                        // Proyectos - lectura pública, escritura autenticada
-                        .requestMatchers("/proyectos/lista", "/proyectos/ranking", "/proyectos/*/").permitAll()
-                        .requestMatchers("/proyectos/**").authenticated()
+                        // Proyectos - Vista pública (ROL VISUALIZADOR)
+                        .requestMatchers("/proyectos/lista", "/proyectos/ranking").permitAll()
+                        .requestMatchers("/proyectos/{id}").permitAll() // Detalle de proyecto PÚBLICO
+                        .requestMatchers("/proyectos/nuevo", "/proyectos/*/editar", "/proyectos/*/eliminar").authenticated()
+                        .requestMatchers("/proyectos/favoritos").authenticated()
+                        .requestMatchers("/proyectos/*/votar", "/proyectos/*/favorito", "/proyectos/*/quitar-favorito").authenticated()
 
                         // Perfiles públicos de usuario (sin autenticación)
                         .requestMatchers("/usuarios/perfil/**").permitAll()

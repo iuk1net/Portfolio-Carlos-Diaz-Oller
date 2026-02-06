@@ -118,6 +118,30 @@
     </nav>
 
     <div class="container">
+        <!-- Banner para visitantes (no autenticados) -->
+        <div th:if="${esVisitante}" class="alert alert-info alert-dismissible fade show" style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); color: var(--text-light);">
+            <h5 class="alert-heading">
+                <i class="fas fa-eye me-2"></i>Modo Visualización
+            </h5>
+            <p class="mb-2">
+                Estás navegando como <strong>visualizador</strong>. Puedes explorar todos los proyectos de la plataforma,
+                pero para interactuar (votar, agregar a favoritos, compartir) necesitas una cuenta.
+            </p>
+            <hr style="border-color: rgba(99, 102, 241, 0.3);">
+            <p class="mb-3 small text-muted">
+                <i class="fas fa-info-circle me-1"></i>
+                El registro es gratuito y te permite participar activamente en la comunidad.
+            </p>
+            <div class="d-flex gap-2">
+                <a th:href="@{/login}" class="btn btn-sm btn-primary">
+                    <i class="fas fa-sign-in-alt me-1"></i> Iniciar Sesión
+                </a>
+                <a th:href="@{/register}" class="btn btn-sm btn-outline-light">
+                    <i class="fas fa-user-plus me-1"></i> Crear Cuenta
+                </a>
+            </div>
+        </div>
+
         <!-- Alerts -->
         <div th:if="${success}" class="alert alert-success alert-dismissible fade show">
             <strong>✓</strong> <span th:text="${success}"></span>

@@ -213,14 +213,16 @@ public class UsuarioController {
                 ? telefono.trim() : null);
 
             // Limpiar y actualizar enlaces RRSS (eliminar vacíos)
-            if (enlacesRRSS != null) {
+            // IMPORTANTE: Para @ElementCollection debemos limpiar primero y luego agregar
+            usuario.getEnlacesRRSS().clear(); // Limpiar la lista existente
+
+            if (enlacesRRSS != null && !enlacesRRSS.isEmpty()) {
                 List<String> enlacesLimpios = enlacesRRSS.stream()
                     .filter(enlace -> enlace != null && !enlace.trim().isEmpty())
                     .map(String::trim)
+                    .distinct() // Evitar duplicados
                     .toList();
-                usuario.setEnlacesRRSS(enlacesLimpios);
-            } else {
-                usuario.setEnlacesRRSS(new java.util.ArrayList<>());
+                usuario.getEnlacesRRSS().addAll(enlacesLimpios); // Agregar los nuevos
             }
 
             // Guardar cambios
@@ -236,8 +238,10 @@ public class UsuarioController {
                 "❌ " + e.getMessage());
             return "redirect:/usuarios/perfil/editar";
         } catch (Exception e) {
+            // Log del error para debugging
+            e.printStackTrace();
             redirectAttributes.addFlashAttribute("error",
-                "❌ Error al actualizar el perfil. Inténtalo de nuevo.");
+                "❌ Error al actualizar el perfil: " + e.getMessage());
             return "redirect:/usuarios/perfil/editar";
         }
     }

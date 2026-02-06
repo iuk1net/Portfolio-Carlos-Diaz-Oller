@@ -9,36 +9,51 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
  * Servicio para gestión de publicaciones en redes sociales
  * Implementa las operaciones para compartir proyectos en RRSS
+ *
+ * @version 3.0.0 - LinkedIn Integration
+ * COMPORTAMIENTO:
+ * - ADMIN → Publica automáticamente en LinkedIn con API
+ * - USUARIOS → Solo registra y genera URL para compartir manualmente
  */
 @Service
 public class PublicacionRRSSService {
 
     private final PublicacionRRSSRepository publicacionRRSSRepository;
+    private final LinkedInService linkedInService;
 
     // Redes sociales soportadas
     private static final List<String> REDES_SOCIALES_VALIDAS =
         List.of("LinkedIn", "Twitter", "Facebook", "Instagram", "GitHub");
 
-    public PublicacionRRSSService(PublicacionRRSSRepository publicacionRRSSRepository) {
+    public PublicacionRRSSService(PublicacionRRSSRepository publicacionRRSSRepository,
+                                 LinkedInService linkedInService) {
         this.publicacionRRSSRepository = publicacionRRSSRepository;
+        this.linkedInService = linkedInService;
     }
 
     /**
      * Publica un proyecto en una red social
      * Método relacionado con el UML: publicarEnRRSS() de Proyecto
      *
+     * COMPORTAMIENTO PROFESIONAL v3.1:
+     * - LinkedIn → SIEMPRE publica automáticamente con API (token oficial)
+     * - Otras redes → Genera URL para compartir manualmente
+     * - Todas las publicaciones de LinkedIn aparecen en el perfil oficial
+     *
      * @param proyecto el proyecto a publicar
      * @param redSocial nombre de la red social
+     * @param esAdmin true si el usuario es administrador (ignorado ahora)
      * @return la publicación creada
      * @throws IllegalArgumentException si la red social no es válida
      */
     @Transactional
-    public PublicacionRRSS publicarEnRedSocial(Proyecto proyecto, String redSocial) {
+    public PublicacionRRSS publicarEnRedSocial(Proyecto proyecto, String redSocial, boolean esAdmin) {
         // Validar red social
         if (!REDES_SOCIALES_VALIDAS.contains(redSocial)) {
             throw new IllegalArgumentException(
@@ -54,33 +69,83 @@ public class PublicacionRRSSService {
         // Guardar la publicación
         publicacion = publicacionRRSSRepository.save(publicacion);
 
-        // TODO: Aquí se integraría con la API de la red social
-        // Por ahora, marcamos como PUBLICADO automáticamente
-        // En producción, esto sería un proceso asíncrono
-        simularPublicacion(publicacion);
+        // LINKEDIN → SIEMPRE publicar automáticamente (todos los usuarios)
+        if ("LinkedIn".equals(redSocial)) {
+            publicarEnLinkedInAutomatico(publicacion, proyecto);
+        } else {
+            // OTRAS REDES → Generar URL para compartir manualmente
+            registrarPublicacionManual(publicacion, proyecto, redSocial);
+        }
 
         return publicacion;
     }
 
     /**
-     * Simula la publicación en la red social
-     * En producción, esto se integraría con APIs reales (OAuth, etc.)
-     *
-     * @param publicacion la publicación a procesar
+     * Publica automáticamente en LinkedIn usando la API (solo ADMIN)
      */
-    private void simularPublicacion(PublicacionRRSS publicacion) {
-        // Simulación: marcar como publicado
-        // En producción esto sería asíncrono y podría fallar
+    private void publicarEnLinkedInAutomatico(PublicacionRRSS publicacion, Proyecto proyecto) {
         try {
-            // Aquí iría la lógica de integración con la API
-            // Por ejemplo: LinkedInAPI.post(proyecto.getTitulo(), proyecto.getDescripcion())
+            // Llamar al servicio de LinkedIn
+            Map<String, String> resultado = linkedInService.publicarPost(
+                proyecto.getTitulo(),
+                proyecto.getDescripcion(),
+                proyecto.getId()
+            );
 
+            // Actualizar publicación con datos de LinkedIn
+            publicacion.setIdExterno(resultado.get("id"));
+            publicacion.setUrlPublicacion(resultado.get("url"));
             publicacion.setEstado(EstadoPublicacion.PUBLICADO);
-            publicacionRRSSRepository.save(publicacion);
+
         } catch (Exception e) {
+            // Error en publicación
             publicacion.setEstado(EstadoPublicacion.ERROR);
-            publicacionRRSSRepository.save(publicacion);
+            publicacion.setMensajeError(e.getMessage());
         }
+
+        publicacionRRSSRepository.save(publicacion);
+    }
+
+    /**
+     * Registra una publicación manual (usuarios normales)
+     * Genera URL para que el usuario comparta manualmente
+     */
+    private void registrarPublicacionManual(PublicacionRRSS publicacion, Proyecto proyecto, String redSocial) {
+        // Generar URL de compartir según la red social
+        String urlCompartir = generarUrlCompartir(proyecto, redSocial);
+
+        // Marcar como PENDIENTE (usuario debe hacer la publicación manual)
+        publicacion.setEstado(EstadoPublicacion.PENDIENTE);
+        publicacion.setUrlPublicacion(urlCompartir);
+
+        publicacionRRSSRepository.save(publicacion);
+    }
+
+    /**
+     * Genera URL de compartir para cada red social
+     * El usuario abrirá esta URL y publicará manualmente
+     */
+    private String generarUrlCompartir(Proyecto proyecto, String redSocial) {
+        String urlProyecto = "http://localhost:8089/proyectos/" + proyecto.getId();
+        String titulo = proyecto.getTitulo();
+
+        return switch (redSocial) {
+            case "LinkedIn" ->
+                // URL para compartir en LinkedIn (abre ventana de compartir)
+                    "https://www.linkedin.com/sharing/share-offsite/?url=" + urlProyecto;
+            case "Twitter" -> {
+                // URL para compartir en Twitter
+                String textoTwitter = "🚀 " + titulo + " - " + urlProyecto;
+                yield "https://twitter.com/intent/tweet?text=" + textoTwitter;
+            }
+            case "Facebook" ->
+                // URL para compartir en Facebook
+                    "https://www.facebook.com/sharer/sharer.php?u=" + urlProyecto;
+            case "GitHub", "Instagram" ->
+                // Para GitHub/Instagram no hay compartir directo
+                    urlProyecto;
+            default -> urlProyecto;
+        };
     }
 
     /**
@@ -109,9 +174,8 @@ public class PublicacionRRSSService {
      * Actualiza el estado de una publicación
      *
      * @param publicacionId ID de la publicación
-     * @param nuevoEstado el nuevo estado
+     * @param nuevoEstado nuevo estado
      * @return la publicación actualizada
-     * @throws IllegalArgumentException si la publicación no existe
      */
     @Transactional
     public PublicacionRRSS actualizarEstadoPublicacion(
@@ -129,28 +193,25 @@ public class PublicacionRRSSService {
      *
      * @param publicacionId ID de la publicación
      * @return la publicación actualizada
-     * @throws IllegalArgumentException si la publicación no existe o no está en ERROR
      */
     @Transactional
     public PublicacionRRSS reintentarPublicacion(Long publicacionId) {
         PublicacionRRSS publicacion = publicacionRRSSRepository.findById(publicacionId)
             .orElseThrow(() -> new IllegalArgumentException("Publicación no encontrada"));
 
-        if (publicacion.getEstado() != EstadoPublicacion.ERROR) {
-            throw new IllegalArgumentException(
-                "Solo se pueden reintentar publicaciones en estado ERROR"
-            );
+        // Solo reintentar si está en estado ERROR
+        if (!publicacion.getEstado().name().equals("ERROR")) {
+            throw new IllegalStateException("Solo se pueden reintentar publicaciones en estado ERROR");
         }
 
-        // Cambiar a PENDIENTE y reintentar
+        // Reiniciar estado
         publicacion.setEstado(EstadoPublicacion.PENDIENTE);
         publicacion.setFechaPublicacion(LocalDateTime.now());
         publicacion = publicacionRRSSRepository.save(publicacion);
 
-        // Reintentar publicación
-        simularPublicacion(publicacion);
-
-        return publicacion;
+        // Reintentar publicación (simulación por ahora)
+        publicacion.setEstado(EstadoPublicacion.PUBLICADO);
+        return publicacionRRSSRepository.save(publicacion);
     }
 
     /**
@@ -220,9 +281,9 @@ public class PublicacionRRSSService {
     }
 
     /**
-     * Obtiene las redes sociales soportadas
+     * Obtiene la lista de redes sociales soportadas
      *
-     * @return lista de redes sociales válidas
+     * @return lista de redes sociales
      */
     public List<String> obtenerRedesSocialesSoportadas() {
         return REDES_SOCIALES_VALIDAS;
