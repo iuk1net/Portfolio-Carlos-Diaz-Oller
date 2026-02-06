@@ -1,21 +1,26 @@
-# Documentación — Portfolio Social v2.5.1
+# Documentación — Portfolio Social v2.6.0
 
 Plataforma social de portfolios desarrollada con Spring Boot, PostgreSQL y Thymeleaf.
 
-**Versión:** 2.5.1  
-**Fecha:** 03/02/2026  
-**Estado:** ✅ Hito 4 Completado
+**Versión:** 2.6.0  
+**Fecha:** 06/02/2026  
+**Estado:** ✅ Documentación Optimizada
 
-## Índice
+## 📚 Índice
+
+### Documentación Principal
 1. [Documento de Requisitos](./01-requisitos-portfolio.md)
 2. [Plan de Proyecto](./02-plan-proyecto-portfolio.md)
 3. [Especificaciones Técnicas](./03-especificaciones-tecnicas-portfolio.md)
 4. [Manual de Desarrollo](./04-manual-desarrollo-portfolio.md)
 5. [Guía de Configuración y Despliegue](./05-guia-configuracion-despliegue.md)
 6. [Modelo de Datos Completo](./06-modelo-datos-completo.md)
-7. [Registro de Cambios (Changelog)](./CHANGELOG.md)
 
-## Diagramas
+### Gestión del Proyecto
+7. [Registro de Cambios (CHANGELOG)](./CHANGELOG.md)
+8. [Índice de Documentación](./INDICE.md)
+
+## 🎨 Diagramas
 - [Modelo Entidad-Relación (ER)](./Modelo%20Entidad%20Relacion.png) - Diagrama visual del modelo de datos
 - [Diagrama de Clases UML](./UML.png) - Arquitectura de clases del sistema
 

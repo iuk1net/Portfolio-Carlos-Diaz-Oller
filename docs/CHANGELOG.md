@@ -4,6 +4,41 @@ Registro de cambios siguiendo versionado semántico (MAJOR.MINOR.PATCH).
 
 ---
 
+## [2.6.1] - 2026-02-06
+**🧹 Limpieza de Documentación**
+
+### 🗑️ Archivos Eliminados
+- Eliminados 16 archivos de documentación temporal y no necesarios:
+  - `ACTUALIZACION-06-02-2026.md`
+  - `ACTUALIZACION-CREDENCIALES-06-02-2026.md`
+  - `ANALISIS-FLUJO-PUBLICACIONES-RRSS.md`
+  - `DISPOSICION-FORMULARIO-REGISTRO.md`
+  - `FASE-5-COMPLETADA.md`
+  - `GUIA-PRUEBAS-VERIFICACION-EMAIL.md`
+  - `INFORME-REVISION-DOCUMENTACION.md`
+  - `MEJORA-CONFIRMACION-PASSWORD.md`
+  - `PLAN-IMPLEMENTACION-VERIFICACION-EMAIL.md`
+  - `PROGRESO-IMPLEMENTACION-VERIFICACION-EMAIL.md`
+  - `REPORTE-VERIFICACION-BD-AUTOMATICA.md`
+  - `RESUMEN-EJECUTIVO.md`
+  - `RESUMEN-VERIFICACION-BD.md`
+  - `SOLUCION-ERROR-EXTENSION.md`
+  - `VALIDACION-EMAIL-VERIFICADO-LOGIN.md`
+  - `VERIFICACION-BASE-DATOS.md`
+
+### 📝 Archivos Mantenidos
+- **Documentación Principal:** 6 archivos (01 a 06)
+- **Diagramas:** 2 imágenes (ER y UML)
+- **Gestión:** 3 archivos (CHANGELOG, DOCUMENTACION-PORTFOLIO, INDICE)
+- **Total:** 11 archivos esenciales
+
+### ✅ Actualizado
+- ✅ `INDICE.md` completamente reestructurado
+- ✅ Documentación más limpia y organizada
+- ✅ Estructura clara y fácil de navegar
+
+---
+
 ## [2.5.2] - 2026-02-06
 **📝 Actualización de Documentación - Credenciales Correctas**
 
