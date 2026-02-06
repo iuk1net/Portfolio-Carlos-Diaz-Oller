@@ -27,18 +27,28 @@ public class CustomUserDetailsService implements UserDetailsService {
         System.out.println("Usuario encontrado: " + usuario.getEmail());
         System.out.println("Rol del usuario: " + usuario.getRol());
         System.out.println("Estado del usuario: " + usuario.getEstado());
+        System.out.println("Email verificado: " + usuario.isEmailVerificado());
+
+        // ⭐ VALIDACIÓN DE EMAIL VERIFICADO (v2.6.0)
+        // Si el email no está verificado, deshabilitar la cuenta
+        boolean cuentaHabilitada = usuario.isEmailVerificado();
+
+        if (!cuentaHabilitada) {
+            System.out.println("⚠️ ACCESO DENEGADO: Email no verificado para " + usuario.getEmail());
+        }
 
         UserDetails userDetails = User.builder()
                 .username(usuario.getUsername())
                 .password(usuario.getPassword()) // Contraseña encriptada
                 .roles(usuario.getRol().name()) // Rol asignado
-                .disabled(false)
+                .disabled(!cuentaHabilitada) // ⭐ Deshabilitar si email no verificado
                 .accountExpired(false)
                 .accountLocked(false)
                 .credentialsExpired(false)
                 .build();
 
         System.out.println("UserDetails creado con authorities: " + userDetails.getAuthorities());
+        System.out.println("Cuenta habilitada: " + userDetails.isEnabled());
         System.out.println("=========================================");
 
         return userDetails;

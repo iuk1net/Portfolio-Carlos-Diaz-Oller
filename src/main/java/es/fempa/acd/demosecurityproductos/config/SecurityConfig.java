@@ -21,11 +21,14 @@ public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
     private final CustomAuthenticationSuccessHandler successHandler;
+    private final CustomAuthenticationFailureHandler failureHandler;
 
     public SecurityConfig(CustomUserDetailsService userDetailsService,
-                         CustomAuthenticationSuccessHandler successHandler) {
+                         CustomAuthenticationSuccessHandler successHandler,
+                         CustomAuthenticationFailureHandler failureHandler) {
         this.userDetailsService = userDetailsService;
         this.successHandler = successHandler;
+        this.failureHandler = failureHandler;
     }
 
     @Bean
@@ -42,6 +45,10 @@ public class SecurityConfig {
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico", "/webjars/**").permitAll()
                         .requestMatchers("/error", "/error/**").permitAll()
                         .requestMatchers("/login", "/", "/logout", "/register").permitAll()
+
+                        // Verificación de email - públicas (v2.6.0)
+                        .requestMatchers("/verificar-email", "/reenviar-verificacion",
+                                       "/solicitar-recuperacion", "/recuperar-password").permitAll()
 
                         // Proyectos - lectura pública, escritura autenticada
                         .requestMatchers("/proyectos/lista", "/proyectos/ranking", "/proyectos/*/").permitAll()
@@ -66,7 +73,7 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/login")
                         .successHandler(successHandler)
-                        .failureUrl("/login?error=true")
+                        .failureHandler(failureHandler) // ⭐ Handler personalizado para email no verificado
                         .permitAll()
                 )
                 .logout(logout -> logout

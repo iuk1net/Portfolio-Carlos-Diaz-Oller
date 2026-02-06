@@ -188,6 +188,13 @@
             <div th:if="${param.error}" class="alert alert-danger" role="alert">
                 ❌ Usuario o contraseña incorrectos
             </div>
+            <div th:if="${param.disabled}" class="alert alert-danger" role="alert">
+                <strong>❌ Email no verificado</strong><br>
+                📧 Debes verificar tu email antes de iniciar sesión.<br>
+                <a th:href="@{/reenviar-verificacion}" style="color: #fca5a5; text-decoration: underline;">
+                    Haz clic aquí para reenviar el email de verificación
+                </a>
+            </div>
             <div th:if="${param.logout}" class="alert alert-success" role="alert">
                 ✓ Has cerrado sesión correctamente
             </div>
