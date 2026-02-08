@@ -31,7 +31,19 @@ linkedin.test-mode=false
 
 ### Limitaciones de la API de LinkedIn
 
-LinkedIn requiere el producto "Community Management API" para publicar automáticamente en páginas de empresa mediante API. Este producto no está disponible para solicitar (botón deshabilitado).
+LinkedIn requiere el producto "**Community Management API**" para publicar automáticamente en páginas de empresa mediante API. Este producto **no está disponible para solicitar** (botón deshabilitado en el Developer Portal).
+
+#### Error encontrado al intentar usar la API ugcPosts:
+```
+Error al publicar en LinkedIn: 500 Server Error on POST request for 
+"https://api.linkedin.com/v2/ugcPosts": "{"message":"Internal Server Error","status":500}"
+```
+
+#### ¿Por qué ocurre este error?
+1. La aplicación tiene el producto "**Share on LinkedIn**" (Default Tier) activado
+2. Este producto solo permite compartir mediante el diálogo web nativo
+3. Para publicaciones automáticas vía API se necesita "**Community Management API**"
+4. El botón "Request access" de Community Management API está **deshabilitado**
 
 **Solución implementada:** Usamos el diálogo de compartir nativo de LinkedIn, que permite al usuario seleccionar si publicar como persona o como página de empresa.
 
@@ -46,6 +58,15 @@ LinkedIn requiere el producto "Community Management API" para publicar automáti
 
 - [App LinkedIn Developer](https://www.linkedin.com/developers/apps/228942413)
 - [Página de Empresa](https://www.linkedin.com/company/111341630/)
+- [Documentación Share on LinkedIn](https://learn.microsoft.com/en-us/linkedin/consumer/integrations/self-serve/share-on-linkedin)
+
+## ⚠️ Estado Actual
+
+| Funcionalidad | Estado | Notas |
+|---------------|--------|-------|
+| Compartir manual | ✅ Funciona | Diálogo nativo de LinkedIn |
+| Publicar vía API (personal) | ❌ No disponible | Requiere permisos especiales |
+| Publicar vía API (empresa) | ❌ No disponible | Requiere Community Management API |
 
 ---
 
