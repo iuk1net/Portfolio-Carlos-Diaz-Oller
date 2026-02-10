@@ -47,6 +47,9 @@ public class SecurityConfig {
                         .requestMatchers("/error", "/error/**").permitAll()
                         .requestMatchers("/login", "/", "/logout", "/register").permitAll()
 
+                        // Páginas legales - públicas (requeridas para LinkedIn verification)
+                        .requestMatchers("/privacy", "/terms", "/support").permitAll()
+
                         // Verificación de email - públicas (v2.6.0)
                         .requestMatchers("/verificar-email", "/reenviar-verificacion",
                                        "/solicitar-recuperacion", "/recuperar-password").permitAll()

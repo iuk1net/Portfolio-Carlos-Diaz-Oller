@@ -79,6 +79,21 @@
                 const data = await response.json();
 
                 if (data.success) {
+                    // Si debe abrir en nueva ventana (otras redes sociales)
+                    if (data.abrirEnNuevaVentana && data.url) {
+                        // Abrir ventana emergente para compartir
+                        const ventana = window.open(
+                            data.url,
+                            'compartir',
+                            'width=600,height=600,menubar=no,toolbar=no,location=no'
+                        );
+
+                        if (!ventana) {
+                            // Si el popup fue bloqueado, abrir en nueva pestaña
+                            window.open(data.url, '_blank');
+                        }
+                    }
+
                     // Mostrar notificación de éxito
                     this.mostrarNotificacion(data.mensaje, 'success');
 
@@ -222,7 +237,7 @@
             } catch (error) {
                 console.error('Error al reintentar:', error);
                 this.mostrarNotificacion(error.message || 'Error al reintentar', 'error');
-            }, 3000);
+            }
         }
 
         /**

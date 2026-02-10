@@ -60,9 +60,9 @@ public class PublicacionRRSSController {
             }
 
             // Publicar en la red social
-            // LinkedIn → SIEMPRE automático (todos los usuarios)
+            // LinkedIn → Intenta automático, si falla usa compartir manual
             // Otras redes → Abre ventana para compartir manualmente
-            boolean esAdmin = false; // Ya no importa, LinkedIn es automático para todos
+            boolean esAdmin = false;
             PublicacionRRSS publicacion = publicacionRRSSService.publicarEnRedSocial(proyecto, redSocial, esAdmin);
 
             // Construir respuesta
@@ -70,19 +70,31 @@ public class PublicacionRRSSController {
             response.put("success", true);
             response.put("publicacion", crearPublicacionDTO(publicacion));
 
-            // Mensaje diferente según la red social
+            // Mensaje diferente según la red social y estado
             if ("LinkedIn".equals(redSocial)) {
-                // LinkedIn → Publicación automática exitosa
                 if (publicacion.getEstado().name().equals("PUBLICADO")) {
+                    // LinkedIn → Publicación automática exitosa
                     response.put("mensaje", "¡Proyecto publicado automáticamente en LinkedIn!");
                     response.put("url", publicacion.getUrlPublicacion());
                     response.put("verEnLinkedIn", true);
+                } else if (publicacion.getEstado().name().equals("PENDIENTE") && publicacion.getUrlPublicacion() != null) {
+                    // LinkedIn → Compartir manual (sin permisos de organización)
+                    response.put("mensaje", "Abriendo LinkedIn para compartir. Puedes seleccionar tu página de empresa en el diálogo de compartir.");
+                    response.put("url", publicacion.getUrlPublicacion());
+                    response.put("abrirEnNuevaVentana", true);
+                    response.put("compartirEnEmpresa", true);
                 } else if (publicacion.getEstado().name().equals("ERROR")) {
                     response.put("mensaje", "Error al publicar en LinkedIn: " + publicacion.getMensajeError());
                     response.put("error", true);
                 } else {
                     response.put("mensaje", "Publicando en LinkedIn...");
                 }
+            } else if ("Instagram".equals(redSocial) || "GitHub".equals(redSocial)) {
+                // Instagram/GitHub → No tienen compartir directo, copiar link
+                response.put("mensaje", redSocial + " no permite compartir automáticamente. Se abrirá el proyecto para copiar el enlace.");
+                response.put("url", publicacion.getUrlPublicacion());
+                response.put("abrirEnNuevaVentana", true);
+                response.put("copiarEnlace", true);
             } else {
                 // Otras redes → Abrir ventana para compartir manualmente
                 response.put("mensaje", "Abriendo " + redSocial + " para compartir...");

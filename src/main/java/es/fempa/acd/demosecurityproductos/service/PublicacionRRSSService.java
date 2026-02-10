@@ -41,14 +41,16 @@ public class PublicacionRRSSService {
      * Publica un proyecto en una red social
      * Método relacionado con el UML: publicarEnRRSS() de Proyecto
      *
-     * COMPORTAMIENTO PROFESIONAL v3.1:
-     * - LinkedIn → SIEMPRE publica automáticamente con API (token oficial)
+     * COMPORTAMIENTO PROFESIONAL v3.3:
+     * - LinkedIn → Compartir manual (permite seleccionar página de empresa)
      * - Otras redes → Genera URL para compartir manualmente
-     * - Todas las publicaciones de LinkedIn aparecen en el perfil oficial
+     *
+     * NOTA: La API de LinkedIn (ugcPosts) requiere permisos especiales que no están disponibles.
+     * Por eso usamos el diálogo de compartir que permite publicar en página de empresa.
      *
      * @param proyecto el proyecto a publicar
      * @param redSocial nombre de la red social
-     * @param esAdmin true si el usuario es administrador (ignorado ahora)
+     * @param esAdmin true si el usuario es administrador (ignorado)
      * @return la publicación creada
      * @throws IllegalArgumentException si la red social no es válida
      */
@@ -69,11 +71,11 @@ public class PublicacionRRSSService {
         // Guardar la publicación
         publicacion = publicacionRRSSRepository.save(publicacion);
 
-        // LINKEDIN → SIEMPRE publicar automáticamente (todos los usuarios)
+        // TODAS LAS REDES → Compartir manual (incluyendo LinkedIn)
+        // LinkedIn usa compartir manual porque la API requiere permisos no disponibles
         if ("LinkedIn".equals(redSocial)) {
-            publicarEnLinkedInAutomatico(publicacion, proyecto);
+            registrarPublicacionManualLinkedIn(publicacion, proyecto);
         } else {
-            // OTRAS REDES → Generar URL para compartir manualmente
             registrarPublicacionManual(publicacion, proyecto, redSocial);
         }
 
@@ -100,8 +102,31 @@ public class PublicacionRRSSService {
         } catch (Exception e) {
             // Error en publicación
             publicacion.setEstado(EstadoPublicacion.ERROR);
-            publicacion.setMensajeError(e.getMessage());
+
+            // Limitar mensaje de error a 950 caracteres (BD límite 1000)
+            String mensajeError = e.getMessage();
+            if (mensajeError != null && mensajeError.length() > 950) {
+                mensajeError = mensajeError.substring(0, 947) + "...";
+            }
+            publicacion.setMensajeError(mensajeError);
         }
+
+        publicacionRRSSRepository.save(publicacion);
+    }
+
+    /**
+     * Registra una publicación manual para LinkedIn
+     * Genera URL para compartir en LinkedIn (perfil o página de empresa)
+     * El usuario puede seleccionar "Publicar como" en el diálogo de LinkedIn
+     */
+    private void registrarPublicacionManualLinkedIn(PublicacionRRSS publicacion, Proyecto proyecto) {
+        // Generar URL de compartir para LinkedIn
+        String urlCompartir = generarUrlCompartir(proyecto, "LinkedIn");
+
+        // Marcar como PENDIENTE (el usuario completará la publicación manualmente)
+        publicacion.setEstado(EstadoPublicacion.PENDIENTE);
+        publicacion.setUrlPublicacion(urlCompartir);
+        // No establecer mensaje de error - es compartir manual intencional
 
         publicacionRRSSRepository.save(publicacion);
     }
@@ -128,22 +153,56 @@ public class PublicacionRRSSService {
     private String generarUrlCompartir(Proyecto proyecto, String redSocial) {
         String urlProyecto = "http://localhost:8089/proyectos/" + proyecto.getId();
         String titulo = proyecto.getTitulo();
+        String descripcion = proyecto.getDescripcion() != null ? proyecto.getDescripcion() : titulo;
+
+        // Limitar descripción a 200 caracteres
+        if (descripcion.length() > 200) {
+            descripcion = descripcion.substring(0, 197) + "...";
+        }
 
         return switch (redSocial) {
-            case "LinkedIn" ->
+            case "LinkedIn" -> {
                 // URL para compartir en LinkedIn (abre ventana de compartir)
-                    "https://www.linkedin.com/sharing/share-offsite/?url=" + urlProyecto;
-            case "Twitter" -> {
-                // URL para compartir en Twitter
-                String textoTwitter = "🚀 " + titulo + " - " + urlProyecto;
-                yield "https://twitter.com/intent/tweet?text=" + textoTwitter;
+                try {
+                    yield "https://www.linkedin.com/sharing/share-offsite/?url=" +
+                            java.net.URLEncoder.encode(urlProyecto, "UTF-8");
+                } catch (Exception e) {
+                    yield "https://www.linkedin.com/sharing/share-offsite/?url=" + urlProyecto;
+                }
             }
-            case "Facebook" ->
+            case "Twitter" -> {
+                // URL para compartir en Twitter (ahora X)
+                try {
+                    String textoTwitter = "🚀 " + titulo + "\n\n" + urlProyecto;
+                    // Limitar a 280 caracteres
+                    if (textoTwitter.length() > 280) {
+                        textoTwitter = "🚀 " + titulo.substring(0, 270) + "...\n\n" + urlProyecto;
+                    }
+                    yield "https://twitter.com/intent/tweet?text=" +
+                            java.net.URLEncoder.encode(textoTwitter, "UTF-8");
+                } catch (Exception e) {
+                    yield "https://twitter.com/intent/tweet?text=" + urlProyecto;
+                }
+            }
+            case "Facebook" -> {
                 // URL para compartir en Facebook
-                    "https://www.facebook.com/sharer/sharer.php?u=" + urlProyecto;
-            case "GitHub", "Instagram" ->
-                // Para GitHub/Instagram no hay compartir directo
-                    urlProyecto;
+                try {
+                    yield "https://www.facebook.com/sharer/sharer.php?u=" +
+                            java.net.URLEncoder.encode(urlProyecto, "UTF-8");
+                } catch (Exception e) {
+                    yield "https://www.facebook.com/sharer/sharer.php?u=" + urlProyecto;
+                }
+            }
+            case "Instagram" -> {
+                // Instagram no tiene compartir directo desde web
+                // Redirigir al proyecto para que copien el link
+                yield urlProyecto + "?share=instagram";
+            }
+            case "GitHub" -> {
+                // GitHub no tiene compartir directo
+                // Redirigir al proyecto para que copien el link
+                yield urlProyecto + "?share=github";
+            }
             default -> urlProyecto;
         };
     }

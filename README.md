@@ -7,11 +7,12 @@ Portfolio web personal con backend (Spring Boot) y persistencia en base de datos
 **Versión:** 3.0.1  
 **Fecha:** 06/02/2026
 
-### 🚀 Novedad: LinkedIn Configurado
-- ✅ Integración con LinkedIn completada
-- ✅ Access Token obtenido y configurado
-- ✅ Sistema listo para publicaciones reales en LinkedIn
-- 📋 Próximo paso: Implementación del MVP (DÍA 1)
+### 🔗 LinkedIn: Compartir Manual
+- ✅ Botón "Compartir en LinkedIn" implementado
+- ✅ Genera URL de compartir para abrir diálogo nativo de LinkedIn
+- ⚠️ **Publicación automática vía API no disponible**
+- ℹ️ LinkedIn requiere "Community Management API" para publicar en páginas de empresa (botón deshabilitado en Developer Portal)
+- 📋 Solución: El usuario comparte manualmente y puede seleccionar publicar como persona o como página de empresa
 
 ## 📚 Documentación
 - **Índice completo**: [`docs/INDICE.md`](./docs/INDICE.md)
@@ -33,7 +34,7 @@ Presentar de forma clara y profesional mi perfil como desarrollador, demostrando
 - ✅ Sistema de galería de imágenes con subida múltiple
 - ✅ Votación AJAX sin recarga de página
 - ✅ Sistema de favoritos independiente
-- ✅ Publicación en redes sociales (LinkedIn, Twitter, Facebook)
+- ✅ Compartir en redes sociales (LinkedIn*, Twitter, Facebook)
 - ✅ Gestión de CVs con múltiples formatos
 - ✅ Ranking de proyectos con medallas visuales
 - ✅ Autenticación y autorización con Spring Security
