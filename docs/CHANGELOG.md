@@ -4,6 +4,82 @@ Registro de cambios siguiendo versionado semántico (MAJOR.MINOR.PATCH).
 
 ---
 
+## [3.0.2] - 2026-02-10
+**📚 ACTUALIZACIÓN DE DOCUMENTACIÓN + SEGURIDAD**
+
+### 🔒 SEGURIDAD - CREDENCIALES PROTEGIDAS
+
+**Cambios en application.properties:**
+- ✅ Email: `spring.mail.username` y `spring.mail.password` → Variables de entorno
+- ✅ LinkedIn: `linkedin.client.id` y `linkedin.organization-id` → Variables de entorno
+- ✅ Eliminadas todas las credenciales hardcodeadas
+
+**Limpieza de documentación:**
+- ✅ Eliminados emails personales del CHANGELOG
+- ✅ Eliminados App Passwords del CHANGELOG
+- ✅ Eliminados IDs de aplicación LinkedIn
+- ✅ Eliminados IDs de organización LinkedIn
+
+### 🔧 PUERTO ACTUALIZADO
+
+**Cambio de puerto 8089 → 8080:**
+- ✅ `README.md` - URL de acceso actualizada
+- ✅ `05-guia-configuracion-despliegue.md` - Puerto por defecto actualizado
+- ✅ `ACCESO-PUBLICO-PROYECTOS.md` - Todas las URLs actualizadas
+- ✅ `PublicacionRRSSService.java` - URL de proyecto actualizada
+- ✅ `LinkedInService.java` - URL de footer actualizada
+- ✅ `support.html` - URLs legales actualizadas
+
+### 📝 DOCUMENTOS ACTUALIZADOS
+
+**Cambios principales:**
+- ✅ Actualizada versión a 3.0.1 en todos los documentos
+- ✅ Actualizada fecha a 10/02/2026
+- ✅ Agregada entidad VerificacionEmail al modelo de datos
+- ✅ Documentado sistema de verificación de email (v2.6.0+)
+- ✅ Documentada integración con LinkedIn API v2 (v3.0.0+)
+- ✅ Actualizados campos de PublicacionRRSS (idExterno, urlPublicacion, mensajeError)
+- ✅ Agregado campo emailVerificado a Usuario
+
+**Documentos modificados:**
+- `06-modelo-datos-completo.md` - Nueva entidad VerificacionEmail + campos actualizados
+- `DOCUMENTACION-PORTFOLIO.md` - Sistema de verificación y LinkedIn API
+- `05-guia-configuracion-despliegue.md` - Variables de email y LinkedIn
+- `03-especificaciones-tecnicas-portfolio.md` - Endpoints y configuración actualizada
+- `01-requisitos-portfolio.md` - Requisitos de verificación de email
+- `04-manual-desarrollo-portfolio.md` - Estructura actualizada
+- `README.md` (principal) - Características y métricas actualizadas
+- `docs/README.md` - Fecha actualizada
+- `LINKEDIN.md` - Fecha actualizada
+- `ACCESO-PUBLICO-PROYECTOS.md` - Fecha actualizada
+- `CONFIGURACION-ENTORNO.md` - Fecha actualizada
+
+### 📊 MÉTRICAS ACTUALIZADAS
+
+| Métrica | Anterior | Actual |
+|---------|----------|--------|
+| Entidades | 6 | **7** (+ VerificacionEmail) |
+| Controllers | 8 | **11** |
+| Services | 7 | **10** |
+| Líneas de código | ~5.000 | **~6.000** |
+
+### ✅ FUNCIONALIDADES DOCUMENTADAS
+
+**Sistema de Verificación de Email (v2.6.0+):**
+- Verificación de cuenta al registrarse
+- Email HTML con enlace de activación
+- Tokens con expiración de 24 horas
+- Recuperación de contraseña
+- Reenvío de email de verificación
+- Email de bienvenida tras verificación
+
+**Integración LinkedIn API (v3.0.0+):**
+- LinkedInService para publicaciones
+- Modo test para desarrollo
+- Compartir manual mediante diálogo nativo
+
+---
+
 ## [3.0.1] - 2026-02-06
 **🧹 LIMPIEZA DE DOCUMENTACIÓN + TOKEN CONFIGURADO**
 
@@ -434,8 +510,8 @@ Proporcionar una base sólida para discutir e implementar mejoras en el sistema 
   - Base de datos: `portfolio` (anteriormente `portfolio_db`)
   - Usuario: `carlos` (valores por defecto para desarrollo)
   - Password: `postgre` (valores por defecto para desarrollo)
-  - Email Gmail: `carlosiuka88@gmail.com` ✅ (correcto)
-  - App Password: `yguc ccvn dsja dclu` ✅ (correcto)
+  - Email Gmail: configurado via variables de entorno
+  - App Password: configurado via variables de entorno
 
 ### 📄 Archivos Actualizados
 - ✅ `docs/04-manual-desarrollo-portfolio.md` - Credenciales actualizadas
@@ -445,7 +521,7 @@ Proporcionar una base sólida para discutir e implementar mejoras en el sistema 
 ### ✅ Consistencia Lograda
 - ✅ Todos los documentos usan `portfolio` como nombre de base de datos
 - ✅ Credenciales por defecto consistentes: `carlos` / `postgre`
-- ✅ Email Gmail confirmado y consistente en toda la documentación
+- ✅ Email Gmail configurado via variables de entorno
 - ✅ README.md ya tenía las credenciales correctas
 
 ---
@@ -455,8 +531,8 @@ Proporcionar una base sólida para discutir e implementar mejoras en el sistema 
 
 ### 🔧 Configuración Actualizada
 - **Actualizado**: Email configurado en toda la documentación
-  - Email: `carlosiuka88@gmail.com`
-  - App Password: `yguc ccvn dsja dclu`
+  - Email: configurado via variables de entorno
+  - App Password: configurado via variables de entorno
   - Archivos actualizados: RESUMEN-EJECUTIVO.md, PLAN-IMPLEMENTACION-VERIFICACION-EMAIL.md, INDICE.md
 
 ### ✅ Estado

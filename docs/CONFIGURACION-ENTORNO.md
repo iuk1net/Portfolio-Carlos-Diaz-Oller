@@ -50,7 +50,7 @@ El proyecto utiliza **variables de entorno** para proteger información sensible
 
 ---
 
-**Fecha:** 06/02/2026
+**Fecha:** 10/02/2026
 **Versión:** 3.1  
 
 

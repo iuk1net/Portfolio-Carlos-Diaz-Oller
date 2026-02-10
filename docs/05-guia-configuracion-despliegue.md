@@ -1,4 +1,4 @@
-# Guía de Configuración y Despliegue - Portfolio Social v2.4.0
+# Guía de Configuración y Despliegue - Portfolio Social v3.0.1
 
 Esta guía contiene toda la información necesaria para configurar, desarrollar y desplegar la aplicación.
 
@@ -63,9 +63,28 @@ La aplicación utiliza variables de entorno para configuración sensible (creden
 | `DB_NAME` | Nombre de la base de datos | `portfolio` | ✅ |
 | `DB_USERNAME` | Usuario de la base de datos | `carlos` | ✅ |
 | `DB_PASSWORD` | Contraseña de la base de datos | `postgre` | ✅ |
-| `SERVER_PORT` | Puerto del servidor Spring | `8089` | ❌ |
+| `SERVER_PORT` | Puerto del servidor Spring | `8080` | ❌ |
 | `UPLOAD_DIR` | Directorio de CVs | `uploads/cvs` | ❌ |
 | `UPLOAD_IMAGES_DIR` | Directorio de imágenes | `uploads/images` | ❌ |
+
+### Variables de Email (v2.6.0+)
+
+| Variable | Descripción | Por Defecto | Requerido |
+|----------|-------------|-------------|-----------|
+| `MAIL_HOST` | Servidor SMTP | `smtp.gmail.com` | ✅ (prod) |
+| `MAIL_PORT` | Puerto SMTP | `587` | ✅ (prod) |
+| `MAIL_USERNAME` | Email del remitente | - | ✅ (prod) |
+| `MAIL_PASSWORD` | Contraseña de aplicación | - | ✅ (prod) |
+| `VERIFICACION_URL_BASE` | URL base para enlaces de verificación | `http://localhost:8080` | ✅ (prod) |
+
+### Variables de LinkedIn (v3.0.0+)
+
+| Variable | Descripción | Por Defecto | Requerido |
+|----------|-------------|-------------|-----------|
+| `LINKEDIN_ACCESS_TOKEN` | Token de acceso LinkedIn API | - | ❌ |
+| `LINKEDIN_CLIENT_ID` | Client ID de la aplicación LinkedIn | - | ❌ |
+| `LINKEDIN_CLIENT_SECRET` | Client secret de la app | - | ❌ |
+| `LINKEDIN_ORGANIZATION_ID` | ID de la página de empresa | - | ❌ |
 
 ### Configurar Variables de Entorno
 
@@ -142,7 +161,7 @@ CREATE DATABASE portfolio;
 
 ### Paso 5: Acceder a la Aplicación
 ```
-http://localhost:8089
+http://localhost:8080
 ```
 
 **Credenciales iniciales:** Debes registrarte en `/register`
@@ -378,16 +397,20 @@ tail -f /opt/portfolio/logs/portfolio-app.log
 - [ ] Firewall configurado (solo puertos 80, 443, 22)
 - [ ] PostgreSQL no accesible desde fuera
 - [ ] Backup automático configurado
+- [ ] Credenciales de email protegidas
 
 ### Funcionalidad
 - [ ] Aplicación arranca sin errores
 - [ ] Registro de usuarios funciona
+- [ ] Verificación de email funciona
 - [ ] Login funciona
+- [ ] Recuperación de contraseña funciona
 - [ ] Crear proyecto funciona
 - [ ] Subir imágenes funciona
 - [ ] Votación funciona
 - [ ] Favoritos funciona
 - [ ] Subir CV funciona
+- [ ] Compartir en LinkedIn funciona
 
 ---
 

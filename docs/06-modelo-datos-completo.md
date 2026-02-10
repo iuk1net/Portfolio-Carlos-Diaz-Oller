@@ -1,8 +1,8 @@
-# Modelo de Datos Completo - Portfolio Social v2.5.1
+# Modelo de Datos Completo - Portfolio Social v3.0.1
 
 **Proyecto:** Plataforma Social de Portfolios — Carlos Díaz Oller  
-**Versión:** 2.5.1  
-**Fecha:** Febrero 2026
+**Versión:** 3.0.1  
+**Fecha:** 10/02/2026
 
 ---
 
@@ -31,11 +31,13 @@ Representa a los usuarios registrados en la plataforma, tanto usuarios estándar
 | `whatsapp` | VARCHAR(20) | NULL | Número de WhatsApp |
 | `telefono` | VARCHAR(20) | NULL | Teléfono de contacto |
 | `enlacesRRSS` | JSON | NULL | Array de enlaces a redes sociales |
+| `emailVerificado` | BOOLEAN | NOT NULL, DEFAULT false | Indica si el email ha sido verificado |
 
 ### Relaciones
 - **Usuario → Proyecto** (1:N): Un usuario puede crear múltiples proyectos
 - **Usuario → CV** (1:N*): Un usuario puede subir múltiples versiones de CV
 - **Usuario → Voto** (1:N): Un usuario puede emitir múltiples votos
+- **Usuario → VerificacionEmail** (1:1): Un usuario tiene una verificación de email asociada
 
 ### Reglas de Negocio
 - El email debe ser único en el sistema
@@ -150,6 +152,9 @@ Registra las publicaciones de proyectos en redes sociales.
 | `redSocial` | VARCHAR(50) | NOT NULL | Red social: 'LinkedIn', 'Twitter', 'Facebook', etc. |
 | `fechaPublicacion` | TIMESTAMP | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Fecha de publicación |
 | `estado` | VARCHAR(20) | NOT NULL | Estado: 'pendiente', 'publicado', 'error' |
+| `id_externo` | VARCHAR(200) | NULL | ID externo de la publicación en la red social (ej: urn:li:ugcPost:123) |
+| `url_publicacion` | VARCHAR(500) | NULL | URL pública de la publicación |
+| `mensaje_error` | VARCHAR(1000) | NULL | Mensaje de error si la publicación falló |
 
 ### Relaciones
 - **PublicacionRRSS → Proyecto** (N:1): Cada publicación pertenece a un proyecto
@@ -169,6 +174,7 @@ Usuario (1) ──crea──> (N) Proyecto
 Usuario (1) ──sube──> (N) CV
 Usuario (1) ──emite──> (N) Voto
 Usuario (1) ──marca favorito──> (N) Favorito
+Usuario (1) ──tiene──> (1) VerificacionEmail
 Proyecto (1) ──recibe──> (N) Voto
 Proyecto (1) ──se publica en──> (N) PublicacionRRSS
 Proyecto (1) ──marcado como favorito por──> (N) Favorito
@@ -207,6 +213,38 @@ UNIQUE (id_usuario, id_proyecto)
 ### Diferencia con Voto
 - **Voto**: Sistema público que afecta el ranking global
 - **Favorito**: Colección personal del usuario
+
+---
+
+## 6.2. Entidad: VerificacionEmail (v2.6.0)
+
+### Descripción
+Gestiona los tokens de verificación de email para registro de cuenta y recuperación de contraseña.
+
+### Tabla en BD: `verificaciones_email`
+
+| Campo | Tipo | Constraints | Descripción |
+|-------|------|-------------|-------------|
+| `id` | INT | PRIMARY KEY, AUTO_INCREMENT | Identificador único |
+| `usuario_id` | INT | NOT NULL, FOREIGN KEY, UNIQUE | Usuario asociado |
+| `token` | VARCHAR(100) | NOT NULL, UNIQUE | Token UUID de verificación |
+| `fecha_creacion` | TIMESTAMP | NOT NULL | Fecha de creación del token |
+| `fecha_expiracion` | TIMESTAMP | NOT NULL | Fecha de expiración (24 horas por defecto) |
+| `usado` | BOOLEAN | NOT NULL, DEFAULT false | Indica si el token ya fue utilizado |
+| `tipo` | VARCHAR(20) | NOT NULL | Tipo: 'REGISTRO' o 'RECUPERACION' |
+
+### Relaciones
+- **VerificacionEmail → Usuario** (1:1): Cada verificación está asociada a un único usuario
+
+### Reglas de Negocio
+- Un usuario solo puede tener una verificación activa del mismo tipo
+- Los tokens expiran a las 24 horas
+- Un token usado no puede reutilizarse
+- Al regenerar token, se actualiza fecha de expiración
+
+### Tipos de Verificación
+- **REGISTRO**: Activación de cuenta nueva
+- **RECUPERACION**: Restablecimiento de contraseña
 
 ---
 
@@ -285,6 +323,6 @@ ORDER BY p.id_proyecto DESC;
 
 ---
 
-**Última actualización:** 2026-01-21  
+**Última actualización:** 2026-02-10  
 **Autor:** Carlos Díaz Oller
 

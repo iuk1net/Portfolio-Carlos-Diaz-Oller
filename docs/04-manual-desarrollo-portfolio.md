@@ -39,16 +39,32 @@ mvn spring-boot:run
 src/main/java/es/fempa/acd/demosecurityproductos/
 ├── config/              # Configuración (Security, MVC, etc.)
 ├── controller/          # Controladores MVC y REST
+│   ├── AuthController.java
+│   ├── ProyectoController.java
+│   ├── VerificacionEmailController.java
+│   └── ...
 ├── model/               # Entidades JPA
-│   └── enums/          # Enumeraciones
+│   ├── enums/          # Enumeraciones (Rol, Estado, TipoVerificacion, etc.)
+│   ├── Usuario.java
+│   ├── Proyecto.java
+│   ├── VerificacionEmail.java
+│   └── ...
 ├── repository/          # Repositorios JPA
 ├── service/            # Lógica de negocio
+│   ├── EmailService.java
+│   ├── VerificacionEmailService.java
+│   ├── LinkedInService.java
+│   └── ...
 └── DemoSecurityProductosApplication.java
 
 src/main/resources/
 ├── application.properties
 ├── static/             # CSS, JS, imágenes
 └── templates/          # Vistas Thymeleaf
+    ├── verificacion/   # Vistas de verificación de email
+    ├── proyectos/
+    ├── usuario/
+    └── ...
 
 src/test/java/          # Tests unitarios e integración
 ```

@@ -1,155 +1,211 @@
-# Portfolio Carlos Díaz Oller
+<p align="center">
+  <h1 align="center">🎨 Portfolio Social - Carlos Díaz Oller</h1>
+  <p align="center">
+    <strong>Plataforma social de portfolios profesionales</strong><br>
+    Desarrollada con Spring Boot, PostgreSQL y Thymeleaf
+  </p>
+  <p align="center">
+    <img src="https://img.shields.io/badge/Java-17+-orange?style=flat-square&logo=openjdk" alt="Java 17+">
+    <img src="https://img.shields.io/badge/Spring_Boot-3.4.1-green?style=flat-square&logo=springboot" alt="Spring Boot">
+    <img src="https://img.shields.io/badge/PostgreSQL-15+-blue?style=flat-square&logo=postgresql" alt="PostgreSQL">
+    <img src="https://img.shields.io/badge/Tests-44_passed-success?style=flat-square" alt="Tests">
+    <img src="https://img.shields.io/badge/Cobertura-70%25-yellow?style=flat-square" alt="Cobertura">
+  </p>
+</p>
 
-Portfolio web personal con backend (Spring Boot) y persistencia en base de datos, orientado a presentar mi perfil profesional, proyectos y tecnologías.
+---
 
-## 🎯 Estado del Proyecto
-**Hito 4 Completado:** ✅ **APROBADO**  
-**Versión:** 3.0.1  
-**Fecha:** 06/02/2026
+## 📋 Índice
 
-### 🔗 LinkedIn: Compartir Manual
-- ✅ Botón "Compartir en LinkedIn" implementado
-- ✅ Genera URL de compartir para abrir diálogo nativo de LinkedIn
-- ⚠️ **Publicación automática vía API no disponible**
-- ℹ️ LinkedIn requiere "Community Management API" para publicar en páginas de empresa (botón deshabilitado en Developer Portal)
-- 📋 Solución: El usuario comparte manualmente y puede seleccionar publicar como persona o como página de empresa
+- [Descripción](#-descripción)
+- [Características](#-características)
+- [Stack Tecnológico](#️-stack-tecnológico)
+- [Instalación](#-instalación-rápida)
+- [Testing](#-testing)
+- [Documentación](#-documentación)
+- [Seguridad](#-seguridad)
+- [Autor](#-autor)
 
-## 📚 Documentación
-- **Índice completo**: [`docs/INDICE.md`](./docs/INDICE.md)
-- **Documentación principal**: [`docs/DOCUMENTACION-PORTFOLIO.md`](./docs/DOCUMENTACION-PORTFOLIO.md)
+---
 
-### Documentos Técnicos
-- Requisitos: [`docs/01-requisitos-portfolio.md`](./docs/01-requisitos-portfolio.md)
-- Plan de proyecto: [`docs/02-plan-proyecto-portfolio.md`](./docs/02-plan-proyecto-portfolio.md)
-- Especificaciones técnicas: [`docs/03-especificaciones-tecnicas-portfolio.md`](./docs/03-especificaciones-tecnicas-portfolio.md)
-- Manual de desarrollo: [`docs/04-manual-desarrollo-portfolio.md`](./docs/04-manual-desarrollo-portfolio.md)
-- **Guía de configuración y despliegue**: [`docs/05-guia-configuracion-despliegue.md`](./docs/05-guia-configuracion-despliegue.md)
-- Modelo de datos: [`docs/06-modelo-datos-completo.md`](./docs/06-modelo-datos-completo.md)
-- Changelog: [`docs/CHANGELOG.md`](./docs/CHANGELOG.md)
+## 🎯 Descripción
 
-## 🎯 Objetivo
-Presentar de forma clara y profesional mi perfil como desarrollador, demostrando capacidad para diseñar, desarrollar y desplegar una aplicación web completa siguiendo MVC, buenas prácticas y seguridad.
+**Portfolio Social** es una plataforma web completa que permite a los usuarios crear y gestionar portfolios profesionales, publicar proyectos y participar en un sistema de votación con ranking global.
 
-## 🚀 Características Principales
-- ✅ Sistema de galería de imágenes con subida múltiple
-- ✅ Votación AJAX sin recarga de página
-- ✅ Sistema de favoritos independiente
-- ✅ Compartir en redes sociales (LinkedIn*, Twitter, Facebook)
-- ✅ Gestión de CVs con múltiples formatos
-- ✅ Ranking de proyectos con medallas visuales
-- ✅ Autenticación y autorización con Spring Security
-- ✅ CSRF habilitado (excepto APIs REST)
-- ✅ Diseño responsive moderno
+El proyecto demuestra competencias en:
+- ✅ Arquitectura MVC con Spring Boot
+- ✅ Seguridad con Spring Security
+- ✅ Persistencia con JPA/Hibernate
+- ✅ Testing automatizado con JUnit 5
+- ✅ Diseño responsive con Bootstrap 5
+
+> **Estado:** ✅ Completado | **Versión:** 3.0.1 | **Fecha:** Febrero 2026
+
+---
+
+## 🚀 Características
+
+### Gestión de Usuarios
+| Funcionalidad | Estado |
+|---------------|--------|
+| Registro con verificación de email | ✅ |
+| Recuperación de contraseña | ✅ |
+| Autenticación con Spring Security | ✅ |
+| Control de acceso por roles (ADMIN/USER) | ✅ |
+| Perfil público personalizable | ✅ |
+
+### Gestión de Proyectos
+| Funcionalidad | Estado |
+|---------------|--------|
+| CRUD completo con permisos | ✅ |
+| Galería de imágenes (subida múltiple) | ✅ |
+| Sistema de votación AJAX | ✅ |
+| Sistema de favoritos | ✅ |
+| Ranking con medallas (🥇🥈🥉) | ✅ |
+
+### Funcionalidades Adicionales
+| Funcionalidad | Estado |
+|---------------|--------|
+| Compartir en redes sociales | ✅ |
+| Gestión de CVs (PDF, DOCX, TXT) | ✅ |
+| Diseño responsive | ✅ |
+| Protección CSRF | ✅ |
+
+---
 
 ## 🛠️ Stack Tecnológico
-- **Backend**: Java 17 + Spring Boot 3.4.1
-- **Frontend**: Thymeleaf + Bootstrap 5 + JavaScript ES6
-- **Base de Datos**: PostgreSQL 15+
-- **Seguridad**: Spring Security + BCrypt + CSRF
-- **Testing**: JUnit 5 + Spring Boot Test (44 tests, ~70% cobertura)
 
-## 🧪 Testing y Calidad
-
-### Tests Implementados
-- ✅ **44 tests automatizados** con JUnit 5
-- ✅ **Cobertura ~70%** en servicios críticos
-- ✅ **0 fallos, 0 errores** - Build exitoso
-- ✅ Validación de reglas de negocio
-- ✅ Tests de integración con Spring Boot
-
-```bash
-# Ejecutar todos los tests
-mvn test
-
-# Ver resultados
-# [INFO] Tests run: 44, Failures: 0, Errors: 0, Skipped: 0
-# [INFO] BUILD SUCCESS
+```
+┌─────────────────────────────────────────────────────────┐
+│                     FRONTEND                            │
+│  Thymeleaf • Bootstrap 5 • JavaScript ES6 • Lightbox   │
+├─────────────────────────────────────────────────────────┤
+│                     BACKEND                             │
+│  Java 17 • Spring Boot 3.4.1 • Spring Security • JPA   │
+├─────────────────────────────────────────────────────────┤
+│                    DATABASE                             │
+│               PostgreSQL 15+                            │
+├─────────────────────────────────────────────────────────┤
+│                     TESTING                             │
+│           JUnit 5 • Spring Boot Test                    │
+└─────────────────────────────────────────────────────────┘
 ```
 
-**Servicios testeados:**
-- VotoService (10 tests) - Sistema de votación
-- ProyectoService (10 tests) - CRUD y permisos
-- UsuarioService (12 tests) - Seguridad y gestión
-- FavoritoService (11 tests) - Sistema de favoritos
+---
 
 ## 📦 Instalación Rápida
 
-### Requisitos Previos
+### Requisitos
 - Java 17+
 - PostgreSQL 15+
 - Maven 3.6+
 
-### Pasos Básicos
+### Pasos
 
-#### 1. Clonar y Preparar
 ```bash
+# 1. Clonar repositorio
 git clone https://github.com/iuk1net/Portfolio-Carlos-Diaz-Oller.git
 cd Portfolio-Carlos-Diaz-Oller
+
+# 2. Crear base de datos
 createdb portfolio
-```
 
-#### 2. Configurar Credenciales (Opcional)
-
-**Sin configurar nada**, la aplicación usará valores por defecto:
-- Usuario: `carlos` / Password: `postgre`
-- Base de datos: `portfolio` en `localhost:5432`
-
-**Para usar tus credenciales**, exporta las variables:
-```bash
-# Linux/Mac
-export DB_USERNAME=tu_usuario
-export DB_PASSWORD=tu_password
+# 3. Configurar credenciales (opcional)
+# Por defecto: usuario=carlos, password=postgre
 
 # Windows PowerShell
 $env:DB_USERNAME="tu_usuario"
 $env:DB_PASSWORD="tu_password"
-```
 
-#### 3. Ejecutar
-```bash
+# Linux/Mac
+export DB_USERNAME=tu_usuario
+export DB_PASSWORD=tu_password
+
+# 4. Ejecutar
 ./mvnw spring-boot:run
+
+# 5. Acceder
+# http://localhost:8080
 ```
 
-#### 4. Acceder
-```
-http://localhost:8089
+---
+
+## 🧪 Testing
+
+```bash
+# Ejecutar tests
+mvn test
 ```
 
-### 📘 Documentación Completa
+### Resultados
+```
+Tests run: 44, Failures: 0, Errors: 0, Skipped: 0
+BUILD SUCCESS
+```
 
-Para configuración avanzada, despliegue en producción, Docker, Nginx y más:
-- **Guía completa**: [`docs/05-guia-configuracion-despliegue.md`](./docs/05-guia-configuracion-despliegue.md)
-- **Manual de desarrollo**: [`docs/04-manual-desarrollo-portfolio.md`](./docs/04-manual-desarrollo-portfolio.md)
+| Servicio | Tests | Cobertura |
+|----------|-------|-----------|
+| VotoService | 10 | ~100% |
+| ProyectoService | 10 | ~80% |
+| UsuarioService | 12 | ~90% |
+| FavoritoService | 11 | ~100% |
+| **TOTAL** | **44** | **~70%** |
+
+---
+
+## 📚 Documentación
+
+| Documento | Descripción |
+|-----------|-------------|
+| [📘 Documentación Principal](./docs/DOCUMENTACION-PORTFOLIO.md) | Visión general del proyecto |
+| [📋 Requisitos](./docs/01-requisitos-portfolio.md) | Requisitos funcionales y no funcionales |
+| [⚙️ Especificaciones Técnicas](./docs/03-especificaciones-tecnicas-portfolio.md) | Arquitectura y diseño |
+| [🔧 Manual de Desarrollo](./docs/04-manual-desarrollo-portfolio.md) | Guía para desarrolladores |
+| [🚀 Guía de Despliegue](./docs/05-guia-configuracion-despliegue.md) | Configuración y producción |
+| [🗄️ Modelo de Datos](./docs/06-modelo-datos-completo.md) | Entidades y relaciones |
+| [📝 Changelog](./docs/CHANGELOG.md) | Historial de cambios |
+
+### Diagramas
+- [Modelo Entidad-Relación](./docs/Modelo%20Entidad%20Relacion.png)
+- [Diagrama UML](./docs/UML.png)
+
+---
 
 ## 🔐 Seguridad
 
-### Medidas Implementadas
-- ✅ **CSRF habilitado** - Protección contra ataques Cross-Site Request Forgery
-- ✅ **BCrypt** - Cifrado de contraseñas con factor 12
-- ✅ **Variables de entorno** - Credenciales protegidas
-- ✅ **Control de acceso por roles** - ADMIN y USER
-- ✅ **Validaciones** - Frontend y Backend
-- ✅ **SQL Injection** - Prevención mediante JPA parametrizado
+| Medida | Implementación |
+|--------|----------------|
+| Autenticación | Spring Security |
+| Contraseñas | BCrypt (factor 12) |
+| CSRF | Habilitado (excepto APIs REST) |
+| SQL Injection | JPA parametrizado |
+| Validaciones | Frontend + Backend |
+| Credenciales | Variables de entorno |
 
-### ⚠️ Antes de Producción
+---
 
-1. ✅ Configurar variables de entorno
-2. ✅ Usar perfil `prod`: `--spring.profiles.active=prod`
-3. ✅ Configurar HTTPS/SSL
-4. ✅ Backup regular de la base de datos
+## 📊 Métricas
 
-📖 **Más información**: [`docs/05-guia-configuracion-despliegue.md`](./docs/05-guia-configuracion-despliegue.md)
+| Métrica | Valor |
+|---------|-------|
+| Líneas de código | ~6.000 |
+| Entidades | 7 |
+| Controllers | 11 |
+| Services | 10 |
+| Tests | 44 |
+| Cobertura | ~70% |
 
-## 📊 Métricas del Proyecto
-- **Líneas de código**: ~5.000
-- **Entidades**: 6 (Usuario, Proyecto, Voto, CV, PublicacionRRSS, Favorito)
-- **Controllers**: 8
-- **Services**: 7
-- **Tests**: 44 (100% exitosos)
-- **Cobertura**: ~70% en servicios críticos
+---
 
-## 🔗 Enlaces
-- **Repositorio**: [GitHub](https://github.com/iuk1net/Portfolio-Carlos-Diaz-Oller)
-- **Documentación completa**: [`docs/`](./docs/)
-- **Diagramas**: [Modelo ER](./docs/Modelo%20Entidad%20Relacion.png) | [UML](./docs/UML.png)
+## 👤 Autor
 
+**Carlos Díaz Oller**
+
+- 📧 Contacto disponible en la plataforma
+- 🔗 [Repositorio GitHub](https://github.com/iuk1net/Portfolio-Carlos-Diaz-Oller)
+
+---
+
+<p align="center">
+  <sub>Desarrollado como proyecto de la 2ª Evaluación — FEMPA 2026</sub>
+</p>

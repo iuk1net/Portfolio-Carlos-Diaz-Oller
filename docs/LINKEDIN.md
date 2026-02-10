@@ -56,8 +56,7 @@ Error al publicar en LinkedIn: 500 Server Error on POST request for
 
 ## 🔗 Enlaces
 
-- [App LinkedIn Developer](https://www.linkedin.com/developers/apps/228942413)
-- [Página de Empresa](https://www.linkedin.com/company/111341630/)
+- [LinkedIn Developer Portal](https://www.linkedin.com/developers/apps/)
 - [Documentación Share on LinkedIn](https://learn.microsoft.com/en-us/linkedin/consumer/integrations/self-serve/share-on-linkedin)
 
 ## ⚠️ Estado Actual
@@ -70,5 +69,5 @@ Error al publicar en LinkedIn: 500 Server Error on POST request for
 
 ---
 
-*Última actualización: 08/02/2026*
+*Última actualización: 10/02/2026*
 

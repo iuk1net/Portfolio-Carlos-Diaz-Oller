@@ -67,6 +67,7 @@
 - String whatsapp
 - String telefono
 - List<String> enlacesRRSS
+- boolean emailVerificado (v2.6.0)
 ```
 
 #### Proyecto
@@ -114,6 +115,9 @@
 - String redSocial
 - LocalDateTime fechaPublicacion
 - EstadoPublicacion estado (ENUM)
+- String idExterno (v3.0.0)
+- String urlPublicacion (v3.0.0)
+- String mensajeError (v3.0.0)
 ```
 
 #### Favorito
@@ -123,6 +127,19 @@
 - Long id (PK)
 - Usuario usuario (FK)
 - Proyecto proyecto (FK)
+```
+
+#### VerificacionEmail (v2.6.0)
+```java
+@Entity
+@Table(name = "verificaciones_email")
+- Long id (PK)
+- Usuario usuario (FK, UNIQUE)
+- String token (UNIQUE)
+- LocalDateTime fechaCreacion
+- LocalDateTime fechaExpiracion
+- boolean usado
+- TipoVerificacion tipo (ENUM: REGISTRO, RECUPERACION)
 ```
 
 ## 4. API REST
@@ -135,6 +152,15 @@
 - `GET /register` - Formulario de registro
 - `POST /register` - Procesar registro
 - `POST /logout` - Cerrar sesión
+
+#### Verificación de Email (v2.6.0)
+- `GET /verificar-email?token={token}` - Verificar cuenta con token
+- `GET /reenviar-verificacion` - Formulario reenviar verificación
+- `POST /reenviar-verificacion` - Procesar reenvío
+- `GET /solicitar-recuperacion` - Formulario recuperar contraseña
+- `POST /solicitar-recuperacion` - Enviar email de recuperación
+- `GET /recuperar-password?token={token}` - Formulario nueva contraseña
+- `POST /recuperar-password` - Guardar nueva contraseña
 
 #### Proyectos
 - `GET /proyectos/lista` - Listar proyectos (público)
@@ -276,6 +302,22 @@ spring.servlet.multipart.max-request-size=50MB
 # Custom
 app.upload.images.dir=uploads/images
 app.upload.cvs.dir=uploads/cvs
+
+# Email Configuration (v2.6.0+)
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=${MAIL_USERNAME}
+spring.mail.password=${MAIL_PASSWORD}
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+verificacion.email.expiracion-horas=24
+verificacion.email.url-base=${VERIFICACION_URL_BASE:http://localhost:8080}
+
+# LinkedIn Configuration (v3.0.0+)
+linkedin.enabled=true
+linkedin.test-mode=false
+linkedin.access-token=${LINKEDIN_ACCESS_TOKEN:}
+linkedin.publication-type=personal
 ```
 
 ## 10. Despliegue

@@ -1,28 +1,27 @@
-# Documentación — Portfolio Social v2.6.0
+# Documentación — Portfolio Social v3.0.1
 
 Plataforma social de portfolios desarrollada con Spring Boot, PostgreSQL y Thymeleaf.
 
-**Versión:** 2.6.0  
-**Fecha:** 06/02/2026  
-**Estado:** ✅ Documentación Optimizada
+**Versión:** 3.0.1  
+**Fecha:** 10/02/2026  
+**Estado:** ✅ Documentación Actualizada
 
 ## 📚 Índice
 
 ### Documentación Principal
-1. [Documento de Requisitos](./01-requisitos-portfolio.md)
-2. [Plan de Proyecto](./02-plan-proyecto-portfolio.md)
-3. [Especificaciones Técnicas](./03-especificaciones-tecnicas-portfolio.md)
-4. [Manual de Desarrollo](./04-manual-desarrollo-portfolio.md)
-5. [Guía de Configuración y Despliegue](./05-guia-configuracion-despliegue.md)
-6. [Modelo de Datos Completo](./06-modelo-datos-completo.md)
+1. [Documento de Requisitos](01-requisitos-portfolio.md)
+2. [Especificaciones Técnicas](03-especificaciones-tecnicas-portfolio.md)
+3. [Manual de Desarrollo](04-manual-desarrollo-portfolio.md)
+4. [Guía de Configuración y Despliegue](05-guia-configuracion-despliegue.md)
+5. [Modelo de Datos Completo](06-modelo-datos-completo.md)
 
 ### Gestión del Proyecto
-7. [Registro de Cambios (CHANGELOG)](./CHANGELOG.md)
-8. [Índice de Documentación](./INDICE.md)
+6. [Registro de Cambios (CHANGELOG)](CHANGELOG.md)
+7. [Índice de Documentación](README.md)
 
 ## 🎨 Diagramas
-- [Modelo Entidad-Relación (ER)](./Modelo%20Entidad%20Relacion.png) - Diagrama visual del modelo de datos
-- [Diagrama de Clases UML](./UML.png) - Arquitectura de clases del sistema
+- [Modelo Entidad-Relación (ER)](Modelo%20Entidad%20Relacion.png) - Diagrama visual del modelo de datos
+- [Diagrama de Clases UML](UML.png) - Arquitectura de clases del sistema
 
 ## Arquitectura del Sistema
 
@@ -33,20 +32,31 @@ Plataforma social de portfolios desarrollada con Spring Boot, PostgreSQL y Thyme
 - **Seguridad**: Spring Security con BCrypt
 
 ### Entidades Principales
-- **Usuario**: gestión de perfiles con autenticación, roles (ADMIN/USER) y datos de contacto
+- **Usuario**: gestión de perfiles con autenticación, roles (ADMIN/USER), datos de contacto y verificación de email
 - **Proyecto**: portfolios con galería de imágenes, sistema de votación y ranking
 - **CV**: almacenamiento de currículums con soporte para PDF, DOCX y TXT
 - **Voto**: sistema de likes con restricción única (un voto por usuario/proyecto)
-- **PublicacionRRSS**: historial de publicaciones en redes sociales
+- **PublicacionRRSS**: historial de publicaciones en redes sociales con soporte para LinkedIn API
 - **Favorito**: sistema de marcado de proyectos favoritos
+- **VerificacionEmail**: gestión de tokens para verificación de cuenta y recuperación de contraseña
 
 ## Funcionalidades Implementadas
 
 ### Gestión de Usuarios
-- Registro y autenticación con Spring Security
+- Registro con verificación de email obligatoria
+- Autenticación con Spring Security
 - Control de acceso por roles (ADMIN/USER)
 - Perfil público con datos de contacto y enlaces a redes sociales
 - Edición de perfil con validación de datos
+- Recuperación de contraseña por email
+
+### Sistema de Verificación de Email (v2.6.0+)
+- Verificación de cuenta al registrarse
+- Email HTML con enlace de activación
+- Tokens con expiración de 24 horas
+- Recuperación de contraseña
+- Reenvío de email de verificación
+- Email de bienvenida tras verificación exitosa
 
 ### Gestión de Proyectos
 - CRUD completo con control de permisos
@@ -68,11 +78,14 @@ Plataforma social de portfolios desarrollada con Spring Boot, PostgreSQL y Thyme
 - Descarga protegida (solo propietario)
 - Validaciones de formato y tamaño (máx 10MB)
 
-### Publicación en Redes Sociales
+### Publicación en Redes Sociales (v3.0.0+)
+- Integración con LinkedIn API v2
 - Compartir proyectos con texto personalizado
 - Estados: pendiente, publicado, error
-- Historial de publicaciones
+- Historial de publicaciones con URLs externas
 - Reintentar publicaciones fallidas
+- Modo test para desarrollo (sin credenciales reales)
+- Compartir manual en LinkedIn (abre diálogo nativo)
 
 ## Testing y Calidad
 
@@ -95,9 +108,11 @@ Plataforma social de portfolios desarrollada con Spring Boot, PostgreSQL y Thyme
 - ✅ Un voto por usuario/proyecto
 - ✅ No votar propio proyecto
 - ✅ Email único en usuarios
+- ✅ Verificación de email obligatoria
 - ✅ Contraseñas cifradas con BCrypt
 - ✅ Permisos de edición/eliminación
 - ✅ Sistema de favoritos independiente
+- ✅ Tokens de verificación con expiración
 
 ## Enlaces
 - [Repositorio GitHub](https://github.com/iuk1net/Portfolio-Carlos-Diaz-Oller)

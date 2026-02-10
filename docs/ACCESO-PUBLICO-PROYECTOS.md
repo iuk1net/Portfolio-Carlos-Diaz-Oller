@@ -1,6 +1,6 @@
 # 👁️ ROL VISUALIZADOR - ACCESO PÚBLICO
 
-**Fecha:** 06/02/2026  
+**Fecha:** 10/02/2026  
 **Versión:** 3.1 - Rol Visualizador Implementado  
 **Estado:** ✅ Funcional y Profesional
 
@@ -176,7 +176,7 @@ async toggleVoto(proyectoId, button) {
    
    Aplicación web completa...
    
-   🔗 Ver proyecto: http://localhost:8089/proyectos/42
+   🔗 Ver proyecto: http://localhost:8080/proyectos/42
    ```
 
 2. **Click en el enlace**
@@ -250,7 +250,7 @@ async toggleVoto(proyectoId, button) {
 ### Prueba 1: Como Visualizador
 
 1. **Abrir en modo incógnito**
-2. **Ir a:** `http://localhost:8089/proyectos/1`
+2. **Ir a:** `http://localhost:8080/proyectos/1`
 3. **Verificar:**
    - ✅ Banner "Modo Visualización" visible
    - ✅ Todo el contenido visible
@@ -265,7 +265,7 @@ async toggleVoto(proyectoId, button) {
 ### Prueba 2: Como Usuario Registrado
 
 1. **Iniciar sesión normalmente**
-2. **Ir a:** `http://localhost:8089/proyectos/1`
+2. **Ir a:** `http://localhost:8080/proyectos/1`
 3. **Verificar:**
    - ✅ Banner "Modo Visualización" NO aparece
    - ✅ Botones de votar/favorito/compartir funcionan
@@ -384,7 +384,7 @@ El modal de login es completamente responsive:
    
    Aplicación web completa...
    
-   🔗 Ver proyecto: http://localhost:8089/proyectos/42
+   🔗 Ver proyecto: http://localhost:8080/proyectos/42
    
    #desarrollo #portfolio #java #springboot
    ```
@@ -525,7 +525,7 @@ El diseño funciona para:
 ### Prueba como visitante:
 
 1. **Abre navegador en modo incógnito**
-2. **Ve a:** `http://localhost:8089/proyectos/1` (o cualquier ID)
+2. **Ve a:** `http://localhost:8080/proyectos/1` (o cualquier ID)
 3. **Verifica:**
    - ✅ Proyecto visible
    - ✅ Banner de visitante aparece
@@ -535,7 +535,7 @@ El diseño funciona para:
 ### Prueba como usuario:
 
 1. **Inicia sesión normalmente**
-2. **Ve a:** `http://localhost:8089/proyectos/1`
+2. **Ve a:** `http://localhost:8080/proyectos/1`
 3. **Verifica:**
    - ✅ Proyecto visible
    - ✅ Banner de visitante NO aparece
@@ -574,7 +574,7 @@ Con esta implementación:
 
 ```java
 // DESARROLLO (actual)
-texto.append("🔗 Ver proyecto: http://localhost:8089/proyectos/")
+texto.append("🔗 Ver proyecto: http://localhost:8080/proyectos/")
 
 // PRODUCCIÓN (cambiar a)
 texto.append("🔗 Ver proyecto: https://tudominio.com/proyectos/")
@@ -636,6 +636,6 @@ Para producción:
 
 ¿Quieres probar ahora? Puedes:
 1. Abrir modo incógnito
-2. Ir a `http://localhost:8089/proyectos/[ID]`
+2. Ir a `http://localhost:8080/proyectos/[ID]`
 3. Verificar que funciona sin login
 

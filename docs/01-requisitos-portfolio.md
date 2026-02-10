@@ -1,7 +1,7 @@
 # Documento de Requisitos
 
 ## 1. Título del Proyecto
-**Plataforma Social de Portfolios v2.0**
+**Plataforma Social de Portfolios v3.0**
 
 ## 2. Introducción
 Plataforma web que permite a múltiples usuarios registrarse, crear y gestionar portfolios profesionales, publicar proyectos y participar en un sistema de votación que genera un ranking público. El proyecto aplica buenas prácticas de desarrollo, arquitectura MVC y cumple con estándares de seguridad profesionales.
@@ -31,10 +31,12 @@ Desarrollar una plataforma social de portfolios con arquitectura Spring Boot, pe
 
 ### 4.2. Gestión de Usuarios
 - Registro con validación de email único
+- Verificación de email obligatoria para activar cuenta
 - Autenticación con Spring Security
 - Gestión de perfil (datos personales y enlaces a RRSS)
 - Roles: ADMIN y USER
 - Estados: activo, bloqueado
+- Recuperación de contraseña por email
 
 ### 4.3. Gestión de Proyectos
 - CRUD completo con control de permisos
@@ -61,10 +63,12 @@ Desarrollar una plataforma social de portfolios con arquitectura Spring Boot, pe
 - Tamaño máximo: 10MB
 
 ### 4.7. Publicación en Redes Sociales
+- Integración con LinkedIn API v2
 - Compartir en LinkedIn, Twitter, Facebook, GitHub
 - Estados: pendiente, publicado, error
-- Historial de publicaciones
+- Historial de publicaciones con URLs externas
 - Reintentar publicaciones fallidas
+- Modo test para desarrollo
 
 ### 4.8. Panel de Administración
 - CRUD de usuarios

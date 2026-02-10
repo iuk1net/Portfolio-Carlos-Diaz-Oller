@@ -1,6 +1,6 @@
 # 📚 ÍNDICE DE DOCUMENTACIÓN - Portfolio Social
 
-**Última actualización:** 06/02/2026  
+**Última actualización:** 10/02/2026  
 **Versión:** 3.1
 
 ---
